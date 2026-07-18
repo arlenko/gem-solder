@@ -1,0 +1,38 @@
+.history/
+
+# KiCad auto-generated files
+*-backups/
+_autosave-*
+*.bak
+*.kicad_pcb-bak
+*.kicad_sch-bak
+fp-info-cache
+*.lck
+*~
+
+# KiCad project local settings (machine-specific, optional to ignore)
+*.kicad_prl
+
+# 3D model cache
+3d-viewer-cache/
+
+# Plot/export output (gerbers, drill files, etc.)
+*.pos
+*.drl
+*.gbr
+*.gbrjob
+gerber/
+plot/
+
+# Netlist / ERC/DRC reports (regenerate-able)
+*.net
+*.rpt
+
+# Python cache if you use KiCad's scripting console
+__pycache__/
+*.pyc
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp

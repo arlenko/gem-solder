@@ -1,0 +1,30 @@
+# FreeCAD backup files
+*.FCBak
+*.FCStd1
+*.FCStd2
+*.FCStd3
+
+# FreeCAD lock file (created while a file is open)
+*.FCStd.lock
+.lock-*
+
+# FreeCAD recovery files (after crash)
+*.FCStd.recover
+
+# Thumbnail/preview cache
+.thumbnails/
+
+# Macro bytecode cache (if you use FreeCAD's Python macros)
+__pycache__/
+*.pyc
+
+# Export output you'd likely regenerate rather than track
+*.step.bak
+*.stl.bak
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.history/
