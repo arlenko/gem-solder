@@ -150,7 +150,11 @@
 #define CURRENT_SENSE_SHUNT_RESISTANCE_mOhms 5
 #define TIP_DISCONNECT_CURRENT_MA            10    // threshold below which tip is considered disconnected
 #define TIP_SHORT_CURRENT_MA                 12000 // threshold above which tip is considered shorted
-#define TIP_MEASUREMENT_DUTY                 40    // 40/255 is ~15% PWM duty
+// With a fast PWM at 100% duty duration of a pulse is ~3.2 ms or ~320 us at 10% duty.
+// It takes 5-10us to fully enhance the mosfet and ADC conversion takes ~4 us.
+// As we measure current at 1/2 of HIGH pulse 10% duty gives enough time for the current flow
+// through heater inductance to settle and perform a valid measurement without significantly heating the tip
+#define TIP_MEASUREMENT_DUTY 26
 
 #define VOLTAGE_DIV           282 // Resistive divider from schematic
 #define CALIBRATION_OFFSET    900 // 900 - Default adc offset in uV

@@ -304,7 +304,7 @@ static void MX_TIP_CONTROL_TIMER_Init(void) {
   htimTip.Init.Prescaler = 3;
 #endif
   htimTip.Init.CounterMode       = TIM_COUNTERMODE_UP;
-  htimTip.Init.Period            = 255;                           // 5 Khz PWM freq
+  htimTip.Init.Period            = 255;                           // 5 Khz PWM freq or 310 hz with direct PWM
   htimTip.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV4;        // 4mhz before div
   htimTip.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE; // Preload the ARR register (though we dont use this)
   HAL_TIM_Base_Init(&htimTip);

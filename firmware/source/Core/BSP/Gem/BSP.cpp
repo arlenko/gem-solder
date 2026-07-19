@@ -122,13 +122,6 @@ uint32_t getCurrentSamplingInterval(OperatingMode opMode) {
   return TICKS_SECOND;
 }
 
-uint8_t getCurrentSamplingDuty(OperatingMode opMode) {
-  if (opMode == OperatingMode::Soldering || opMode == OperatingMode::DebugMenuReadout) {
-    return TIP_MEASUREMENT_DUTY; // More precise measurement
-  }
-  return 20; // 25/255 is ~8% duty. Enough for sensing if the tip is connected
-}
-
 // We may need to disable current sampling for some operating modes
 bool currentSamplingAllowed(OperatingMode opMode) {
   switch (opMode) {
@@ -184,8 +177,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
     if (currentSamplingAllowed(currentOperatingMode) &&
         (lastCurrentSamplingTick == 0 || (now - lastCurrentSamplingTick) > currentSamplingInterval)) {
-      uint8_t neededPWM = getCurrentSamplingDuty(currentOperatingMode);
-      pendingPWM        = pendingPWM >= neededPWM ? pendingPWM : neededPWM;
+      pendingPWM = pendingPWM >= TIP_MEASUREMENT_DUTY ? pendingPWM : TIP_MEASUREMENT_DUTY;
       __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, pendingPWM / 2);
       currentSamplingActive = true;
     } else {
