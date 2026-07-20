@@ -324,14 +324,7 @@ uint64_t getDeviceID() {
 }
 
 uint8_t preStartChecksDone() {
-#ifdef TIP_RESISTANCE_SENSE_Pin
-  return (lastTipResistance == 0 || tipResistanceReadingSlot < numTipResistanceReadings || tipMeasurementOccuring ||
-          tipShorted)
-             ? 0
-             : 1;
-#else
-  return 1;
-#endif
+  return (lastCurrentSamplingTick == 0 || currentSamplingActive || isTipShorted()) ? 0 : 1;
 }
 
 uint8_t getTipResistanceX10() {
