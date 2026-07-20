@@ -175,19 +175,21 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
     uint32_t now                     = HAL_GetTick();
     uint32_t currentSamplingInterval = getCurrentSamplingInterval(currentOperatingMode);
+    uint8_t  thisCyclePWM            = pendingPWM; // Use callback scoped variable to avoid pendingPWM overwrite
 
     if (currentSamplingAllowed(currentOperatingMode) &&
         (lastCurrentSamplingTick == 0 || (now - lastCurrentSamplingTick) > currentSamplingInterval)) {
-      pendingPWM = pendingPWM >= TIP_MEASUREMENT_DUTY ? pendingPWM : TIP_MEASUREMENT_DUTY;
-      __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, pendingPWM / 2);
+      // Demand current sampling for this cycle
+      thisCyclePWM = pendingPWM >= TIP_MEASUREMENT_DUTY ? pendingPWM : TIP_MEASUREMENT_DUTY;
+      __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, thisCyclePWM / 2);
       currentSamplingActive = true;
     } else {
-      __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF);
+      __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF); // Set unreachable count to skip ADC trigger
     }
 
     htimADC.Instance->CCR4 = powerPWM;
-    if (pendingPWM && PWMSafetyTimer) {
-      __HAL_TIM_SET_COMPARE(&htimTip, PWM_Out_CHANNEL, pendingPWM);
+    if (thisCyclePWM && PWMSafetyTimer) {
+      __HAL_TIM_SET_COMPARE(&htimTip, PWM_Out_CHANNEL, thisCyclePWM);
       HAL_TIM_PWM_Start(&htimTip, PWM_Out_CHANNEL);
     } else {
       HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
