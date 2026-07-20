@@ -7,6 +7,7 @@
 #include "Pins.h"
 #include "Settings.h"
 #include "Setup.h"
+#include "TipProfile.hpp"
 #include "TipThermoModel.h"
 #include "USBPD.h"
 #include "configuration.h"
@@ -344,19 +345,7 @@ uint8_t getTipResistanceX10() {
 
 bool isTipShorted() { return getCurrentMilliamps() >= TIP_SHORT_CURRENT_MA; }
 
-uint16_t getTipThermalMass() {
-  uint8_t r = getTipResistanceX10();
-  if (r >= 80) {
-    return TIP_THERMAL_MASS; // high-resistance tip
-  }
-  return 45; // low-resistance tip
-}
-uint16_t getTipInertia() {
-  uint8_t r = getTipResistanceX10();
-  if (r >= 80) {
-    return TIP_THERMAL_MASS;
-  }
-  return 10;
-}
+uint16_t getTipThermalMass() { return TIP_C245.thermalMass; }
+uint16_t getTipInertia() { return TIP_C245.inertia; }
 
 void showBootLogo(void) { BootLogo::handleShowingLogo((uint8_t *)FLASH_LOGOADDR); }
