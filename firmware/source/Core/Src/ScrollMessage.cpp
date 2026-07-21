@@ -35,8 +35,8 @@ static uint16_t str_display_len(const char *const str) {
  * @param message The null-terminated message string.
  */
 static uint16_t messageWidth(const char *message) {
-  const uint8_t *next = reinterpret_cast<const uint8_t *>(message);
-  if (next[0] == 0x01) {
+  const uint8_t *msgBytes = reinterpret_cast<const uint8_t *>(message);
+  if (msgBytes[0] == 0x01) {
     // Leading 0x01 selects large font (see OLED::print)
     return FONT_12_WIDTH * str_display_len(message + 1);
   }
