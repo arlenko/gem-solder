@@ -349,13 +349,17 @@ const menuitem PowerSavingMenu[] = {
    *  -Shutdown Time
    *  Hall Sensor Sensitivity
    */
+#ifndef NO_ACCEL
   /* Motion Sensitivity */
   {SETTINGS_DESC(SettingsItemIndex::MotionSensitivity), nullptr, displaySensitivity, nullptr, SettingsOptions::Sensitivity, SettingsItemIndex::MotionSensitivity, 7},
-#ifndef NO_SLEEP_MODE
+#endif
+  #ifndef NO_SLEEP_MODE
   /* Sleep Temp */
   {SETTINGS_DESC(SettingsItemIndex::SleepTemperature), setSleepTemp, displaySleepTemp, showSleepOptions, SettingsOptions::SleepTemp, SettingsItemIndex::SleepTemperature, 5},
+#ifndef NO_ACCEL
   /* Sleep Time */
   {SETTINGS_DESC(SettingsItemIndex::SleepTimeout), nullptr, displaySleepTime, showSleepOptions, SettingsOptions::SleepTime, SettingsItemIndex::SleepTimeout, 5},
+#endif /* NO_ACCEL */
 #endif /* *not* NO_SLEEP_MODE */
   /* Shutdown Time */
   {SETTINGS_DESC(SettingsItemIndex::ShutdownTimeout), nullptr, displayShutdownTime, showSleepOptions, SettingsOptions::ShutdownTime, SettingsItemIndex::ShutdownTimeout, 5},
@@ -743,7 +747,13 @@ static void displaySensitivity(void) {
     OLED::drawUnavailableIcon();
   }
 }
-static bool showSleepOptions(void) { return getSettingValue(SettingsOptions::Sensitivity) > 0; }
+static bool showSleepOptions(void) {
+#ifdef STAND_SENSE
+  return true;
+#else
+  return getSettingValue(SettingsOptions::Sensitivity) > 0; 
+#endif
+}
 
 #ifndef NO_SLEEP_MODE
 
