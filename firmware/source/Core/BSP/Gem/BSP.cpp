@@ -129,6 +129,7 @@ bool currentSamplingAllowed(OperatingMode opMode) {
   case OperatingMode::Sleeping:
   case OperatingMode::Hibernating:
   case OperatingMode::ThermalRunaway:
+  case OperatingMode::CJCCalibration:
     return false;
   default:
     return true;

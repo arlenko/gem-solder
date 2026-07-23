@@ -13,7 +13,8 @@ bool shouldBeSleeping() {
       return true;
     }
     if (lastMovementTime > 0 || lastButtonTime > 0) {
-      if (((xTaskGetTickCount() - lastMovementTime) > getSleepTimeout()) && ((xTaskGetTickCount() - lastButtonTime) > getSleepTimeout())) {
+      if (((xTaskGetTickCount() - lastMovementTime) > getSleepTimeout()) &&
+          ((xTaskGetTickCount() - lastButtonTime) > getSleepTimeout())) {
         return true;
       }
     }
@@ -44,18 +45,22 @@ bool shouldBeSleeping() {
 #ifdef STAND_SENSE
   // Enable sleep when tip touching a plate.
   // Debounce to avoild false triggers.
-  static TickType_t lastStandSenseStart = 0;
-  if (HAL_GPIO_ReadPin(STAND_SENSE_GPIO_Port, STAND_SENSE_Pin) == GPIO_PIN_RESET) {
-    if (lastStandSenseStart == 0) {
-      lastStandSenseStart = xTaskGetTickCount();
-    }
-    if ((xTaskGetTickCount() - lastStandSenseStart) > TICKS_100MS) {
-      return true;
-    }
+  GPIO_PinState        pinState           = HAL_GPIO_ReadPin(STAND_SENSE_GPIO_Port, STAND_SENSE_Pin);
+  uint32_t             now                = HAL_GetTick();
+  bool                 tapToSleepEnabled  = getSettingValue(SettingsOptions::TapToSleep);
+  static TickType_t    lastPinStateChange = 0;
+  static GPIO_PinState prevPinState       = pinState;
+  static bool          tapSleep           = false;
 
-  } else {
-    lastStandSenseStart = 0;
+  if (pinState != prevPinState) {
+    if (pinState == GPIO_PIN_SET && (now - lastPinStateChange) < TICKS_100MS * 2) {
+      tapSleep = !tapSleep;
+    }
+    lastPinStateChange = HAL_GetTick();
   }
+  prevPinState = pinState;
+
+  return pinState == GPIO_PIN_RESET || (tapToSleepEnabled && tapSleep);
 #endif
 #endif // ndef NO_SLEEP_MODE
   return false;

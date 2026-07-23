@@ -593,6 +593,12 @@
       "maxLen": 7,
       "maxLen2": 15,
       "description": "For manually selecting the type of tip fitted"
+    },
+    {
+      "id": "TapToSleep",
+      "maxLen": 7,
+      "maxLen2": 15,
+      "description": "Enable entering sleep mode by tapping the stand"
     }
   ]
 }
