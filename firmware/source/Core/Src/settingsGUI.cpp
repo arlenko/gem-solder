@@ -34,6 +34,7 @@ static void displayUSBPDMode(void);
 static void displaySensitivity(void);
 static void displayShutdownTime(void);
 static bool showSleepOptions(void);
+static void displayTapSleep(void) { OLED::drawCheckbox(getSettingValue(SettingsOptions::TapToSleep)); }
 
 #ifndef NO_SLEEP_MODE
 static void setSleepTemp(void);
@@ -364,6 +365,10 @@ const menuitem PowerSavingMenu[] = {
   /* Hall Effect Sleep Time */
   {SETTINGS_DESC(SettingsItemIndex::HallEffSleepTimeout), nullptr, displayHallEffectSleepTime, showHallEffect, SettingsOptions::HallEffectSleepTime, SettingsItemIndex::HallEffSleepTimeout, 5},
 #endif /* HALL_SENSOR */
+#ifdef STAND_SENSE
+  /* Tap to Sleep */
+  {SETTINGS_DESC(SettingsItemIndex::TapToSleep), nullptr, displayTapSleep, nullptr, SettingsOptions::TapToSleep, SettingsItemIndex::TapToSleep, 7},
+#endif
   /* vvvv end of menu marker. DO NOT REMOVE vvvv */
   {0, nullptr, nullptr, nullptr, SettingsOptions::SettingsOptionsLength, SettingsItemIndex::NUM_ITEMS, 0}
   /* ^^^^ end of menu marker. DO NOT REMOVE ^^^^ */
@@ -549,9 +554,9 @@ static void displayPDNegTimeout(void) {
 static void displayUSBPDMode(void) {
   /*
    * Supported PD modes:
-   *  DEFAULT,    1 = PPS + EPR + more power request through increasing resistance by 0.5 Ohm to compensate power loss over cable/PCB/etc.
-   *  SAFE,       2 = PPS + EPR, without requesting more power
-   *  NO_DYNAMIC, 0 = PPS + EPR disabled, fixed PDO only
+   *  DEFAULT,    1 = PPS + EPR + more power request through increasing resistance by 0.5 Ohm to compensate power loss
+   * over cable/PCB/etc. SAFE,       2 = PPS + EPR, without requesting more power NO_DYNAMIC, 0 = PPS + EPR disabled,
+   * fixed PDO only
    */
 
 #ifdef OLED_128x32
@@ -628,9 +633,13 @@ static void displayAutomaticStartMode(void) {
   }
 }
 
-static void displayTempChangeShortStep(void) { OLED::printNumber(getSettingValue(SettingsOptions::TempChangeShortStep), 2, FontStyle::LARGE); }
+static void displayTempChangeShortStep(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::TempChangeShortStep), 2, FontStyle::LARGE);
+}
 
-static void displayTempChangeLongStep(void) { OLED::printNumber(getSettingValue(SettingsOptions::TempChangeLongStep), 2, FontStyle::LARGE); }
+static void displayTempChangeLongStep(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::TempChangeLongStep), 2, FontStyle::LARGE);
+}
 
 static void displayLockingMode(void) {
   switch (getSettingValue(SettingsOptions::LockingMode)) {
@@ -651,7 +660,9 @@ static void displayLockingMode(void) {
 
 #ifdef PROFILE_SUPPORT
 
-static void displayProfilePhases(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhases), 1, FontStyle::LARGE); }
+static void displayProfilePhases(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhases), 1, FontStyle::LARGE);
+}
 
 static void setProfileTemp(const enum SettingsOptions option) {
   // If in C, 5 deg, if in F 10 deg
@@ -677,19 +688,45 @@ static void setProfilePhase3Temp(void) { return setProfileTemp(SettingsOptions::
 static void setProfilePhase4Temp(void) { return setProfileTemp(SettingsOptions::ProfilePhase4Temp); }
 static void setProfilePhase5Temp(void) { return setProfileTemp(SettingsOptions::ProfilePhase5Temp); }
 
-static void displayProfilePreheatTemp(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfilePreheatTemp), 3, FontStyle::LARGE); }
-static void displayProfilePhase1Temp(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase1Temp), 3, FontStyle::LARGE); }
-static void displayProfilePhase2Temp(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase2Temp), 3, FontStyle::LARGE); }
-static void displayProfilePhase3Temp(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase3Temp), 3, FontStyle::LARGE); }
-static void displayProfilePhase4Temp(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase4Temp), 3, FontStyle::LARGE); }
-static void displayProfilePhase5Temp(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase5Temp), 3, FontStyle::LARGE); }
-static void displayProfilePreheatSpeed(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfilePreheatSpeed), 2, FontStyle::LARGE); }
-static void displayProfileCooldownSpeed(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfileCooldownSpeed), 2, FontStyle::LARGE); }
-static void displayProfilePhase1Duration(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase1Duration), 3, FontStyle::LARGE); }
-static void displayProfilePhase2Duration(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase2Duration), 3, FontStyle::LARGE); }
-static void displayProfilePhase3Duration(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase3Duration), 3, FontStyle::LARGE); }
-static void displayProfilePhase4Duration(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase4Duration), 3, FontStyle::LARGE); }
-static void displayProfilePhase5Duration(void) { OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase5Duration), 3, FontStyle::LARGE); }
+static void displayProfilePreheatTemp(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfilePreheatTemp), 3, FontStyle::LARGE);
+}
+static void displayProfilePhase1Temp(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase1Temp), 3, FontStyle::LARGE);
+}
+static void displayProfilePhase2Temp(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase2Temp), 3, FontStyle::LARGE);
+}
+static void displayProfilePhase3Temp(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase3Temp), 3, FontStyle::LARGE);
+}
+static void displayProfilePhase4Temp(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase4Temp), 3, FontStyle::LARGE);
+}
+static void displayProfilePhase5Temp(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase5Temp), 3, FontStyle::LARGE);
+}
+static void displayProfilePreheatSpeed(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfilePreheatSpeed), 2, FontStyle::LARGE);
+}
+static void displayProfileCooldownSpeed(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfileCooldownSpeed), 2, FontStyle::LARGE);
+}
+static void displayProfilePhase1Duration(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase1Duration), 3, FontStyle::LARGE);
+}
+static void displayProfilePhase2Duration(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase2Duration), 3, FontStyle::LARGE);
+}
+static void displayProfilePhase3Duration(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase3Duration), 3, FontStyle::LARGE);
+}
+static void displayProfilePhase4Duration(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase4Duration), 3, FontStyle::LARGE);
+}
+static void displayProfilePhase5Duration(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::ProfilePhase5Duration), 3, FontStyle::LARGE);
+}
 
 static bool showProfileOptions(void) { return getSettingValue(SettingsOptions::ProfilePhases); }
 static bool showProfilePhase2Options(void) { return getSettingValue(SettingsOptions::ProfilePhases) >= 2; }
@@ -727,7 +764,9 @@ static void setSleepTemp(void) {
   setSettingValue(SettingsOptions::SleepTemp, temp);
 }
 
-static void displaySleepTemp(void) { OLED::printNumber(getSettingValue(SettingsOptions::SleepTemp), 3, FontStyle::LARGE); }
+static void displaySleepTemp(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::SleepTemp), 3, FontStyle::LARGE);
+}
 
 static void displaySleepTime(void) {
   if (getSettingValue(SettingsOptions::SleepTime) == 0) {
@@ -901,11 +940,19 @@ static void displayDisplayRotation(void) {
 
 static void displayCoolingBlinkEnabled(void) { OLED::drawCheckbox(getSettingValue(SettingsOptions::CoolingTempBlink)); }
 
-static void displayScrollSpeed(void) { OLED::print(translatedString((getSettingValue(SettingsOptions::DescriptionScrollSpeed)) ? Tr->SettingFastChar : Tr->SettingSlowChar), FontStyle::LARGE); }
+static void displayScrollSpeed(void) {
+  OLED::print(translatedString((getSettingValue(SettingsOptions::DescriptionScrollSpeed)) ? Tr->SettingFastChar
+                                                                                          : Tr->SettingSlowChar),
+              FontStyle::LARGE);
+}
 
-static void displayReverseButtonTempChangeEnabled(void) { OLED::drawCheckbox(getSettingValue(SettingsOptions::ReverseButtonTempChangeEnabled)); }
+static void displayReverseButtonTempChangeEnabled(void) {
+  OLED::drawCheckbox(getSettingValue(SettingsOptions::ReverseButtonTempChangeEnabled));
+}
 
-static void displayReverseButtonSettings(void) { OLED::drawCheckbox(getSettingValue(SettingsOptions::ReverseButtonSettings)); }
+static void displayReverseButtonSettings(void) {
+  OLED::drawCheckbox(getSettingValue(SettingsOptions::ReverseButtonSettings));
+}
 
 static void displayAnimationSpeed(void) {
   switch (getSettingValue(SettingsOptions::AnimationSpeed)) {
@@ -959,7 +1006,9 @@ static void displayLogoTime(void) {
 
 static void displayAdvancedIDLEScreens(void) { OLED::drawCheckbox(getSettingValue(SettingsOptions::DetailedIDLE)); }
 
-static void displayAdvancedSolderingScreens(void) { OLED::drawCheckbox(getSettingValue(SettingsOptions::DetailedSoldering)); }
+static void displayAdvancedSolderingScreens(void) {
+  OLED::drawCheckbox(getSettingValue(SettingsOptions::DetailedSoldering));
+}
 
 #ifdef BLE_ENABLED
 static void displayBluetoothLE(void) {
@@ -1056,9 +1105,13 @@ static void displayPowerPulse(void) {
 
 static bool showPowerPulseOptions(void) { return getSettingValue(SettingsOptions::KeepAwakePulse) > 0; }
 
-static void displayPowerPulseWait(void) { OLED::printNumber(getSettingValue(SettingsOptions::KeepAwakePulseWait), 1, FontStyle::LARGE); }
+static void displayPowerPulseWait(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::KeepAwakePulseWait), 1, FontStyle::LARGE);
+}
 
-static void displayPowerPulseDuration(void) { OLED::printNumber(getSettingValue(SettingsOptions::KeepAwakePulseDuration), 1, FontStyle::LARGE); }
+static void displayPowerPulseDuration(void) {
+  OLED::printNumber(getSettingValue(SettingsOptions::KeepAwakePulseDuration), 1, FontStyle::LARGE);
+}
 
 static void setResetSettings(void) {
   if (userConfirmation(translatedString(Tr->SettingsResetWarning))) {
@@ -1116,7 +1169,8 @@ static void displayMenu(size_t index) {
   // 16 pixel wide image
   // less 2 pixel wide scrolling indicator
 
-  OLED::drawArea(OLED_WIDTH - SETTINGS_ICON_WIDTH - 2, 0, SETTINGS_ICON_WIDTH, SETTINGS_ICON_HEIGHT, (&SettingsMenuIcons[index][(SETTINGS_ICON_WIDTH * (SETTINGS_ICON_HEIGHT / 8)) * currentFrame]));
+  OLED::drawArea(OLED_WIDTH - SETTINGS_ICON_WIDTH - 2, 0, SETTINGS_ICON_WIDTH, SETTINGS_ICON_HEIGHT,
+                 (&SettingsMenuIcons[index][(SETTINGS_ICON_WIDTH * (SETTINGS_ICON_HEIGHT / 8)) * currentFrame]));
 }
 
 #if defined(POW_DC) || defined(POW_QC) || defined(POW_PD)

@@ -348,6 +348,10 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Tap to\nsleep",
+      "description": "Enter sleep mode by tapping the stand"
     }
   }
 }
