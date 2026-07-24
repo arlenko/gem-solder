@@ -348,6 +348,7 @@ const menuitem PowerSavingMenu[] = {
    *  -Sleep Time
    *  -Shutdown Time
    *  Hall Sensor Sensitivity
+   *  Tap to sleep
    */
 #ifndef NO_ACCEL
   /* Motion Sensitivity */

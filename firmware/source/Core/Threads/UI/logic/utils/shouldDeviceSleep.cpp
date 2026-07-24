@@ -43,8 +43,8 @@ bool shouldBeSleeping() {
 #endif
 
 #ifdef STAND_SENSE
-  // Enable sleep when tip touching a plate.
-  // Debounce to avoild false triggers.
+  // Enable sleep mode when handle touching a metal plate pulling stand sense pin low.
+  // Quick tap toggles sleep mode when tap to sleep feature enabled
   GPIO_PinState        pinState           = HAL_GPIO_ReadPin(STAND_SENSE_GPIO_Port, STAND_SENSE_Pin);
   uint32_t             now                = HAL_GetTick();
   bool                 tapToSleepEnabled  = getSettingValue(SettingsOptions::TapToSleep);
