@@ -9462,6 +9462,16 @@
 		)
 		(uuid "68329a00-cace-49a3-a217-6b84cd88c3da")
 	)
+	(text "4.5V output"
+		(exclude_from_sim no)
+		(at 149.606 21.336 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "6b938085-f02e-4643-8e9c-d4233c28bdfd")
+	)
 	(text "AMPLIFIER"
 		(exclude_from_sim no)
 		(at 22.606 190.246 0)
@@ -17229,7 +17239,7 @@
 				)
 			)
 		)
-		(property "Value" "+6V"
+		(property "Value" "+5V"
 			(at 173.99 27.686 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19708,7 +19718,7 @@
 				)
 			)
 		)
-		(property "Value" "+6V"
+		(property "Value" "+5V"
 			(at 149.86 25.146 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -25460,7 +25470,7 @@
 				)
 			)
 		)
-		(property "Value" "20k"
+		(property "Value" "28k"
 			(at 131.064 45.212 0)
 			(show_name no)
 			(do_not_autoplace no)
