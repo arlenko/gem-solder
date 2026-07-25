@@ -16965,7 +16965,7 @@
 				)
 			)
 		)
-		(property "MPN" "BAT54SW,115"
+		(property "MPN" "BAT54SW.115"
 			(at 190.5 80.01 90)
 			(hide yes)
 			(show_name no)
@@ -18169,7 +18169,7 @@
 				)
 			)
 		)
-		(property "MPN" "BZV55-B12,115"
+		(property "MPN" "BZV55-B12.115"
 			(at 58.42 151.13 90)
 			(hide yes)
 			(show_name no)
@@ -19066,7 +19066,7 @@
 				)
 			)
 		)
-		(property "MPN" "BAV199,215"
+		(property "MPN" "BAV199.215"
 			(at 39.37 226.06 90)
 			(hide yes)
 			(show_name no)
@@ -19878,7 +19878,7 @@
 				)
 			)
 		)
-		(property "MPN" "BAT54SW,115"
+		(property "MPN" "BAT54SW.115"
 			(at 200.66 161.29 90)
 			(hide yes)
 			(show_name no)
@@ -24872,7 +24872,7 @@
 				)
 			)
 		)
-		(property "MPN" "PMEG6010CEH,115-JSM"
+		(property "MPN" "PMEG6010CEH.115-JSM"
 			(at 81.28 167.64 90)
 			(hide yes)
 			(show_name no)
@@ -28859,7 +28859,7 @@
 				)
 			)
 		)
-		(property "MPN" "BAV199,215"
+		(property "MPN" "BAV199.215"
 			(at 44.45 207.01 90)
 			(hide yes)
 			(show_name no)
