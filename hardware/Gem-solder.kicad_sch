@@ -29329,7 +29329,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "https://www.lcsc.com/datasheet/C5248081.pdf?spm=wm.sxq.inf.ggs___wm.fly.bg.0.xh&lcsc_vid=TlkNBVUDQgALVVBSQAVWUVJWQlkIV11XQ1AMVlQHFFUxVlNeQ1hWVVFSTlJcUTsOAxUeFF5JWBYZEEoKFBINSQcJGk4NBhADEA4cHktXRlhXSQwSGg0%3D"
 			(at 236.982 131.572 0)
 			(hide yes)
 			(show_name no)
@@ -29340,7 +29340,7 @@
 				)
 			)
 		)
-		(property "Description" ""
+		(property "Description" "0.91 128x32 SSD1306 chip I2C LCD, OLED, Graphic RoHS"
 			(at 220.98 133.604 0)
 			(hide yes)
 			(show_name no)
@@ -29351,7 +29351,7 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C5248081"
 			(at 194.31 116.84 0)
 			(hide yes)
 			(show_name no)
@@ -29362,7 +29362,7 @@
 				)
 			)
 		)
-		(property "MPN" ""
+		(property "MPN" "HS91L02W2C01"
 			(at 194.31 116.84 0)
 			(hide yes)
 			(show_name no)
