@@ -9462,6 +9462,16 @@
 		)
 		(uuid "68329a00-cace-49a3-a217-6b84cd88c3da")
 	)
+	(text "4.6V output"
+		(exclude_from_sim no)
+		(at 149.606 21.336 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "6b938085-f02e-4643-8e9c-d4233c28bdfd")
+	)
 	(text "AMPLIFIER"
 		(exclude_from_sim no)
 		(at 22.606 190.246 0)
@@ -9612,6 +9622,16 @@
 			(justify left)
 		)
 		(uuid "c87c98a9-8e22-417e-8468-9961d8d9e909")
+	)
+	(text "Alternative mosfet: IRF7416TRPBF"
+		(exclude_from_sim no)
+		(at 35.306 143.256 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "c9452a11-a77c-45cc-b27e-98fe0f7a1c02")
 	)
 	(text "USB TYPE-C POWER DELIVERY"
 		(exclude_from_sim no)
@@ -14621,6 +14641,17 @@
 				)
 			)
 		)
+		(property "MPN" "0154007.DR"
+			(at 41.91 43.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "8c67d0fb-6e75-4e59-9a91-16944da0d53e")
 		)
@@ -14704,6 +14735,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C48533600"
+			(at 81.28 176.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRM253WJR005TM"
 			(at 81.28 176.53 0)
 			(hide yes)
 			(show_name no)
@@ -15193,6 +15235,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 184.15 217.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -15355,6 +15408,17 @@
 				)
 			)
 		)
+		(property "MPN" "FRC0603F1501TS"
+			(at 134.62 120.65 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "c92773af-9f1b-4c08-83e5-f26c8abf5690")
 		)
@@ -15436,7 +15500,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C346190"
+			(at 156.21 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10B104KA8WPNC"
 			(at 156.21 171.45 0)
 			(hide yes)
 			(show_name no)
@@ -15528,6 +15603,17 @@
 			)
 		)
 		(property "LCSC Part Number" ""
+			(at 210.82 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" ""
 			(at 210.82 213.36 0)
 			(hide yes)
 			(show_name no)
@@ -15787,7 +15873,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C85862"
+			(at 123.19 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "GCM188R71E105KA64D"
 			(at 123.19 74.93 0)
 			(hide yes)
 			(show_name no)
@@ -16110,7 +16207,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2907124"
+		(property "LCSC Part Number" "C2907011"
+			(at 130.81 92.71 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F2002TS"
 			(at 130.81 92.71 90)
 			(hide yes)
 			(show_name no)
@@ -16202,7 +16310,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C346190"
+			(at 138.43 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10B104KA8WPNC"
 			(at 138.43 171.45 0)
 			(hide yes)
 			(show_name no)
@@ -16449,7 +16568,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C85862"
+			(at 241.3 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "GCM188R71E105KA64D"
 			(at 241.3 35.56 0)
 			(hide yes)
 			(show_name no)
@@ -16541,7 +16671,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C163508"
+			(at 135.89 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "C0603C102J3GACAUTO"
 			(at 135.89 228.6 0)
 			(hide yes)
 			(show_name no)
@@ -16633,6 +16774,17 @@
 		)
 		(property "LCSC Part Number" "C2907044"
 			(at 295.91 151.13 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F5101TS"
+			(at 295.91 151.13 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16802,7 +16954,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "BAT54SW"
+		(property "LCSC Part Number" "C78606"
+			(at 190.5 80.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "BAT54SW,115"
 			(at 190.5 80.01 90)
 			(hide yes)
 			(show_name no)
@@ -16901,7 +17064,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2944310"
+		(property "LCSC Part Number" "C3000"
+			(at 78.74 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "IRF7416TRPBF"
 			(at 78.74 156.21 0)
 			(hide yes)
 			(show_name no)
@@ -17011,6 +17185,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C2076611"
+			(at 134.62 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CRCW0603100RJNEAC"
 			(at 134.62 106.68 0)
 			(hide yes)
 			(show_name no)
@@ -17181,7 +17366,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C105175"
+			(at 87.63 44.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "MSASU31LBB5106KTNA01"
 			(at 87.63 44.45 0)
 			(hide yes)
 			(show_name no)
@@ -17229,7 +17425,7 @@
 				)
 			)
 		)
-		(property "Value" "+6V"
+		(property "Value" "+5V"
 			(at 173.99 27.686 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17436,6 +17632,17 @@
 				)
 			)
 		)
+		(property "MPN" "FRC0603J134 TS"
+			(at 134.62 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "71c32f46-a546-4b61-8a4b-5db2618447d4")
 		)
@@ -17517,6 +17724,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C3025063"
+			(at 33.02 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "USB4105-GF-A-060"
 			(at 33.02 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -17743,6 +17961,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 184.15 212.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -17818,6 +18047,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C29613"
+			(at 187.96 36.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "MIC5219-3.3YM5-TR"
 			(at 187.96 36.83 0)
 			(hide yes)
 			(show_name no)
@@ -17909,6 +18149,28 @@
 		)
 		(property "Description" "Zener diode, small symbol"
 			(at 58.42 151.13 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC Part Number" "C426807"
+			(at 58.42 151.13 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "BZV55-B12,115"
+			(at 58.42 151.13 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18316,6 +18578,17 @@
 				)
 			)
 		)
+		(property "MPN" "FRC0603J100 TS"
+			(at 72.39 223.52 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "410cef67-b837-4470-af9d-36aa49bc1962")
 		)
@@ -18397,6 +18670,17 @@
 		)
 		(property "LCSC Part Number" "C2907044"
 			(at 295.91 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F5101TS"
+			(at 295.91 170.18 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18488,7 +18772,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C2762594"
+			(at 149.86 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10A226MO7JZNC"
 			(at 149.86 35.56 0)
 			(hide yes)
 			(show_name no)
@@ -18613,7 +18908,7 @@
 				)
 			)
 		)
-		(property "Value" "22uH"
+		(property "Value" "47uH"
 			(at 125.73 27.94 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -18656,7 +18951,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2936660"
+		(property "LCSC Part Number" "C706600"
+			(at 125.73 30.48 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "SMMS0630-470MT"
 			(at 125.73 30.48 90)
 			(hide yes)
 			(show_name no)
@@ -18760,6 +19066,17 @@
 				)
 			)
 		)
+		(property "MPN" "BAV199,215"
+			(at 39.37 226.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "b22bee9d-ad9b-478a-8f61-88651ab8da0c")
 		)
@@ -18842,7 +19159,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2907044"
+		(property "LCSC Part Number" "C2907011"
+			(at 49.53 176.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F2002TS"
 			(at 49.53 176.53 0)
 			(hide yes)
 			(show_name no)
@@ -18944,6 +19272,17 @@
 				)
 			)
 		)
+		(property "MPN" "FRC0603J394 TS"
+			(at 55.88 234.95 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "fa221c57-d518-4a80-b821-df007ca9b67e")
 		)
@@ -19024,6 +19363,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C2930050"
+			(at 30.48 226.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F1501TS"
 			(at 30.48 226.06 90)
 			(hide yes)
 			(show_name no)
@@ -19203,6 +19553,17 @@
 				)
 			)
 		)
+		(property "MPN" "AD8629ARZ-REEL7"
+			(at 58.42 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "3"
 			(uuid "e444afe0-3175-433e-af1c-3e91f3f8faef")
 		)
@@ -19311,6 +19672,17 @@
 				)
 			)
 		)
+		(property "MPN" "FRC0603F5101TS"
+			(at 295.91 157.48 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "c45cc8c7-2f8f-4664-8ceb-98ea04c05ccd")
 		)
@@ -19391,6 +19763,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C2907099"
+			(at 184.15 157.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603J134 TS"
 			(at 184.15 157.48 0)
 			(hide yes)
 			(show_name no)
@@ -19484,7 +19867,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "BAT54SW"
+		(property "LCSC Part Number" "C78606"
+			(at 200.66 161.29 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "BAT54SW,115"
 			(at 200.66 161.29 90)
 			(hide yes)
 			(show_name no)
@@ -19668,6 +20062,17 @@
 				)
 			)
 		)
+		(property "MPN" "MCP9700AT-E/TT"
+			(at 241.3 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "93bea1ab-d41a-4e02-8710-f1b356c4ea76")
 		)
@@ -19708,7 +20113,7 @@
 				)
 			)
 		)
-		(property "Value" "+6V"
+		(property "Value" "+5V"
 			(at 149.86 25.146 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19830,7 +20235,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C7187"
+			(at 208.28 40.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "TAJA475K016RNJ"
 			(at 208.28 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -20088,6 +20504,17 @@
 				)
 			)
 		)
+		(property "MPN" "SMAJ24CA"
+			(at 72.39 45.72 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "21c67439-c472-4379-bc4f-567965f483aa")
 		)
@@ -20173,7 +20600,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2944310"
+		(property "LCSC Part Number" "C3000"
+			(at 142.24 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "IRF7416TRPBF"
 			(at 142.24 101.6 0)
 			(hide yes)
 			(show_name no)
@@ -20283,6 +20721,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C2907158"
+			(at 55.88 207.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603J394 TS"
 			(at 55.88 207.01 90)
 			(hide yes)
 			(show_name no)
@@ -20451,7 +20900,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C346190"
+			(at 139.7 111.76 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10B104KA8WPNC"
 			(at 139.7 111.76 90)
 			(hide yes)
 			(show_name no)
@@ -20554,6 +21014,17 @@
 				)
 			)
 		)
+		(property "MPN" "SMAJ24CA"
+			(at 74.93 107.95 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "46b889c2-67f8-4434-b4cd-a5c6525a7974")
 		)
@@ -20636,6 +21107,17 @@
 			)
 		)
 		(property "LCSC Part Number" ""
+			(at 135.89 220.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" ""
 			(at 135.89 220.98 0)
 			(hide yes)
 			(show_name no)
@@ -20815,6 +21297,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 203.2 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -20891,6 +21384,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C2935146"
+			(at 67.31 86.36 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "ESDA6V1SC5"
 			(at 67.31 86.36 90)
 			(hide yes)
 			(show_name no)
@@ -21234,6 +21738,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 201.93 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "a2d6bf1a-7787-4608-87fd-34988d122eee")
 		)
@@ -21312,7 +21827,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C105175"
+			(at 100.33 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "MSASU31LBB5106KTNA01"
 			(at 100.33 156.21 0)
 			(hide yes)
 			(show_name no)
@@ -21405,6 +21931,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C278406"
+			(at 88.9 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "EEEFP1V221AP"
 			(at 88.9 156.21 0)
 			(hide yes)
 			(show_name no)
@@ -21508,6 +22045,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 161.29 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -21583,6 +22131,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C2930036"
+			(at 115.57 232.41 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603J244TS"
 			(at 115.57 232.41 90)
 			(hide yes)
 			(show_name no)
@@ -21684,6 +22243,17 @@
 				)
 			)
 		)
+		(property "MPN" "FRC0603F1501TS"
+			(at 86.36 102.87 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "c13a0a45-1540-47c6-8185-71aeeb48c049")
 		)
@@ -21765,6 +22335,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C7501259"
+			(at 187.96 229.87 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "ZX-PZ2.54-1-1PZZ"
 			(at 187.96 229.87 0)
 			(hide yes)
 			(show_name no)
@@ -21940,6 +22521,17 @@
 				)
 			)
 		)
+		(property "MPN" "FRC0603F5101TS"
+			(at 180.34 80.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "ec5cdc70-73c4-4b4c-a853-a389b28eb9fa")
 		)
@@ -22021,6 +22613,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C2158012"
+			(at 102.87 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "AP63300WU-7"
 			(at 102.87 38.1 0)
 			(hide yes)
 			(show_name no)
@@ -22211,6 +22814,17 @@
 				)
 			)
 		)
+		(property "MPN" "AD8629ARZ-REEL7"
+			(at 127 200.66 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "3"
 			(uuid "e444afe0-3175-433e-af1c-3e91f3f8faf0")
 		)
@@ -22321,6 +22935,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 39.37 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "21696b68-7080-4937-aaca-ee716a970e0c")
 		)
@@ -22400,7 +23025,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C2762594"
+			(at 142.24 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10A226MO7JZNC"
 			(at 142.24 35.56 0)
 			(hide yes)
 			(show_name no)
@@ -22491,6 +23127,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C2907099"
+			(at 138.43 92.71 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603J134 TS"
 			(at 138.43 92.71 90)
 			(hide yes)
 			(show_name no)
@@ -22669,6 +23316,17 @@
 				)
 			)
 		)
+		(property "MPN" "FRC0603F5101TS"
+			(at 295.91 163.83 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "c4620d66-2b82-4e83-873d-4c1b6aafedaf")
 		)
@@ -22761,6 +23419,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 72.39 30.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "7ce203d0-b66b-481b-a7e7-3718b6f7b1b9")
 		)
@@ -22841,6 +23510,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C2678061"
+			(at 106.68 100.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "STUSB4500QTR"
 			(at 106.68 100.33 0)
 			(hide yes)
 			(show_name no)
@@ -23001,7 +23681,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C346190"
+			(at 190.5 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10B104KA8WPNC"
 			(at 190.5 165.1 0)
 			(hide yes)
 			(show_name no)
@@ -23093,7 +23784,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C163508"
+			(at 78.74 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "C0603C102J3GACAUTO"
 			(at 78.74 228.6 0)
 			(hide yes)
 			(show_name no)
@@ -23166,7 +23868,7 @@
 				(justify left)
 			)
 		)
-		(property "Datasheet" "https://assets.nexperia.com/documents/data-sheet/MMBT2222A.pdf"
+		(property "Datasheet" "https://www.onsemi.com/download/data-sheet/pdf/bsr14-d.pdf"
 			(at 55.88 172.72 0)
 			(hide yes)
 			(show_name no)
@@ -23178,7 +23880,7 @@
 				(justify left)
 			)
 		)
-		(property "Description" "600mA Ic, 40V Vce, NPN Transistor, SOT-23"
+		(property "Description" "TRANS NPN 40V 800mA SOT-23"
 			(at 55.88 172.72 0)
 			(hide yes)
 			(show_name no)
@@ -23201,6 +23903,28 @@
 			)
 		)
 		(property "Sim.Pins" "1=B 2=E 3=C"
+			(at 55.88 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "BSR14"
+			(at 55.88 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC Part Number" "C258201"
 			(at 55.88 172.72 0)
 			(hide yes)
 			(show_name no)
@@ -23295,6 +24019,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C5594007"
+			(at 153.67 158.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "B3FS-1050"
 			(at 153.67 158.75 0)
 			(hide yes)
 			(show_name no)
@@ -23551,6 +24286,17 @@
 				)
 			)
 		)
+		(property "MPN" "RCS060310K0JNEA"
+			(at 204.47 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "1e87d16b-eacc-48fd-823b-6b68b372398e")
 		)
@@ -23631,6 +24377,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C2930050"
+			(at 30.48 207.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F1501TS"
 			(at 30.48 207.01 90)
 			(hide yes)
 			(show_name no)
@@ -23797,7 +24554,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2907044"
+		(property "LCSC Part Number" "C2930050"
+			(at 67.31 161.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F1501TS"
 			(at 67.31 161.29 0)
 			(hide yes)
 			(show_name no)
@@ -23899,6 +24667,17 @@
 				)
 			)
 		)
+		(property "MPN" "B3FS-1050"
+			(at 135.89 158.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "26cf3f88-1e74-4708-9776-ea877bdc2e60")
 		)
@@ -23990,6 +24769,17 @@
 				)
 			)
 		)
+		(property "MPN" "FRC0603J244TS"
+			(at 109.22 210.82 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "93a15ea6-d4fb-44b8-a290-6bb1a9ba49b8")
 		)
@@ -24062,6 +24852,28 @@
 		)
 		(property "Description" "Schottky diode, small symbol"
 			(at 81.28 167.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC Part Number" "C53113897"
+			(at 81.28 167.64 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "PMEG6010CEH,115-JSM"
+			(at 81.28 167.64 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -24150,8 +24962,19 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2907044"
+		(property "LCSC Part Number" "C2930050"
 			(at 45.72 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F1501TS"
+			(at 45.72 172.72 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -24251,6 +25074,17 @@
 				)
 			)
 		)
+		(property "MPN" "FRC0603J100 TS"
+			(at 129.54 223.52 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "90f0e6fe-78b7-480c-9536-293015f855b8")
 		)
@@ -24331,6 +25165,17 @@
 			)
 		)
 		(property "LCSC Part Number" ""
+			(at 21.59 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" ""
 			(at 21.59 38.1 0)
 			(hide yes)
 			(show_name no)
@@ -24515,6 +25360,17 @@
 			)
 		)
 		(property "LCSC Part Number" ""
+			(at 78.74 220.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" ""
 			(at 78.74 220.98 0)
 			(hide yes)
 			(show_name no)
@@ -24845,6 +25701,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 242.57 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "10a19a43-1266-47a2-addb-7c02b94c3995")
 		)
@@ -25165,6 +26032,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 242.57 111.76 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "94624eae-f916-40bf-90d1-60fba0e73cf3")
 		)
@@ -25320,7 +26198,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C346190"
+			(at 204.47 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10B104KA8WPNC"
 			(at 204.47 85.09 0)
 			(hide yes)
 			(show_name no)
@@ -25413,7 +26302,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C85862"
+			(at 250.19 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "GCM188R71E105KA64D"
 			(at 250.19 35.56 0)
 			(hide yes)
 			(show_name no)
@@ -25460,7 +26360,7 @@
 				)
 			)
 		)
-		(property "Value" "20k"
+		(property "Value" "27k"
 			(at 131.064 45.212 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -25503,7 +26403,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2907124"
+		(property "LCSC Part Number" "C2930084"
+			(at 134.62 44.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F2702TS"
 			(at 134.62 44.45 0)
 			(hide yes)
 			(show_name no)
@@ -25604,6 +26515,17 @@
 				)
 			)
 		)
+		(property "MPN" "BLM18AG331SN1D"
+			(at 247.65 57.15 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "821eacfe-d30f-45ea-b267-04a54f307913")
 		)
@@ -25685,6 +26607,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C2907044"
+			(at 101.6 210.82 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F5101TS"
 			(at 101.6 210.82 90)
 			(hide yes)
 			(show_name no)
@@ -25862,6 +26795,17 @@
 				)
 			)
 		)
+		(property "MPN" "RCS060310K0JNEA"
+			(at 184.15 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "ac549672-a02c-4e15-b44a-4df869d59cca")
 		)
@@ -25955,6 +26899,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 161.29 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -26030,6 +26985,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C2076611"
+			(at 148.59 163.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CRCW0603100RJNEAC"
 			(at 148.59 163.83 0)
 			(hide yes)
 			(show_name no)
@@ -26131,6 +27097,17 @@
 				)
 			)
 		)
+		(property "MPN" "215298-5"
+			(at 241.3 81.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "4"
 			(uuid "c7a025f4-792b-430b-bcc4-6753b3bd4a41")
 		)
@@ -26222,7 +27199,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C346190"
+			(at 265.43 60.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10B104KA8WPNC"
 			(at 265.43 60.96 0)
 			(hide yes)
 			(show_name no)
@@ -26313,7 +27301,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2907158"
+		(property "LCSC Part Number" "C2907003"
+			(at 59.69 39.37 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F1004TS"
 			(at 59.69 39.37 0)
 			(hide yes)
 			(show_name no)
@@ -26403,7 +27402,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2907044"
+		(property "LCSC Part Number" "C2930050"
+			(at 58.42 161.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F1501TS"
 			(at 58.42 161.29 0)
 			(hide yes)
 			(show_name no)
@@ -26584,6 +27594,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 242.57 121.92 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "62db07a8-4af0-46e9-ab66-9122b916fb96")
 		)
@@ -26742,6 +27763,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C8734"
+			(at 313.69 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "STM32F103C8T6"
 			(at 313.69 71.12 0)
 			(hide yes)
 			(show_name no)
@@ -27060,6 +28092,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 184.15 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -27214,7 +28257,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C85862"
+			(at 255.27 60.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "GCM188R71E105KA64D"
 			(at 255.27 60.96 0)
 			(hide yes)
 			(show_name no)
@@ -27316,6 +28370,17 @@
 				)
 			)
 		)
+		(property "MPN" "RCS060310K0JNEA"
+			(at 86.36 82.55 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "d9046bac-7627-46b6-ba58-3d4f807e5d4a")
 		)
@@ -27397,7 +28462,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C85862"
+			(at 138.43 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "GCM188R71E105KA64D"
 			(at 138.43 74.93 0)
 			(hide yes)
 			(show_name no)
@@ -27489,6 +28565,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C2907044"
+			(at 101.6 226.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F5101TS"
 			(at 101.6 226.06 90)
 			(hide yes)
 			(show_name no)
@@ -27657,7 +28744,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C346190"
+			(at 118.11 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10B104KA8WPNC"
 			(at 118.11 34.29 0)
 			(hide yes)
 			(show_name no)
@@ -27761,6 +28859,17 @@
 				)
 			)
 		)
+		(property "MPN" "BAV199,215"
+			(at 44.45 207.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "cbee4bd0-6c32-4635-b285-6a0a8584180f")
 		)
@@ -27845,6 +28954,17 @@
 			)
 		)
 		(property "LCSC Part Number" "C7501259"
+			(at 187.96 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "ZX-PZ2.54-1-1PZZ"
 			(at 187.96 226.06 0)
 			(hide yes)
 			(show_name no)
@@ -28020,6 +29140,17 @@
 				)
 			)
 		)
+		(property "MPN" "AD8629ARZ-REEL7"
+			(at 116.84 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "3"
 			(uuid "e444afe0-3175-433e-af1c-3e91f3f8faf1")
 		)
@@ -28128,6 +29259,17 @@
 				)
 			)
 		)
+		(property "MPN" "FRC0603F5101TS"
+			(at 148.59 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "6695093b-09ba-459b-a2e5-1b1c5be23442")
 		)
@@ -28210,6 +29352,17 @@
 			)
 		)
 		(property "LCSC Part Number" ""
+			(at 194.31 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" ""
 			(at 194.31 116.84 0)
 			(hide yes)
 			(show_name no)
@@ -28305,7 +29458,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2907044"
+		(property "LCSC Part Number" "C2907011"
+			(at 67.31 151.13 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F2002TS"
 			(at 67.31 151.13 0)
 			(hide yes)
 			(show_name no)
@@ -28483,6 +29647,17 @@
 				)
 			)
 		)
+		(property "MPN" "FRC0603F5101TS"
+			(at 130.81 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "e0cc7d73-6e78-401c-b72c-4f28a122b25b")
 		)
@@ -28565,7 +29740,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C85862"
+			(at 259.08 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "GCM188R71E105KA64D"
 			(at 259.08 35.56 0)
 			(hide yes)
 			(show_name no)
@@ -28823,6 +30009,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 161.29 219.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -28986,6 +30183,17 @@
 				)
 			)
 		)
+		(property "MPN" "CRCW0603100RJNEAC"
+			(at 130.81 163.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "b63fd605-726e-4307-ae9e-d0e48f90a129")
 		)
@@ -29067,7 +30275,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C163508"
+			(at 198.12 40.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "C0603C102J3GACAUTO"
 			(at 198.12 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -29325,6 +30544,17 @@
 				)
 			)
 		)
+		(property "MPN" ""
+			(at 161.29 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -29400,7 +30630,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C85862"
+			(at 130.81 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "GCM188R71E105KA64D"
 			(at 130.81 74.93 0)
 			(hide yes)
 			(show_name no)
@@ -29725,7 +30966,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C346190"
+			(at 269.24 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10B104KA8WPNC"
 			(at 269.24 35.56 0)
 			(hide yes)
 			(show_name no)
@@ -29818,7 +31070,18 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" ""
+		(property "LCSC Part Number" "C346190"
+			(at 273.05 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "CL10B104KA8WPNC"
 			(at 273.05 85.09 0)
 			(hide yes)
 			(show_name no)

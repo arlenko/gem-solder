@@ -115,14 +115,6 @@ uint32_t getCurrentMilliamps() {
   return (v_adc_mV * 1000) / (CURRENT_SENSE_SHUNT_RESISTANCE_mOhms * OP_AMP_CURRENT_SENSE_GAIN_STAGE);
 }
 
-uint32_t getCurrentSamplingInterval(OperatingMode opMode) {
-  if (opMode == OperatingMode::Soldering && pendingPWM >= TIP_MEASUREMENT_DUTY) {
-    // In soldering mode when the tip is actively heating do more frequent measurement
-    return TICKS_100MS * 5;
-  }
-  return TICKS_SECOND;
-}
-
 // We may need to disable current sampling for some operating modes
 bool currentSamplingAllowed(OperatingMode opMode) {
   switch (opMode) {
@@ -174,13 +166,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     // While we could assume this could never happen, its a small price for
     // increased safety
 
-    uint32_t now                     = HAL_GetTick();
-    uint32_t currentSamplingInterval = getCurrentSamplingInterval(currentOperatingMode);
-    uint8_t  thisCyclePWM            = pendingPWM; // Use callback scoped variable to avoid pendingPWM overwrite
+    uint32_t now          = HAL_GetTick();
+    uint8_t  thisCyclePWM = pendingPWM; // Use callback scoped variable to avoid pendingPWM overwrite
+    uint32_t currentSamplingInterval =
+        currentOperatingMode == OperatingMode::Soldering ? TICKS_100MS * 5 : TICKS_SECOND;
+    bool shouldSampleCurrent =
+        (lastCurrentSamplingTick == 0 || (now - lastCurrentSamplingTick) > currentSamplingInterval);
 
-    if (currentSamplingAllowed(currentOperatingMode) &&
-        (lastCurrentSamplingTick == 0 || (now - lastCurrentSamplingTick) > currentSamplingInterval)) {
-      // Demand current sampling for this cycle
+    // Force higher duty cycle if current sampling needed. In soldering mode skip sampling
+    // if pending PWM is too low to avoid PID regulartion interruption by forced duty cycle
+    if (shouldSampleCurrent && currentSamplingAllowed(currentOperatingMode) &&
+        (currentOperatingMode != OperatingMode::Soldering || pendingPWM >= TIP_MEASUREMENT_DUTY)) {
       thisCyclePWM = pendingPWM >= TIP_MEASUREMENT_DUTY ? pendingPWM : TIP_MEASUREMENT_DUTY;
       __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, thisCyclePWM / 2);
       currentSamplingActive = true;
@@ -188,7 +184,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
       __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF); // Set unreachable count to skip ADC trigger
     }
 
-    htimADC.Instance->CCR4 = powerPWM;
+    __HAL_TIM_SET_COMPARE(&htimADC, TIM_CHANNEL_4, powerPWM);
     if (thisCyclePWM && PWMSafetyTimer) {
       __HAL_TIM_SET_COMPARE(&htimTip, PWM_Out_CHANNEL, thisCyclePWM);
       HAL_TIM_PWM_Start(&htimTip, PWM_Out_CHANNEL);
