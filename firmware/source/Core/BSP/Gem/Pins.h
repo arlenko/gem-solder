@@ -40,9 +40,9 @@
 #define ADC_CONTROL_TIMER     TIM4
 #define ADC_CONTROL_TIMER_IRQ TIM4_IRQn
 #define ADC_TRIGGER           ADC_EXTERNALTRIGINJECCONV_T4_TRGO
-#define SCL_Pin               GPIO_PIN_10
+#define SCL_Pin               GPIO_PIN_11
 #define SCL_GPIO_Port         GPIOB
-#define SDA_Pin               GPIO_PIN_11
+#define SDA_Pin               GPIO_PIN_10
 #define SDA_GPIO_Port         GPIOB
 // PD controller
 // #define SCL2_Pin         GPIO_PIN_6
