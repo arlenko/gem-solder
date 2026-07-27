@@ -175,11 +175,11 @@
 #define POW_DC             1
 // #define POW_PD               1
 // #define USB_PD_EPR_WATTAGE   140 /* EPR Supported */
-// #define I2C_SOFT_BUS_2       1
-#define OLED_I2CBB1 1
-// #define USB_PD_I2CBB2        1
-#define USB_PD_VMAX 20
-#define OLED_128x32 1
+#define I2C_SOFT_BUS_2 1
+#define OLED_I2CBB1    1
+#define USB_PD_I2CBB2  1
+#define USB_PD_VMAX    20
+#define OLED_128x32    1
 // #define OLED_FLIP            1
 // #define HAS_SPLIT_POWER_PATH 1
 #define TEMP_TMP36 1 // Gem uses MCP9700 which has the same characteristics as TMP36

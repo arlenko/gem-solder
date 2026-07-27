@@ -45,10 +45,10 @@
 #define SDA_Pin               GPIO_PIN_10
 #define SDA_GPIO_Port         GPIOB
 // PD controller
-// #define SCL2_Pin         GPIO_PIN_6
-// #define SCL2_GPIO_Port   GPIOB
-// #define SDA2_Pin         GPIO_PIN_5
-// #define SDA2_GPIO_Port   GPIOB
+#define SCL2_Pin       GPIO_PIN_10
+#define SCL2_GPIO_Port GPIOA
+#define SDA2_Pin       GPIO_PIN_9
+#define SDA2_GPIO_Port GPIOA
 // #define INT_PD_Pin       GPIO_PIN_7
 // #define INT_PD_GPIO_Port GPIOB
 // Selecting the DC source to route to theg
