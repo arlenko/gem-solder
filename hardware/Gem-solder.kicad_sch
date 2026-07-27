@@ -16164,7 +16164,7 @@
 				)
 			)
 		)
-		(property "Value" "20k"
+		(property "Value" "27k"
 			(at 130.81 90.678 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16207,7 +16207,7 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2907011"
+		(property "LCSC Part Number" "C2930084"
 			(at 130.81 92.71 90)
 			(hide yes)
 			(show_name no)
@@ -16218,7 +16218,7 @@
 				)
 			)
 		)
-		(property "MPN" "FRC0603F2002TS"
+		(property "MPN" "FRC0603F2702TS"
 			(at 130.81 92.71 90)
 			(hide yes)
 			(show_name no)
@@ -17007,7 +17007,7 @@
 		(dnp no)
 		(uuid "24833886-cb05-40a7-bb69-7e876b83de09")
 		(property "Reference" "Q4"
-			(at 78.486 141.732 0)
+			(at 80.772 148.082 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17018,7 +17018,7 @@
 			)
 		)
 		(property "Value" "AO4435"
-			(at 78.486 144.272 0)
+			(at 80.772 150.622 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -19116,7 +19116,7 @@
 				)
 			)
 		)
-		(property "Value" "20k"
+		(property "Value" "10k"
 			(at 45.974 177.292 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -19159,7 +19159,7 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2907011"
+		(property "LCSC Part Number" "C4134045"
 			(at 49.53 176.53 0)
 			(hide yes)
 			(show_name no)
@@ -19170,7 +19170,7 @@
 				)
 			)
 		)
-		(property "MPN" "FRC0603F2002TS"
+		(property "MPN" "RCS060310K0JNEA"
 			(at 49.53 176.53 0)
 			(hide yes)
 			(show_name no)
@@ -28794,7 +28794,7 @@
 		(dnp no)
 		(uuid "dd4a059f-29c9-4372-aa71-5e760ae1f727")
 		(property "Reference" "D2"
-			(at 46.228 200.66 90)
+			(at 45.72 198.628 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -28805,7 +28805,7 @@
 			)
 		)
 		(property "Value" "BAV199.215"
-			(at 46.228 203.2 90)
+			(at 45.72 201.168 90)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -29415,7 +29415,7 @@
 				)
 			)
 		)
-		(property "Value" "20k"
+		(property "Value" "10k"
 			(at 63.754 151.892 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -29458,7 +29458,7 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2907011"
+		(property "LCSC Part Number" "C4134045"
 			(at 67.31 151.13 0)
 			(hide yes)
 			(show_name no)
@@ -29469,7 +29469,7 @@
 				)
 			)
 		)
-		(property "MPN" "FRC0603F2002TS"
+		(property "MPN" "RCS060310K0JNEA"
 			(at 67.31 151.13 0)
 			(hide yes)
 			(show_name no)
