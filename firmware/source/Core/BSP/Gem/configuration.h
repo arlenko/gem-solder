@@ -154,7 +154,7 @@
 // It takes 5-10us to fully enhance the mosfet and ADC conversion takes ~4 us.
 // As we measure current at 1/2 of HIGH pulse 10% duty gives enough time for the current flow
 // through heater inductance to settle and perform a valid measurement without significantly heating the tip
-#define TIP_MEASUREMENT_DUTY 26
+#define TIP_MEASUREMENT_DUTY 20
 
 #define VOLTAGE_DIV           282 // Resistive divider from schematic
 #define CALIBRATION_OFFSET    900 // 900 - Default adc offset in uV
