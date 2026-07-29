@@ -169,7 +169,8 @@ void I2CBB2::Receive(uint16_t DevAddress, uint8_t *pData, uint16_t Size) {
   unlock();
 }
 
-void I2CBB2::TransmitReceive(uint16_t DevAddress, uint8_t *pData_tx, uint16_t Size_tx, uint8_t *pData_rx, uint16_t Size_rx) {
+void I2CBB2::TransmitReceive(uint16_t DevAddress, uint8_t *pData_tx, uint16_t Size_tx, uint8_t *pData_rx,
+                             uint16_t Size_rx) {
   if (Size_tx == 0 && Size_rx == 0) {
     return;
   }
@@ -214,7 +215,11 @@ void I2CBB2::TransmitReceive(uint16_t DevAddress, uint8_t *pData_tx, uint16_t Si
 }
 
 void I2CBB2::start() {
-  /* I2C Start condition, data line goes low when clock is high */
+  /*
+   * I2C Start condition, data line goes low when clock is high
+   * Pulling SDA high at the end of start sequence may result into
+   * sending 1 as first bit
+   */
   SOFT_SCL2_HIGH();
   SOFT_SDA2_HIGH();
   SOFT_I2C_DELAY();
@@ -222,7 +227,7 @@ void I2CBB2::start() {
   SOFT_I2C_DELAY();
   SOFT_SCL2_LOW();
   SOFT_I2C_DELAY();
-  SOFT_SDA2_HIGH();
+  // SOFT_SDA2_HIGH();
 }
 
 void I2CBB2::stop() {

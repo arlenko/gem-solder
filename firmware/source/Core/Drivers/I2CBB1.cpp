@@ -223,7 +223,7 @@ void I2CBB1::start() {
   SOFT_I2C_DELAY();
   SOFT_SCL1_LOW();
   SOFT_I2C_DELAY();
-  SOFT_SDA1_HIGH();
+  // SOFT_SDA1_HIGH();
 }
 
 void I2CBB1::stop() {
