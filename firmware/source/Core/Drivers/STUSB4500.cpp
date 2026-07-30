@@ -110,10 +110,11 @@ void STUSB4500::check_negotiation() {
     send_soft_reset();
 
     powerSupplyWattageLimit = ((best_mV * best_mA) / 1000000) - 2; // Take off 2W for safety of overhead
-    negotiationState        = NegotiationState::Done;              // Just trust the hardware
+    negotiationState        = NegotiationState::Negotiating;       // Just trust the hardware
     break;
   }
   case NegotiationState::Negotiating: {
+    wait_sink_ready();
     negotiationState = NegotiationState::Done;
     break;
   }
