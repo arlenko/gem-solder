@@ -117,7 +117,7 @@ uint32_t getCurrentMilliamps() {
 
 // We may need to disable current sampling for some operating modes
 bool currentSamplingAllowed(OperatingMode opMode) {
-  if (HAL_GetTick() < TICKS_100MS * 2)
+  if (HAL_GetTick() < TICKS_100MS)
     return false; // Startup delay to allow hardware to settle
 
   switch (opMode) {
@@ -332,7 +332,10 @@ uint64_t getDeviceID() {
   return HAL_GetUIDw0() | ((uint64_t)HAL_GetUIDw1() << 32);
 }
 
-uint8_t preStartChecksDone() { return 1; }
+uint8_t preStartChecksDone() {
+  // For a correct power estimation current sampling must be completed before start
+  return (lastCurrentSamplingTick == 0 || currentSamplingActive || isTipShorted()) ? 0 : 1;
+}
 
 uint8_t getTipResistanceX10() {
   // Aftermarket tips may have different resistance
