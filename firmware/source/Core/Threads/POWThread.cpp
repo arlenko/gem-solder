@@ -10,6 +10,7 @@
 #include "FreeRTOS.h"
 #include "HUB238.hpp"
 #include "QC3.h"
+#include "STUSB4500.hpp"
 #include "Settings.h"
 #include "USBPD.h"
 #include "cmsis_os.h"
@@ -39,10 +40,14 @@ void startPOWTask(void const *argument __unused) {
   FS2711::start();
   FS2711::negotiate();
 #endif
+#ifdef POW_PD_STUSB4500
+  STUSB4500::init();
+#endif
 
   BaseType_t res;
   for (;;) {
     res = pdFALSE;
+#ifdef POW_PD
     // While the interrupt is low, dont delay
     /*This is due to a possible race condition, where:
      * IRQ fires
@@ -54,7 +59,6 @@ void startPOWTask(void const *argument __unused) {
       res = xTaskNotifyWait(0x0, 0xFFFFFF, NULL, TICKS_100MS / 2);
     }
 
-#ifdef POW_PD
     if (res != pdFALSE || getFUS302IRQLow()) {
       USBPowerDelivery::IRQOccured();
     }
@@ -63,12 +67,16 @@ void startPOWTask(void const *argument __unused) {
 
 #else
     (void)res;
+    vTaskDelay(pdMS_TO_TICKS(50));
 #endif
 #if POW_PD_EXT == 1
     hub238_check_negotiation();
 #endif
 #if POW_PD_EXT == 2
     FS2711::negotiate();
+#endif
+#ifdef POW_PD_STUSB4500
+    STUSB4500::check_negotiation();
 #endif
     power_check();
   }

@@ -115,8 +115,6 @@
 #define ADC_MAX_READING (4096 * 8) // Maximum reading of the adc
 #define ADC_VDD_MV      3300       // ADC max reading millivolts
 
-#define POW_PD_EXT 0
-
 // Deriving the Voltage div:
 // Vin_max = (3.3*(r1+r2))/(r2)
 // vdiv = (32768*4)/(vin_max*10)
@@ -127,6 +125,13 @@
 #error "No model defined!"
 #endif
 #define NEEDS_VBUS_PROBE 0
+
+// Power delivery.
+// There're a lot of PD logic tied to FUSB when POW_PD 1
+// so a new define POW_PD_STUSB4500 was introduced for Gem
+#define POW_PD_STUSB4500 1
+#define USB_PD_I2CBB2    1  // PD controller is on the I2C bus 2
+#define USB_PD_VMAX      19 // Max voltage to negotiate with PD source
 
 #define MIN_CALIBRATION_OFFSET 100 // Min value for calibration
 #define SOLDERING_TEMP         320 // Default soldering temp is 320.0 °C
@@ -139,6 +144,7 @@
 #define MIN_BOOST_TEMP_F       480 // The min settable temp for boost mode °F
 
 #define I2C_SOFT_BUS_1 1
+#define I2C_SOFT_BUS_2 1
 
 #ifdef MODEL_Gem
 #define NO_ACCEL    1
@@ -173,13 +179,8 @@
 
 #define TIP_HAS_DIRECT_PWM 1
 #define POW_DC             1
-// #define POW_PD               1
-// #define USB_PD_EPR_WATTAGE   140 /* EPR Supported */
-#define I2C_SOFT_BUS_2 1
-#define OLED_I2CBB1    1
-#define USB_PD_I2CBB2  1
-#define USB_PD_VMAX    20
-#define OLED_128x32    1
+#define OLED_I2CBB1        1
+#define OLED_128x32        1
 // #define OLED_FLIP            1
 // #define HAS_SPLIT_POWER_PATH 1
 #define TEMP_TMP36 1 // Gem uses MCP9700 which has the same characteristics as TMP36

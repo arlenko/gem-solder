@@ -2,7 +2,7 @@
 #ifdef OLED_128x32
 void ui_draw_power_source_icon(void) {
   const int16_t xPos = OLED::getCursorX();
-#if defined(POW_PD) || defined(POW_QC) || defined(POW_PD_EXT)
+#if defined(POW_PD) || defined(POW_QC) || defined(POW_PD_EXT) || defined(POW_PD_STUSB4500)
   if (!getIsPoweredByDCIN()) {
     // On non-DC inputs we replace this symbol with the voltage we are operating on,
     // as two 8x16 digits stacked to fill the 32px panel height.
@@ -27,7 +27,8 @@ void ui_draw_power_source_icon(void) {
     uint8_t  cellCount = getSettingValue(SettingsOptions::MinDCVoltageCells) + 2;
     uint32_t cellV     = getInputVoltageX10(getSettingValue(SettingsOptions::VoltageDiv), 0) / cellCount;
     // Should give us approx cell voltage X10
-    // Range is 42 -> Minimum voltage setting (systemSettings.minVoltageCells) = 9 steps therefore we will use battery 0-9
+    // Range is 42 -> Minimum voltage setting (systemSettings.minVoltageCells) = 9 steps therefore we will use battery
+    // 0-9
     if (cellV < getSettingValue(SettingsOptions::MinVoltageCells)) {
       cellV = getSettingValue(SettingsOptions::MinVoltageCells);
     }
