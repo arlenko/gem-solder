@@ -117,7 +117,7 @@ uint32_t getCurrentMilliamps() {
 
 // We may need to disable current sampling for some operating modes
 bool currentSamplingAllowed(OperatingMode opMode) {
-  if (HAL_GetTick() < TICKS_100MS)
+  if (HAL_GetTick() < TICKS_100MS * 2)
     return false; // Startup delay to allow hardware to settle
 
   switch (opMode) {
