@@ -31,53 +31,16 @@ void startPOWTask(void const *argument __unused) {
   }
   // You have to run this once we are willing to answer PD messages
   // Setting up too early can mean that we miss the ~20ms window to respond on some chargers
-#ifdef POW_PD
-  USBPowerDelivery::start();
-  // Crank the handle at boot until we are stable and waiting for IRQ
-  USBPowerDelivery::step();
-#endif
-#if POW_PD_EXT == 2
-  FS2711::start();
-  FS2711::negotiate();
-#endif
 #ifdef POW_PD_STUSB4500
   STUSB4500::init();
 #endif
 
-  BaseType_t res;
   for (;;) {
-    res = pdFALSE;
-#ifdef POW_PD
-    // While the interrupt is low, dont delay
-    /*This is due to a possible race condition, where:
-     * IRQ fires
-     * We read interrupt register but dont see the Good CRC
-     * Then Good CRC is set while reading it out (racing on I2C read)
-     * Then we would sleep as nothing to do, but 100ms> 20ms power supply typical timeout
-     */
-    if (!getFUS302IRQLow()) {
-      res = xTaskNotifyWait(0x0, 0xFFFFFF, NULL, TICKS_100MS / 2);
-    }
-
-    if (res != pdFALSE || getFUS302IRQLow()) {
-      USBPowerDelivery::IRQOccured();
-    }
-    USBPowerDelivery::PPSTimerCallback();
-    USBPowerDelivery::step();
-
-#else
-    (void)res;
-    vTaskDelay(pdMS_TO_TICKS(50));
-#endif
-#if POW_PD_EXT == 1
-    hub238_check_negotiation();
-#endif
-#if POW_PD_EXT == 2
-    FS2711::negotiate();
-#endif
 #ifdef POW_PD_STUSB4500
     STUSB4500::check_negotiation();
 #endif
     power_check();
+    // Delay before next iteration
+    vTaskDelay(pdMS_TO_TICKS(50));
   }
 }
