@@ -117,7 +117,7 @@ uint32_t getCurrentMilliamps() {
 
 // We may need to disable current sampling for some operating modes
 bool currentSamplingAllowed(OperatingMode opMode) {
-  if (HAL_GetTick() < TICKS_SECOND * 0.5)
+  if (HAL_GetTick() < TICKS_100MS * 2)
     return false; // Startup delay to allow hardware to settle
 
   switch (opMode) {
@@ -313,7 +313,11 @@ const uint8_t numTipResistanceReadings = 3;
 uint32_t      tipResistanceReadings[3] = {0, 0, 0};
 uint8_t       tipResistanceReadingSlot = 0;
 
-bool isTipDisconnected() { return getCurrentMilliamps() <= TIP_DISCONNECT_CURRENT_MA; }
+bool isTipDisconnected() {
+  if (lastCurrentSamplingTick == 0)
+    return true; // No measurement done yet. Suppose it's disconnected
+  return getCurrentMilliamps() <= TIP_DISCONNECT_CURRENT_MA;
+}
 
 void setStatusLED(const enum StatusLED state) {}
 void setBuzzer(bool on) {}
