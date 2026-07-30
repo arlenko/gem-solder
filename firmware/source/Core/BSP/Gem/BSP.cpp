@@ -314,8 +314,11 @@ uint32_t      tipResistanceReadings[3] = {0, 0, 0};
 uint8_t       tipResistanceReadingSlot = 0;
 
 bool isTipDisconnected() {
+  // If startup behaviour setting is soldering screen
+  // we suppose that tip is connected so it wouldn't quit the soldering screen on power up
+  // while connection state is unknown
   if (lastCurrentSamplingTick == 0)
-    return true; // No measurement done yet. Suppose it's disconnected
+    return false;
   return getCurrentMilliamps() <= TIP_DISCONNECT_CURRENT_MA;
 }
 
