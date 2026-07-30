@@ -75,11 +75,9 @@ void startPIDTask(void const *argument __unused) {
 #endif
 #endif
 #ifdef POW_PD_STUSB4500
-  if (STUSB4500::is_attached()) {
-    while (!STUSB4500::has_negotiated()) {
-      resetWatchdog();
-      ulTaskNotifyTake(pdTRUE, TICKS_100MS);
-    }
+  while (!STUSB4500::has_negotiated() && xTaskGetTickCount() < TICKS_SECOND * 2) {
+    resetWatchdog();
+    ulTaskNotifyTake(pdTRUE, TICKS_100MS);
   }
 #endif
 
@@ -230,7 +228,7 @@ int32_t getPIDResultX10Watts(TemperatureType_t set_point, TemperatureType_t curr
   // it acts more like a P term whereas on closing to set point it acts increasingly closer to a plain I term.
   // So in a sense, we have a bit of both.
   //																		 So
-  //there we go...
+  // there we go...
 
   // P = (Thermal Mass) x (Delta Temperature ) / 1sec, where thermal mass is in X10 J / °C and
   // delta temperature is in °C. The result is the power in X10 W needed to raise (or decrease!) the

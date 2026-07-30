@@ -21,16 +21,8 @@ bool stusb_write(uint8_t reg, const uint8_t *data, uint16_t len) {
   return I2CBB2::Mem_Write(STUSB4500_ADDR, reg, data, len);
 }
 
-// Wait a few ms after power up
-void STUSB4500::startup_delay() {
-  while (xTaskGetTickCount() < 100) {
-    vTaskDelay(10);
-  }
-}
-
 // Check if the device is present on I2C bus by reading it's id and compare to the expected value
 bool STUSB4500::probe() {
-  startup_delay();
   if (!I2CBB2::probe(STUSB4500_ADDR))
     return false;
   uint8_t device_id;
@@ -41,7 +33,11 @@ bool STUSB4500::probe() {
 
 // Read PDOs and clear alerts
 void STUSB4500::init() {
-  startup_delay();
+  // Wait a few ms after power up
+  while (xTaskGetTickCount() < pdMS_TO_TICKS(50)) {
+    vTaskDelay(10);
+  }
+
   if (!probe())
     return;
 
@@ -62,12 +58,12 @@ void STUSB4500::check_negotiation() {
   case NegotiationState::NotStarted:
     if (!is_attached())
       return;
-    wait_sink_ready();
     negotiationState = NegotiationState::GettingCapabilities;
     break;
   // wait until the last moment for caps to arrive
   // (no explicit timeout here — check_negotiation is called periodically)
   case NegotiationState::GettingCapabilities:
+    wait_sink_ready();
     if (get_source_capabilities()) {
       negotiationState = NegotiationState::HaveCapabilities;
       break;

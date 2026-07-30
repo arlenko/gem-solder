@@ -129,7 +129,6 @@ private:
   static bool send_soft_reset();
   static bool reset_by_reg();
   static bool get_source_capabilities();
-  static void startup_delay();
   static void clear_alerts();
   static bool wait_sink_ready();
 };
