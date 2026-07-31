@@ -9,5 +9,9 @@ struct TipProfile {
   uint8_t inertia;
 };
 
-inline const TipProfile TIP_C245 = {.type = TipType::C245, .thermalMass = 40, .inertia = 15};
-inline const TipProfile TIP_C210 = {.type = TipType::C210, .thermalMass = 30, .inertia = 10};
+/**
+ * We use a large inertia value to smooth out the drive to the tip since its stupidly sensitive
+ *                                                                                  Ralim. 2023
+ */
+inline const TipProfile TIP_C245 = {.type = TipType::C245, .thermalMass = 40, .inertia = 142};
+inline const TipProfile TIP_C210 = {.type = TipType::C210, .thermalMass = 10, .inertia = 128};

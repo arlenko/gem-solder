@@ -59,16 +59,15 @@ void STUSB4500::check_negotiation() {
     if (!is_attached())
       return;
     negotiationState = NegotiationState::GettingCapabilities;
-    break;
   // wait until the last moment for caps to arrive
   // (no explicit timeout here — check_negotiation is called periodically)
   case NegotiationState::GettingCapabilities:
     wait_sink_ready();
     if (get_source_capabilities()) {
       negotiationState = NegotiationState::HaveCapabilities;
+    } else {
       break;
     }
-    break;
   case NegotiationState::HaveCapabilities: {
     uint16_t vmax_mV = USB_PD_VMAX * 1000;
     int      bestIdx = -1, best_mV = 0, best_mA = 0;
@@ -106,13 +105,11 @@ void STUSB4500::check_negotiation() {
     send_soft_reset();
 
     powerSupplyWattageLimit = ((best_mV * best_mA) / 1000000) - 2; // Take off 2W for safety of overhead
-    negotiationState        = NegotiationState::Negotiating;       // Just trust the hardware
-    break;
+    negotiationState        = NegotiationState::Negotiating;
   }
   case NegotiationState::Negotiating: {
     wait_sink_ready();
     negotiationState = NegotiationState::Done;
-    break;
   }
   case NegotiationState::Done:
     break;

@@ -173,9 +173,10 @@
 #define OP_AMP_GAIN_STAGE_Gem ((OP_AMP_Rf_Gem) / (OP_AMP_Rin_Gem))
 #define OP_AMP_GAIN_STAGE     OP_AMP_GAIN_STAGE_Gem
 #define TEMP_uV_LOOKUP_C245
-#define HARDWARE_MAX_WATTAGE_X10 1000
-#define TIP_THERMAL_MASS         65 // X10 watts to raise 1 deg C in 1 second
-#define TIP_RESISTANCE           30 // x10 ohms
+#define HARDWARE_MAX_WATTAGE_X10  1000
+#define TIP_THERMAL_MASS          65 // X10 watts to raise 1 deg C in 1 second
+#define TIP_RESISTANCE            30 // x10 ohms
+#define FILTER_DISPLAYED_TIP_TEMP 4  // Filtering for GUI display
 
 #define TIP_HAS_DIRECT_PWM 1
 #define POW_DC             1

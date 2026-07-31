@@ -29415,7 +29415,7 @@
 				)
 			)
 		)
-		(property "Value" "10k"
+		(property "Value" "5k1"
 			(at 63.754 151.892 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -29458,7 +29458,7 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C4134045"
+		(property "LCSC Part Number" "C2907044"
 			(at 67.31 151.13 0)
 			(hide yes)
 			(show_name no)
@@ -29469,7 +29469,7 @@
 				)
 			)
 		)
-		(property "MPN" "RCS060310K0JNEA"
+		(property "MPN" "FRC0603F5101TS"
 			(at 67.31 151.13 0)
 			(hide yes)
 			(show_name no)
