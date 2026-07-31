@@ -548,6 +548,7 @@
       "netlist": "",
       "plot": "E:/ironOS-solder/hardware/Gerbers/",
       "specctra_dsn": "",
+      "step": "",
       "vrml": ""
     },
     "page_layout_descr_file": ""
@@ -558,7 +559,7 @@
       "method": 0,
       "sort_order": 0
     },
-    "bom_export_filename": "${PROJECTNAME}.csv",
+    "bom_export_filename": "../../../Desktop/Gem-solder.csv",
     "bom_fmt_presets": [],
     "bom_fmt_settings": {
       "field_delimiter": ",",

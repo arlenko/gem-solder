@@ -22,6 +22,10 @@
 #endif
 #endif
 
+#ifdef POW_PD_STUSB4500
+#include "STUSB4500.hpp"
+#endif
+
 static TickType_t          powerPulseWaitUnit          = 25 * TICKS_100MS;      // 2.5 s
 static TickType_t          powerPulseDurationUnit      = (5 * TICKS_100MS) / 2; // 250 ms
 TaskHandle_t               pidTaskNotification         = NULL;
@@ -69,6 +73,12 @@ void startPIDTask(void const *argument __unused) {
     ulTaskNotifyTake(pdTRUE, TICKS_100MS);
   }
 #endif
+#endif
+#ifdef POW_PD_STUSB4500
+  while (!STUSB4500::has_negotiated() && xTaskGetTickCount() < TICKS_SECOND * 2) {
+    resetWatchdog();
+    ulTaskNotifyTake(pdTRUE, TICKS_100MS);
+  }
 #endif
 
   int32_t    x10WattsOut             = 0;
@@ -174,7 +184,8 @@ template <class T = TemperatureType_t> struct Integrator {
     // Add the new value x integration interval ( 1 / rate)
     sum += (gain * val) / rate;
 
-    // constrain the output between +- our max power output, this limits windup when doing the inital heatup or when solding something large
+    // constrain the output between +- our max power output, this limits windup when doing the inital heatup or when
+    // solding something large
     if (sum > limit) {
       sum = limit;
     } else if (sum < -limit) {
@@ -216,7 +227,8 @@ int32_t getPIDResultX10Watts(TemperatureType_t set_point, TemperatureType_t curr
   // rather than a plain I term. Depending on the circumstances, like when the delta temperature is large,
   // it acts more like a P term whereas on closing to set point it acts increasingly closer to a plain I term.
   // So in a sense, we have a bit of both.
-  //																		 So there we go...
+  //																		 So
+  // there we go...
 
   // P = (Thermal Mass) x (Delta Temperature ) / 1sec, where thermal mass is in X10 J / °C and
   // delta temperature is in °C. The result is the power in X10 W needed to raise (or decrease!) the
@@ -227,10 +239,11 @@ int32_t getPIDResultX10Watts(TemperatureType_t set_point, TemperatureType_t curr
 #ifdef TIP_CONTROL_PID
   return pid.update(set_point, current_reading, interval, getX10WattageLimits());
 #else
-  return powerStore.update(((TemperatureType_t)getTipThermalMass()) * (set_point - current_reading), // the required power
-                           getTipInertia(),                                                          // Inertia, smaller numbers increase dominance of the previous value
-                           2,                                                                        // gain
-                           rate,                                                                     // PID cycle frequency
+  return powerStore.update(((TemperatureType_t)getTipThermalMass()) *
+                               (set_point - current_reading), // the required power
+                           getTipInertia(), // Inertia, smaller numbers increase dominance of the previous value
+                           2,               // gain
+                           rate,            // PID cycle frequency
                            getX10WattageLimits());
 #endif
 }
@@ -314,9 +327,10 @@ void setOutputx10WattsViaFilters(int32_t x10WattsOut) {
   if (getSettingValue(SettingsOptions::KeepAwakePulse)) {
     const TickType_t powerPulseWait = powerPulseWaitUnit * getSettingValue(SettingsOptions::KeepAwakePulseWait);
     if (xTaskGetTickCount() - lastPowerPulseStart > powerPulseWait) {
-      const TickType_t powerPulseDuration = powerPulseDurationUnit * getSettingValue(SettingsOptions::KeepAwakePulseDuration);
-      lastPowerPulseStart                 = xTaskGetTickCount();
-      lastPowerPulseEnd                   = lastPowerPulseStart + powerPulseDuration;
+      const TickType_t powerPulseDuration =
+          powerPulseDurationUnit * getSettingValue(SettingsOptions::KeepAwakePulseDuration);
+      lastPowerPulseStart = xTaskGetTickCount();
+      lastPowerPulseEnd   = lastPowerPulseStart + powerPulseDuration;
     }
 
     // If current PID is less than the pulse level, check if we want to constrain to the pulse as the floor

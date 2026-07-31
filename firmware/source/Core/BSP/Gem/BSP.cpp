@@ -117,6 +117,9 @@ uint32_t getCurrentMilliamps() {
 
 // We may need to disable current sampling for some operating modes
 bool currentSamplingAllowed(OperatingMode opMode) {
+  if (HAL_GetTick() < TICKS_100MS * 2)
+    return false; // Startup delay to allow hardware to settle
+
   switch (opMode) {
   case OperatingMode::Sleeping:
   case OperatingMode::Hibernating:
@@ -310,7 +313,14 @@ const uint8_t numTipResistanceReadings = 3;
 uint32_t      tipResistanceReadings[3] = {0, 0, 0};
 uint8_t       tipResistanceReadingSlot = 0;
 
-bool isTipDisconnected() { return getCurrentMilliamps() <= TIP_DISCONNECT_CURRENT_MA; }
+bool isTipDisconnected() {
+  // If startup behaviour setting is soldering screen
+  // we suppose that tip is connected so it wouldn't quit the soldering screen on power up
+  // while connection state is unknown
+  if (lastCurrentSamplingTick == 0)
+    return false;
+  return getCurrentMilliamps() <= TIP_DISCONNECT_CURRENT_MA;
+}
 
 void setStatusLED(const enum StatusLED state) {}
 void setBuzzer(bool on) {}
@@ -323,6 +333,7 @@ uint64_t getDeviceID() {
 }
 
 uint8_t preStartChecksDone() {
+  // For a correct power estimation current sampling must be completed before start
   return (lastCurrentSamplingTick == 0 || currentSamplingActive || isTipShorted()) ? 0 : 1;
 }
 

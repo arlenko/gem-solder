@@ -4,6 +4,7 @@
 
 #include "SolderingCommon.h"
 #include "OperatingModes.h"
+#include "STUSB4500.hpp"
 #include "Types.h"
 #include "configuration.h"
 #include "history.hpp"
@@ -66,6 +67,12 @@ int8_t getPowerSourceNumber(void) {
         pdHasVBUSConnected = USBPowerDelivery::isVBUSConnected();
 #endif
       }
+    }
+#endif
+#ifdef POW_PD_STUSB4500
+    if (STUSB4500::has_negotiated()) {
+      poweredbyPD        = true;
+      pdHasVBUSConnected = true;
     }
 #endif
     if (poweredbyPD) {

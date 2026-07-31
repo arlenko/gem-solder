@@ -2,30 +2,23 @@
 #include "BSP_Power.h"
 #include "Pins.h"
 #include "QC3.h"
+#include "STUSB4500.hpp"
 #include "Settings.h"
 #include "USBPD.h"
 #include "configuration.h"
 #include "stm32f1xx_hal.h"
+
 void power_check() {
-#ifdef POW_PD
-  // Cant start QC until either PD works or fails
-  if (!USBPowerDelivery::negotiationComplete()) {
-    return;
-  }
-  if (USBPowerDelivery::negotiationHasWorked()) {
+#ifdef POW_PD_STUSB4500
+  if (STUSB4500::has_negotiated()) {
     return; // We are using PD
   }
-#endif
-#ifdef POW_QC
-  QC_resync();
 #endif
 }
 
 bool getIsPoweredByDCIN() {
-#ifdef MODEL_Gem
-  // TODO have to check what we are using
-  // return HAL_GPIO_ReadPin(DC_SELECT_GPIO_Port, DC_SELECT_Pin) == GPIO_PIN_SET;
-  return true;
+#ifdef POW_PD_STUSB4500
+  return !STUSB4500::is_attached(); // Must be DC if Type-C cable not attached
 #endif
   return true;
 }

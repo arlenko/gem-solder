@@ -185,6 +185,17 @@ endif
 
 ifdef debug_enable
   DEV_CXXFLAGS += -g
+
+  # Application code: -Og (debug-friendly)
+  $(OUTPUT_DIR)/./Core/Drivers/%.o:   OPTIM = -Og
+  #$(OUTPUT_DIR)/./Core/Threads/%.o:  OPTIM = -Og
+  #$(OUTPUT_DIR)/./Core/Src/%.o:      OPTIM = -Og
+  #$(OUTPUT_DIR)/./Core/BSP/Gem/%.o:  OPTIM = -Og
+  #$(OUTPUT_DIR)/./Core/brieflz/%.o:  OPTIM = -Og
+
+  # Vendor code: -Os (more specific path overrides the above)
+  #$(OUTPUT_DIR)/./Core/BSP/Gem/Vendor/%.o: OPTIM = -Os
+  #$(OUTPUT_DIR)/./Middlewares/%.o:         OPTIM = -Os
 endif
 
 # Libs -------------------------------------------------------------------------
