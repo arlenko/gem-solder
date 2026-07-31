@@ -131,7 +131,7 @@
 // so a new define POW_PD_STUSB4500 was introduced for Gem
 #define POW_PD_STUSB4500 1
 #define USB_PD_I2CBB2    1  // PD controller is on the I2C bus 2
-#define USB_PD_VMAX      12 // Max voltage to negotiate with PD source
+#define USB_PD_VMAX      20 // Max voltage to negotiate with PD source
 
 #define MIN_CALIBRATION_OFFSET 100 // Min value for calibration
 #define SOLDERING_TEMP         320 // Default soldering temp is 320.0 °C
@@ -189,8 +189,8 @@
 // #define TIP_TYPE_SUPPORT     1 // Support for tips of different types, i.e. resistance
 // #define AUTO_TIP_SELECTION   1 // Can auto-select the tip
 // #define TIPTYPE_T12          1 // Can manually pick a T12 tip
-// #define HAS_POWER_DEBUG_MENU
-// #define DEBUG_POWER_MENU_BUTTON_B
+#define HAS_POWER_DEBUG_MENU
+#define DEBUG_POWER_MENU_BUTTON_B
 
 #endif
 

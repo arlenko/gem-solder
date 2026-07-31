@@ -24,13 +24,14 @@
 #define STUSB_CMD_CTRL                  0x1A
 #define STUSB_DPM_PDO_NUMB              0x70
 #define STUSB_RESET_CTRL_REG            0x23 // Allows to reset the device by software
+#define STUSB_TYPEC_MONITORING_STATUS_1 0x10 // Provides information on current status of the VBUS and VCONN voltages
 
 #define STUSBPD_DATAMSG_Source_Capabilities 0x01
 
 // RX
-#define STUSB_RX_BYTE_CNT  0x30
-#define STUSB_RX_HEADER    0x31 // RX message header (16bit)
-#define STUSB_RX_DATA_OBJ  0x33 // (32bit)
+#define STUSB_RX_BYTE_CNT 0x30
+#define STUSB_RX_HEADER   0x31 // RX message header (16bit)
+#define STUSB_RX_DATA_OBJ 0x33 // (32bit)
 
 #define STUSB_PE_FSM_STATE                 0x29 // Policy engine layer FSM state
 #define STUSB_PE_INIT                      0x00
@@ -115,14 +116,34 @@ typedef union {
 
 } STUSB_PD_SRC_PDO_TypeDef;
 
+typedef union {
+  uint8_t d8;
+  struct {
+    uint8_t VCONN_VALID    : 1;
+    uint8_t VBUS_VALID_SNK : 1;
+    uint8_t VBUS_VSAFE0V   : 1;
+    uint8_t VBUS_READY     : 1;
+    uint8_t _Reserved_4_7  : 4;
+  } b;
+} STUSB_MONITORING_STATUS_RegTypeDef;
+
+typedef struct {
+  uint8_t attached;   // cable attached (PORT_STATUS_1 bit 0, @0x0E)
+  uint8_t pdo_num;    // source PDO count
+  uint8_t pe_state;   // raw PE_FSM_STATE @0x29
+  uint8_t vbus_ready; // 1 = VBUS within valid range (@0x10, VBUS_READY bit)
+} stusb_debug_state_t;
+
 class STUSB4500 {
 public:
-  static void init();
-  static bool probe();
-  static bool is_attached();
-  static void check_negotiation();
-  static bool has_negotiated();
-  static bool has_run_selection();
+  static void                            init();
+  static bool                            probe();
+  static bool                            is_attached();
+  static void                            check_negotiation();
+  static bool                            has_negotiated();
+  static bool                            has_run_selection();
+  static const STUSB_PD_SRC_PDO_TypeDef *get_last_seen_capabilities(uint8_t *count);
+  static stusb_debug_state_t             debug_get_state();
 
 private:
   static bool update_PDO(uint8_t PDO_number, int voltage_mV, int current_mA);

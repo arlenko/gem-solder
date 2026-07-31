@@ -232,4 +232,26 @@ bool STUSB4500::wait_sink_ready() {
 bool STUSB4500::has_run_selection() { return negotiationState != NegotiationState::NotStarted; }
 bool STUSB4500::has_negotiated() { return negotiationState == NegotiationState::Done; }
 
+stusb_debug_state_t STUSB4500::debug_get_state() {
+  stusb_debug_state_t state = {};
+  state.pdo_num             = srcPDOCount;
+  state.attached            = is_attached(); // reads PORT_STATUS_1 @0x0E bit 0
+
+  stusb_read(STUSB_PE_FSM_STATE, &state.pe_state, 1); // @0x29
+
+  STUSB_MONITORING_STATUS_RegTypeDef monitoring = {0};
+  if (stusb_read(STUSB_TYPEC_MONITORING_STATUS_1, &monitoring.d8, 1)) {
+    state.vbus_ready = monitoring.b.VBUS_READY; // @0x10 bit 3
+  }
+
+  return state;
+}
+
+// Returns pointer to the cached source capabilities and sets *count to their number.
+const STUSB_PD_SRC_PDO_TypeDef *STUSB4500::get_last_seen_capabilities(uint8_t *count) {
+  if (count)
+    *count = srcPDOCount;
+  return srcPDO;
+}
+
 #endif
