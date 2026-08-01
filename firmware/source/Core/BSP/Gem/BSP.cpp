@@ -350,5 +350,6 @@ bool isTipShorted() { return getCurrentMilliamps() >= TIP_SHORT_CURRENT_MA; }
 
 uint16_t getTipThermalMass() { return TIP_C245.thermalMass; }
 uint16_t getTipInertia() { return TIP_C245.inertia; }
+uint8_t  getTipPowerRating() { return TIP_C245.powerRating; }
 
 void showBootLogo(void) { BootLogo::handleShowingLogo((uint8_t *)FLASH_LOGOADDR); }

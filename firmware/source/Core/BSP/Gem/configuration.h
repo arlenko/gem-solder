@@ -139,7 +139,7 @@
 #define MAX_TEMP_C             450 // Max soldering temp selectable °C
 #define MAX_TEMP_F             850 // Max soldering temp selectable °F
 #define MIN_TEMP_C             40  // Min soldering temp selectable °C
-#define MIN_TEMP_F             100  // Min soldering temp selectable °F
+#define MIN_TEMP_F             100 // Min soldering temp selectable °F
 #define MIN_BOOST_TEMP_C       250 // The min settable temp for boost mode °C
 #define MIN_BOOST_TEMP_F       480 // The min settable temp for boost mode °F
 
@@ -164,9 +164,9 @@
 
 #define VOLTAGE_DIV           282 // Resistive divider from schematic
 #define CALIBRATION_OFFSET    900 // 900 - Default adc offset in uV
-#define PID_POWER_LIMIT       100 // Sets the max pwm power limit
-#define POWER_LIMIT           0   // 0 watts default limit
-#define MAX_POWER_LIMIT       100
+#define PID_POWER_LIMIT       100 // Sets the max pwm power limit. Seems that nothing reads it but let's keep for now
+#define POWER_LIMIT           0   // 0 watts default limit. User dettings power limit
+#define MAX_POWER_LIMIT       140 // Crank it up to 140W
 #define POWER_LIMIT_STEPS     5
 #define OP_AMP_Rf_Gem         390 * 1000 // 390  Kilo-ohms -> From schematic
 #define OP_AMP_Rin_Gem        1500       // 1.5 Kilo-ohms -> From schematic

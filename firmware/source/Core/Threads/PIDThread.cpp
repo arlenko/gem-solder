@@ -306,12 +306,17 @@ void detectThermalRunaway(const TemperatureType_t currentTipTempInC, const uint3
 
 int32_t getX10WattageLimits() {
   int32_t limit = availableW10(0);
-
+  // Power limit defined in user settings
   if (getSettingValue(SettingsOptions::PowerLimit) && limit > (getSettingValue(SettingsOptions::PowerLimit) * 10)) {
     limit = getSettingValue(SettingsOptions::PowerLimit) * 10;
   }
+  // Power supply capability
   if (powerSupplyWattageLimit && limit > powerSupplyWattageLimit * 10) {
     limit = powerSupplyWattageLimit * 10;
+  }
+  // Tip profile power rating
+  if (getTipPowerRating() && limit > (int32_t)getTipPowerRating() * 10) {
+    limit = getTipPowerRating() * 10;
   }
   return limit;
 }
