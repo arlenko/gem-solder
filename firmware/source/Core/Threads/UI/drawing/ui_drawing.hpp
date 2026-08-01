@@ -8,6 +8,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
+
+#define UI_DRAWING_TEMP_ZONE 82 // Temperature right-aligned within this zone
+
 void ui_draw_warning_undervoltage(void);
 void ui_draw_power_source_icon(void);                            // Draw a single character wide power source icon
 void ui_draw_tip_temperature(bool symbol, const FontStyle font); // Draw tip temp, aware of conversions
@@ -22,13 +25,16 @@ void ui_draw_soldering_power_status(bool boost_mode_on);
 void ui_draw_soldering_basic_status(bool boostModeOn);
 void ui_draw_soldering_detailed_sleep(TemperatureType_t tipTemp);
 void ui_draw_soldering_basic_sleep(TemperatureType_t tipTemp);
-void ui_draw_soldering_profile_advanced(TemperatureType_t tipTemp, TemperatureType_t profileCurrentTargetTemp, uint32_t phaseElapsedSeconds, uint32_t phase, const uint32_t phaseTimeGoal);
+void ui_draw_soldering_profile_advanced(TemperatureType_t tipTemp, TemperatureType_t profileCurrentTargetTemp,
+                                        uint32_t phaseElapsedSeconds, uint32_t phase, const uint32_t phaseTimeGoal);
+void ui_draw_heat_status(bool boostModeOn);
 
 // Temp change
 void ui_draw_temperature_change(void);
 // USB-PD debug
 void ui_draw_usb_pd_debug_state(const uint16_t vbus_sense_state, const uint8_t stateNumber);
-void ui_draw_usb_pd_debug_pdo(const uint8_t entry_num, const uint16_t min_voltage, const uint16_t max_voltage, const uint16_t current_a_x100, const uint16_t wattage);
+void ui_draw_usb_pd_debug_pdo(const uint8_t entry_num, const uint16_t min_voltage, const uint16_t max_voltage,
+                              const uint16_t current_a_x100, const uint16_t wattage);
 // Utils
 void printVoltage(void);
 #endif // UI_DRAWING_UI_DRAWING_HPP_
