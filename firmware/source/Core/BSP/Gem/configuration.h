@@ -138,8 +138,8 @@
 #define PID_TIM_HZ             (8) // Tick rate of the PID loop
 #define MAX_TEMP_C             450 // Max soldering temp selectable °C
 #define MAX_TEMP_F             850 // Max soldering temp selectable °F
-#define MIN_TEMP_C             10  // Min soldering temp selectable °C
-#define MIN_TEMP_F             50  // Min soldering temp selectable °F
+#define MIN_TEMP_C             40  // Min soldering temp selectable °C
+#define MIN_TEMP_F             100  // Min soldering temp selectable °F
 #define MIN_BOOST_TEMP_C       250 // The min settable temp for boost mode °C
 #define MIN_BOOST_TEMP_F       480 // The min settable temp for boost mode °F
 
