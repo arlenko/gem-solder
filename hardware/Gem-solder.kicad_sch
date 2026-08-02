@@ -9633,6 +9633,16 @@
 		)
 		(uuid "c9452a11-a77c-45cc-b27e-98fe0f7a1c02")
 	)
+	(text "Recommended replacement LDO: TLV75733PDBVR"
+		(exclude_from_sim no)
+		(at 186.944 20.574 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "d0ed2d85-b54a-4940-ab4e-2b7bf4445164")
+	)
 	(text "USB TYPE-C POWER DELIVERY"
 		(exclude_from_sim no)
 		(at 18.034 63.246 0)
