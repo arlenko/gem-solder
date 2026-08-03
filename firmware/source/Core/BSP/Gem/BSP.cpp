@@ -5,6 +5,7 @@
 #include "I2C_Wrapper.hpp"
 #include "OperatingModes.h"
 #include "Pins.h"
+#include "STUSB4500.hpp"
 #include "Settings.h"
 #include "Setup.h"
 #include "TipProfile.hpp"
@@ -117,8 +118,14 @@ uint32_t getCurrentMilliamps() {
 
 // We may need to disable current sampling for some operating modes
 bool currentSamplingAllowed(OperatingMode opMode) {
-  if (HAL_GetTick() < TICKS_100MS * 2)
+#if defined(POW_PD) || defined(POW_PD_STUSB4500)
+  // For PD capable device we wait for PD negotiation or time out
+  if (!STUSB4500::has_negotiated() && HAL_GetTick() < TICKS_SECOND * 2)
+    return false;
+#else
+  if (HAL_GetTick() < TICKS_SECOND * 0.5)
     return false; // Startup delay to allow hardware to settle
+#endif
 
   switch (opMode) {
   case OperatingMode::Sleeping:
