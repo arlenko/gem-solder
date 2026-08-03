@@ -150,10 +150,11 @@
 #define NO_ACCEL    1
 #define STAND_SENSE 1
 
-#define OP_AMP_CURRENT_SENSE_Rf              240 * 1000
-#define OP_AMP_CURRENT_SENSE_Rin             5.1 * 1000
-#define OP_AMP_CURRENT_SENSE_GAIN_STAGE      ((OP_AMP_CURRENT_SENSE_Rf) / (OP_AMP_CURRENT_SENSE_Rin))
-#define CURRENT_SENSE_SHUNT_RESISTANCE_mOhms 5
+#define OP_AMP_CURRENT_SENSE_Rf         240 * 1000
+#define OP_AMP_CURRENT_SENSE_Rin        5.1 * 1000
+#define OP_AMP_CURRENT_SENSE_GAIN_STAGE ((OP_AMP_CURRENT_SENSE_Rf) / (OP_AMP_CURRENT_SENSE_Rin))
+// Effective shunt resistance is 5mOhm plus ~1mOhm parasitic resistance of traces and solder joints
+#define CURRENT_SENSE_SHUNT_RESISTANCE_mOhms (5 + 1)
 #define TIP_DISCONNECT_CURRENT_MA            10    // threshold below which tip is considered disconnected
 #define TIP_SHORT_CURRENT_MA                 12000 // threshold above which tip is considered shorted
 // With a fast PWM at 100% duty duration of a pulse is ~3.2 ms or ~320 us at 10% duty.
