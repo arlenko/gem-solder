@@ -52,7 +52,7 @@ void        Setup_HAL() {
   HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ADCReadings, (ADC_SAMPLES)); // start DMA of normal readings
   HAL_ADCEx_InjectedStart(&hadc1);                                   // enable injected readings
   HAL_ADCEx_InjectedStart(&hadc2);                                   // enable injected readings
-  HAL_ADC_Start_IT(&hadc2);                                             // enable regular readings
+  HAL_ADC_Start_IT(&hadc2);                                          // enable regular readings
 }
 
 uint16_t getADCHandleTemp(uint8_t sample) {
@@ -116,7 +116,8 @@ uint16_t getADCVin(uint8_t sample) {
   return filter.average();
 #endif
 }
-// Returns either average or instant value. When sample is set the samples from the injected ADC are copied to the filter and then the raw reading is returned
+// Returns either average or instant value. When sample is set the samples from the injected ADC are copied to the
+// filter and then the raw reading is returned
 uint16_t getTipRawTemp(uint8_t sample) {
   static history<uint16_t, ADC_FILTER_LEN> filter = {{0}, 0, 0};
   if (sample) {
@@ -152,7 +153,7 @@ void SystemClock_Config(void) {
 
   /**Initializes the CPU, AHB and APB busses clocks
    */
-  RCC_ClkInitStruct.ClockType      = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource   = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider  = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV16; // TIM
@@ -324,15 +325,16 @@ static void MX_TIP_CONTROL_TIMER_Init(void) {
 #ifdef TIP_HAS_DIRECT_PWM
   sConfigOC.Pulse = 0; // PWM is direct to tip
 #else
-  sConfigOC.Pulse = 127; // 50% duty cycle, that is AC coupled through the cap to provide an on signal (This does not do tip at 50% duty cycle)
+  sConfigOC.Pulse = 127; // 50% duty cycle, that is AC coupled through the cap to provide an on signal (This does not do
+                         // tip at 50% duty cycle)
 #endif
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_ENABLE;
   HAL_TIM_PWM_ConfigChannel(&htimTip, &sConfigOC, PWM_Out_CHANNEL);
 
   // Use channel 2 to fire IRQ callback for current sampling
-  sConfigOC.OCMode     = TIM_OCMODE_PWM2;     // inverted vs CH1's PWM1
-  sConfigOC.Pulse      = sConfigOC.Pulse / 2; // reuses whatever CH1's Pulse currently is; needs to be updated along with CH1
+  sConfigOC.OCMode = TIM_OCMODE_PWM2;    // inverted vs CH1's PWM1
+  sConfigOC.Pulse = sConfigOC.Pulse / 2; // reuses whatever CH1's Pulse currently is; needs to be updated along with CH1
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_ENABLE;
   HAL_TIM_PWM_ConfigChannel(&htimTip, &sConfigOC, TIM_CHANNEL_2);
@@ -467,15 +469,26 @@ static void MX_GPIO_Init(void) {
   /*
    * Configure All pins as analog by default
    */
-  GPIO_InitStruct.Pin  = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_15;
+  GPIO_InitStruct.Pin  = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 | GPIO_PIN_3 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6 |
+                         GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_15;
   GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
   GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_2 |
 #ifdef MODEL_TS100
                         GPIO_PIN_3 |
 #endif
-                        GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
+                        GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_6 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 |
+                        GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+#ifdef WS2812_ENABLE
+  GPIO_InitStruct.Pin   = WS2812_Pin;
+  GPIO_InitStruct.Pull  = GPIO_NOPULL;
+  GPIO_InitStruct.Mode  = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(WS2812_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_WritePin(WS2812_GPIO_Port, WS2812_Pin, GPIO_PIN_RESET);
+#endif
 
 #ifdef MODEL_TS100
 #ifndef SWD_ENABLE

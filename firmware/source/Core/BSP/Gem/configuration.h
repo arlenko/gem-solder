@@ -194,6 +194,7 @@
 #define HAS_POWER_DEBUG_MENU
 #define DEBUG_POWER_MENU_BUTTON_B
 
+#define WS2812_ENABLE 1 // This feature is in testing yet and not supported in v1.1 board revision
 #endif
 
 #define FLASH_LOGOADDR      (0x08000000 + (62 * 1024))
