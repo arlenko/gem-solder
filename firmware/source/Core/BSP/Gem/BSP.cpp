@@ -363,6 +363,9 @@ void setStatusLED(const enum StatusLED state) {
     case LED_COOLING_STILL_HOT:
       ws2812.led_set_color(0, 0xFF, 0x8C, 0x00); // Orange
       break;
+    case LED_SLEEPING:
+      ws2812.led_set_color(0, 0x40, 0x00, 0x80); // dark violet #400080
+      break;
     }
     ws2812.led_update();
     lastState = state;

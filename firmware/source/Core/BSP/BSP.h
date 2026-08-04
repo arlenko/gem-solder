@@ -94,6 +94,7 @@ enum StatusLED {
   LED_HEATING,           // The unit is heating up to temperature
   LED_HOT,               // The unit is at operating temperature
   LED_COOLING_STILL_HOT, // The unit is off and cooling but still hot
+  LED_SLEEPING,          // The unit is in sleep mode
   LED_UNKNOWN,           //
 };
 void setStatusLED(const enum StatusLED state);
