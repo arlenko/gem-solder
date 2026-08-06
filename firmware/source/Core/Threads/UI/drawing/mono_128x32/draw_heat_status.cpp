@@ -5,7 +5,7 @@
 void ui_draw_heat_status(bool boostModeOn) {
   const bool    rot         = OLED::getRotation();
   const uint8_t heatSymbolW = 12;
-  const int16_t heatSymbolX = rot ? (OLED_WIDTH - heatSymbolW) : 0;
+  const int16_t heatSymbolX = rot ? (OLED_WIDTH - 1 - heatSymbolW) : 0;
   const int16_t boostX      = rot ? (heatSymbolX - heatSymbolW) : heatSymbolW;
   const uint8_t posY        = 0;
 
