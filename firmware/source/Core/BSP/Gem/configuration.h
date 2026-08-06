@@ -167,14 +167,14 @@
 #define CALIBRATION_OFFSET    900 // 900 - Default adc offset in uV
 #define PID_POWER_LIMIT       100 // Sets the max pwm power limit. Seems that nothing reads it but let's keep for now
 #define POWER_LIMIT           0   // 0 watts default limit. User dettings power limit
-#define MAX_POWER_LIMIT       120 // Crank it up to 140W
+#define MAX_POWER_LIMIT       140 // Crank it up to 140W
 #define POWER_LIMIT_STEPS     5
 #define OP_AMP_Rf_Gem         390 * 1000 // 390  Kilo-ohms -> From schematic
 #define OP_AMP_Rin_Gem        1500       // 1.5 Kilo-ohms -> From schematic
 #define OP_AMP_GAIN_STAGE_Gem ((OP_AMP_Rf_Gem) / (OP_AMP_Rin_Gem))
 #define OP_AMP_GAIN_STAGE     OP_AMP_GAIN_STAGE_Gem
 #define TEMP_uV_LOOKUP_C245
-#define HARDWARE_MAX_WATTAGE_X10  1200
+#define HARDWARE_MAX_WATTAGE_X10  1400
 #define TIP_THERMAL_MASS          65 // X10 watts to raise 1 deg C in 1 second
 #define TIP_RESISTANCE            30 // x10 ohms
 #define FILTER_DISPLAYED_TIP_TEMP 4  // Filtering for GUI display
