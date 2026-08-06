@@ -108,9 +108,7 @@ uint16_t getADCVin(uint8_t sample) {
 
     latestADC += hadc2.Instance->JDR1;
     latestADC += hadc2.Instance->JDR2;
-    latestADC += hadc2.Instance->JDR3;
-    latestADC += hadc2.Instance->JDR4;
-    latestADC <<= 1;
+    latestADC <<= 2;
     filter.update(latestADC);
   }
   return filter.average();
@@ -263,6 +261,9 @@ static void MX_ADC2_Init(void) {
 
 #ifdef HAS_SPLIT_POWER_PATH
   sConfigInjected.InjectedChannel = PD_VIN_ADC2_CHANNEL;
+#endif
+#ifdef STAND_SENSE
+  sConfigInjected.InjectedChannel = STAND_SENSE_ADC2_CHANNEL;
 #endif
 
   sConfigInjected.InjectedRank = ADC_INJECTED_RANK_3;
@@ -571,8 +572,8 @@ static void MX_GPIO_Init(void) {
 
 #ifdef STAND_SENSE
   GPIO_InitStruct.Pin  = STAND_SENSE_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(STAND_SENSE_GPIO_Port, &GPIO_InitStruct);
 #endif
 }

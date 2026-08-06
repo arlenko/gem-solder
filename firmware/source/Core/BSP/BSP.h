@@ -86,6 +86,8 @@ uint32_t getDeviceValidation();
 // If device validation passes returns 0
 uint8_t getDeviceValidationStatus();
 
+uint16_t getStandSenseVoltagemV();
+
 // Status LED controls
 
 enum StatusLED {

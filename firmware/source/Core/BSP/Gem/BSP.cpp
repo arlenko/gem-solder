@@ -122,6 +122,15 @@ uint32_t getCurrentMilliamps() {
   return (v_adc_mV * 1000) / (CURRENT_SENSE_SHUNT_RESISTANCE_mOhms * OP_AMP_CURRENT_SENSE_GAIN_STAGE);
 }
 
+uint16_t getStandSenseVoltagemV() {
+  // The stand sense pin only reads correctly while the heater MOSFET is off: heater current
+  // couples into the tip and from there into the stand sense line, reading
+  // falsely high during conduction. Sample the pin voltage makes it more flexible
+  // and trustworhy than HAL_GPIO_ReadPin reading.
+  uint16_t adc = (hadc2.Instance->JDR3 + hadc2.Instance->JDR4) >> 1;
+  return (uint16_t)(((uint32_t)adc * ADC_VDD_MV) / 4096);
+}
+
 // We may need to disable current sampling for some operating modes
 bool currentSamplingAllowed(OperatingMode opMode) {
 #if defined(POW_PD) || defined(POW_PD_STUSB4500)
