@@ -39,7 +39,7 @@ void ui_draw_homescreen_detailed(TemperatureType_t tipTemp) {
     const int16_t tempX    = rot ? (OLED_MAX_X - tempZone) : (tempZone - tempW);
     const int16_t statusX  = rot ? 0 : (OLED_MAX_X - statusW);
 
-    ui_draw_heat_status(false);
+    // ui_draw_heat_status(false);
 
     if (!(getSettingValue(SettingsOptions::CoolingTempBlink) && (tipTemp > 55) && (xTaskGetTickCount() % 1000 < 300))) {
       // Blink temp if setting enable and temp < 55° (OFF 300ms / ON 700ms)

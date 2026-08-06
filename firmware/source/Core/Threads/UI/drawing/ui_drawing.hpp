@@ -9,7 +9,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#define UI_DRAWING_TEMP_ZONE 82 // Temperature right-aligned within this zone
+#define UI_DRAWING_TEMP_ZONE 82               // Temperature right-aligned within this zone
 #define OLED_MAX_X           (OLED_WIDTH - 1) // Max X coordinate
 
 void ui_draw_warning_undervoltage(void);
@@ -28,7 +28,7 @@ void ui_draw_soldering_detailed_sleep(TemperatureType_t tipTemp);
 void ui_draw_soldering_basic_sleep(TemperatureType_t tipTemp);
 void ui_draw_soldering_profile_advanced(TemperatureType_t tipTemp, TemperatureType_t profileCurrentTargetTemp,
                                         uint32_t phaseElapsedSeconds, uint32_t phase, const uint32_t phaseTimeGoal);
-void ui_draw_heat_status(bool boostModeOn);
+void ui_draw_heat_status(int16_t posX, bool boostModeOn);
 
 // Temp change
 void ui_draw_temperature_change(void);

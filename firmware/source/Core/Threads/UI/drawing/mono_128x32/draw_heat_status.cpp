@@ -2,18 +2,11 @@
 #include "ui_drawing.hpp"
 #include <OperatingModes.h>
 
-void ui_draw_heat_status(bool boostModeOn) {
-  const bool    rot         = OLED::getRotation();
-  const uint8_t heatSymbolW = 12;
-  const int16_t heatSymbolX = rot ? (OLED_MAX_X - heatSymbolW) : 0;
-  const int16_t boostX      = rot ? (heatSymbolX - heatSymbolW) : heatSymbolW;
-  const uint8_t posY        = 0;
-
-  // Heat symbol. Top row opposite side to status
-  OLED::setCursor(heatSymbolX, posY);
+void ui_draw_heat_status(int16_t posX, bool boostModeOn) {
+  // Heat symbol
+  OLED::setCursor(posX, 0);
   OLED::drawHeatSymbol(X10WattsToPWM(x10WattHistory.average()));
   // Boost mode indicator next to heat symbol
-  OLED::setCursor(boostX, posY);
   if (boostModeOn) {
     OLED::drawSymbol(2);
   } else {
