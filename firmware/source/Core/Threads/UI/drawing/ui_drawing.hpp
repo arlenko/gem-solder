@@ -10,6 +10,7 @@
 #include <string.h>
 
 #define UI_DRAWING_TEMP_ZONE 82 // Temperature right-aligned within this zone
+#define OLED_MAX_X           (OLED_WIDTH - 1) // Max X coordinate
 
 void ui_draw_warning_undervoltage(void);
 void ui_draw_power_source_icon(void);                            // Draw a single character wide power source icon

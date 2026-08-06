@@ -9,13 +9,12 @@ void ui_draw_soldering_power_status(bool boost_mode_on) {
   // other edge. The sleep countdown and power-source label are dropped to keep
   // two larger rows. Sides flip with rotation.
   (void)boost_mode_on;
-  const uint8_t maxX     = OLED_WIDTH - 1; // Max X coordinate is 127 while OLED_WIDTH is 128
   const bool    rot      = OLED::getRotation();
   const uint8_t statusW  = 5 * 8;                // "NN.NW" / "NN.NV" are 5 cells in the 8x16 small font
   const uint8_t tempW    = (3 * 12) + (2 * 8);   // 3 large digits + small "°C" = 52px
   const uint8_t tempZone = UI_DRAWING_TEMP_ZONE; // Left of the status block
-  const int16_t tempX    = rot ? (maxX - tempZone) : (tempZone - tempW);
-  const int16_t statusX  = rot ? 0 : (maxX - statusW);
+  const int16_t tempX    = rot ? (OLED_MAX_X - tempZone) : (tempZone - tempW);
+  const int16_t statusX  = rot ? 0 : (OLED_MAX_X - statusW);
 
   // Draw heat symbol
   ui_draw_heat_status(boost_mode_on);
