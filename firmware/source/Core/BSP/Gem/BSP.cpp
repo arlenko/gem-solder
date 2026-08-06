@@ -353,7 +353,7 @@ void setStatusLED(const enum StatusLED state) {
 #ifdef WS2812_ENABLE
   static enum StatusLED lastState = LED_UNKNOWN;
 
-  if (lastState != state || state == LED_HEATING) {
+  if (lastState != state || state == LED_HEATING || state == LED_COOLING_STILL_HOT) {
     switch (state) {
     default:
     case LED_UNKNOWN:
@@ -364,14 +364,39 @@ void setStatusLED(const enum StatusLED state) {
       ws2812.led_set_color(0, 0, 0xFF, 0); // green
       break;
     case LED_HEATING: {
-      ws2812.led_set_color(0, ((HAL_GetTick() / 10) % 192) + 64, 0, 0); // Red fade
+      static const uint32_t half_period = 960; // ms for dim->saturated (tune speed here)
+      const uint32_t        t           = HAL_GetTick() % (half_period * 2);
+      const uint32_t        tri         = (t < half_period) ? t : (half_period * 2 - t);
+      const uint8_t         red         = (uint8_t)(64 + (tri * (255 - 64)) / half_period);
+      ws2812.led_set_color(0, red, 0, 0);
     } break;
     case LED_HOT:
       ws2812.led_set_color(0, 0xFF, 0, 0); // red
       break;
-    case LED_COOLING_STILL_HOT:
-      ws2812.led_set_color(0, 0xFF, 0x8C, 0x00); // Orange
-      break;
+    case LED_COOLING_STILL_HOT: {
+      // black -> red -> black -> green -> black, repeating
+      static const uint32_t segment_ms = 1500; // tune fade speed here
+      const uint32_t        t          = HAL_GetTick() % (segment_ms * 4);
+      const uint32_t        seg        = t / segment_ms;
+      const uint32_t        phase      = t % segment_ms;
+      uint8_t               r = 0, g = 0;
+
+      switch (seg) {
+      case 0: // black -> red
+        r = (uint8_t)((phase * 255) / segment_ms);
+        break;
+      case 1: // red -> black
+        r = (uint8_t)(255 - (phase * 255) / segment_ms);
+        break;
+      case 2: // black -> green
+        g = (uint8_t)((phase * 255) / segment_ms);
+        break;
+      case 3: // green -> black
+        g = (uint8_t)(255 - (phase * 255) / segment_ms);
+        break;
+      }
+      ws2812.led_set_color(0, r, g, 0);
+    } break;
     case LED_SLEEPING:
       ws2812.led_set_color(0, 0x40, 0x00, 0x80); // dark violet #400080
       break;
