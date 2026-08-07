@@ -42,7 +42,8 @@ guiContext    context; // Context passed to functions to aid in state during ren
 
 OperatingMode handle_post_init_state();
 OperatingMode guiHandleDraw(void) {
-  OLED::clearScreen(); // Clear ready for render pass
+  static bool ledCoolingStillHot = false; // Hysteresis: stays "hot" until tip drops to 55°C
+  OLED::clearScreen();                    // Clear ready for render pass
   // Read button state
   ButtonState buttons = getButtonState();
   // Enforce screen on if buttons pressed, movement, hot tip etc
@@ -64,11 +65,14 @@ OperatingMode guiHandleDraw(void) {
       setStatusLED(LED_SLEEPING);
     } else if (currentOperatingMode != OperatingMode::Soldering &&
                currentOperatingMode != OperatingMode::SolderingProfile) {
-      // Not in soldering mode, so set this based on temp
-      if (tipTemp > 55) {
+      // Not in soldering mode, so set this based on temp.
+      // Hysteresis: enter "still hot" at >= 60°C, leave it (to standby) at <= 55°C.
+      if (tipTemp >= 60 || (ledCoolingStillHot && tipTemp > 55)) {
         setStatusLED(LED_COOLING_STILL_HOT);
+        ledCoolingStillHot = true;
       } else {
         setStatusLED(LED_STANDBY);
+        ledCoolingStillHot = false;
       }
     }
   }
