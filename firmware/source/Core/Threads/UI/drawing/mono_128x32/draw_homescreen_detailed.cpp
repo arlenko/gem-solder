@@ -14,20 +14,14 @@ void ui_draw_homescreen_detailed(TemperatureType_t tipTemp) {
       OLED::drawArea(0, 0, 56, 32, disconnectedTip);
     }
     if (OLED::getRotation()) {
-      OLED::setCursor(0, 4);
+      OLED::setCursor(10, 8);
     } else {
-      OLED::setCursor(54, 4);
+      OLED::setCursor(62, 8);
     }
     uint32_t Vlt = getInputVoltageX10(getSettingValue(SettingsOptions::VoltageDiv), 0);
-    OLED::printNumber(Vlt / 10, 2, FontStyle::LARGE);
-    OLED::print(LargeSymbolDot, FontStyle::LARGE);
-    OLED::printNumber(Vlt % 10, 1, FontStyle::LARGE);
-    if (OLED::getRotation()) {
-      OLED::setCursor(OLED::getCursorX(), 4);
-    } else {
-      OLED::setCursor(OLED::getCursorX(), 4);
-    }
-    OLED::setCursor(OLED::getCursorX(), 11);
+    OLED::printNumber(Vlt / 10, 2, FontStyle::SMALL);
+    OLED::print(SmallSymbolDot, FontStyle::SMALL);
+    OLED::printNumber(Vlt % 10, 1, FontStyle::SMALL);
     OLED::print(SmallSymbolVolts, FontStyle::SMALL);
     OLED::setCursor(116, 0);
     ui_draw_power_source_icon();
