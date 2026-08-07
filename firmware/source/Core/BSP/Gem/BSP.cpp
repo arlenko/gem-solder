@@ -361,7 +361,7 @@ void setStatusLED(const enum StatusLED state) {
       ws2812.led_set_color(0, 0, 0, 0);
       break;
     case LED_STANDBY:
-      ws2812.led_set_color(0, 0, 0xFF, 0); // green
+      ws2812.led_set_color(0, 0, 0x9E, 0); // green
       break;
     case LED_HEATING: {
       static const uint32_t half_period = 960; // ms for dim->saturated (tune speed here)
@@ -376,6 +376,7 @@ void setStatusLED(const enum StatusLED state) {
     case LED_COOLING_STILL_HOT: {
       // black -> red -> black -> green -> black, repeating
       static const uint32_t segment_ms = 1500; // tune fade speed here
+      static const uint8_t  green_max  = 0x9E;
       const uint32_t        t          = HAL_GetTick() % (segment_ms * 4);
       const uint32_t        seg        = t / segment_ms;
       const uint32_t        phase      = t % segment_ms;
@@ -389,10 +390,10 @@ void setStatusLED(const enum StatusLED state) {
         r = (uint8_t)(255 - (phase * 255) / segment_ms);
         break;
       case 2: // black -> green
-        g = (uint8_t)((phase * 255) / segment_ms);
+        g = (uint8_t)((phase * green_max) / segment_ms);
         break;
       case 3: // green -> black
-        g = (uint8_t)(255 - (phase * 255) / segment_ms);
+        g = (uint8_t)(green_max - (phase * green_max) / segment_ms);
         break;
       }
       ws2812.led_set_color(0, r, g, 0);
