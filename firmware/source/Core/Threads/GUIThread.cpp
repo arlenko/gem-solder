@@ -64,7 +64,8 @@ OperatingMode guiHandleDraw(void) {
     if (currentOperatingMode == OperatingMode::Sleeping) {
       setStatusLED(LED_SLEEPING);
     } else if (currentOperatingMode != OperatingMode::Soldering &&
-               currentOperatingMode != OperatingMode::SolderingProfile) {
+               currentOperatingMode != OperatingMode::SolderingProfile &&
+               currentOperatingMode != OperatingMode::TemperatureAdjust) {
       // Not in soldering mode, so set this based on temp.
       // Hysteresis: enter "still hot" at >= 60°C, leave it (to standby) at <= 55°C.
       if (tipTemp >= 60 || (ledCoolingStillHot && tipTemp > 55)) {
