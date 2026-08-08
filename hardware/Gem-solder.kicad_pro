@@ -626,7 +626,7 @@
           "group_by": false,
           "label": "Опис",
           "name": "Description",
-          "show": true
+          "show": false
         },
         {
           "group_by": false,

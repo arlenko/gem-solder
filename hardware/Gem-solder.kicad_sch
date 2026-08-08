@@ -16174,7 +16174,7 @@
 				)
 			)
 		)
-		(property "Value" "27k"
+		(property "Value" "20k"
 			(at 130.81 90.678 90)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16217,7 +16217,7 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2930084"
+		(property "LCSC Part Number" "C2907011"
 			(at 130.81 92.71 90)
 			(hide yes)
 			(show_name no)
@@ -16228,7 +16228,7 @@
 				)
 			)
 		)
-		(property "MPN" "FRC0603F2702TS"
+		(property "MPN" "FRC0603F2002TS"
 			(at 130.81 92.71 90)
 			(hide yes)
 			(show_name no)
@@ -17588,7 +17588,7 @@
 				)
 			)
 		)
-		(property "Value" "130k"
+		(property "Value" "20k"
 			(at 131.064 36.322 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -17631,7 +17631,7 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2907099"
+		(property "LCSC Part Number" "C2907011"
 			(at 134.62 35.56 0)
 			(hide yes)
 			(show_name no)
@@ -17642,7 +17642,7 @@
 				)
 			)
 		)
-		(property "MPN" "FRC0603J134 TS"
+		(property "MPN" "FRC0603F2002TS"
 			(at 134.62 35.56 0)
 			(hide yes)
 			(show_name no)
@@ -26370,7 +26370,7 @@
 				)
 			)
 		)
-		(property "Value" "27k"
+		(property "Value" "4k3"
 			(at 131.064 45.212 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26413,7 +26413,7 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2930084"
+		(property "LCSC Part Number" "C310281"
 			(at 134.62 44.45 0)
 			(hide yes)
 			(show_name no)
@@ -26424,7 +26424,7 @@
 				)
 			)
 		)
-		(property "MPN" "FRC0603F2702TS"
+		(property "MPN" "RS-03K4301FT"
 			(at 134.62 44.45 0)
 			(hide yes)
 			(show_name no)
