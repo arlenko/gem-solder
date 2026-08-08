@@ -143,7 +143,6 @@ bool currentSamplingAllowed(OperatingMode opMode) {
 #endif
 
   switch (opMode) {
-  case OperatingMode::Sleeping:
   case OperatingMode::Hibernating:
   case OperatingMode::ThermalRunaway:
   case OperatingMode::CJCCalibration:
