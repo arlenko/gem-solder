@@ -143,6 +143,7 @@ OperatingMode guiHandleDraw(void) {
     context.scratch_state.state4 = 1;
     gui_SolderingSleepingMode(buttons, &context);
     if (lastButtonTime > 0 || lastMovementTime > 0) {
+      clearTapToSleep();
       newMode = OperatingMode::Soldering;
     }
     break;

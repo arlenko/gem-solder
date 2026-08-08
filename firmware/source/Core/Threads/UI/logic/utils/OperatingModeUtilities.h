@@ -11,6 +11,7 @@ uint32_t getSleepTimeout(void);                    //
 uint32_t getHallEffectSleepTimeout(void);          //
 bool     shouldBeSleeping();                       //
 bool     shouldShutdown(void);                     //
+void     clearTapToSleep(void);                    //
 void     printVoltage(void);                       //
 bool     checkForUnderVoltage(void);               //
 uint16_t min(uint16_t a, uint16_t b);              //

@@ -11,6 +11,7 @@ OperatingMode gui_SolderingSleepingMode(const ButtonState buttons, guiContext *c
 
 #ifdef POW_DC
   if (checkForUnderVoltage()) {
+    clearTapToSleep();
     return OperatingMode::HomeScreen; // return non-zero on error
   }
 #endif
@@ -20,13 +21,16 @@ OperatingMode gui_SolderingSleepingMode(const ButtonState buttons, guiContext *c
     currentTempTargetDegC = 0;
   } else {
     if (getSettingValue(SettingsOptions::TemperatureInF)) {
-      currentTempTargetDegC = TipThermoModel::convertFtoC(min(getSettingValue(SettingsOptions::SleepTemp), getSettingValue(SettingsOptions::SolderingTemp)));
+      currentTempTargetDegC = TipThermoModel::convertFtoC(
+          min(getSettingValue(SettingsOptions::SleepTemp), getSettingValue(SettingsOptions::SolderingTemp)));
     } else {
-      currentTempTargetDegC = min(getSettingValue(SettingsOptions::SleepTemp), getSettingValue(SettingsOptions::SolderingTemp));
+      currentTempTargetDegC =
+          min(getSettingValue(SettingsOptions::SleepTemp), getSettingValue(SettingsOptions::SolderingTemp));
     }
   }
   // draw the lcd
-  uint16_t tipTemp = getSettingValue(SettingsOptions::TemperatureInF) ? TipThermoModel::getTipInF() : TipThermoModel::getTipInC();
+  uint16_t tipTemp =
+      getSettingValue(SettingsOptions::TemperatureInF) ? TipThermoModel::getTipInF() : TipThermoModel::getTipInC();
 
   if (getSettingValue(SettingsOptions::DetailedSoldering)) {
     ui_draw_soldering_detailed_sleep(tipTemp);
@@ -35,12 +39,14 @@ OperatingMode gui_SolderingSleepingMode(const ButtonState buttons, guiContext *c
   }
 
   if (!shouldBeSleeping()) {
+    clearTapToSleep();
     return cxt->previousMode;
   }
 
   if (shouldShutdown()) {
     // shutdown
     currentTempTargetDegC = 0;
+    clearTapToSleep();
     return OperatingMode::HomeScreen;
   }
   if (cxt->scratch_state.state4) {

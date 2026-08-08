@@ -4,6 +4,9 @@
 
 TickType_t        lastHallEffectSleepStart = 0;
 extern TickType_t lastMovementTime;
+static bool       inTapSleep = false;
+
+void clearTapToSleep(void) { inTapSleep = false; }
 
 bool shouldBeSleeping() {
 #ifndef NO_SLEEP_MODE
@@ -52,7 +55,6 @@ bool shouldBeSleeping() {
   uint32_t             now                = HAL_GetTick();
   static TickType_t    lastPinStateChange = 0;
   static GPIO_PinState prevPinState       = GPIO_PIN_SET;
-  static bool          inTapSleep         = false;
 
   if (pinState != prevPinState) {
     if (pinState == GPIO_PIN_SET && (now - lastPinStateChange) < TICKS_100MS * 2.5) {
@@ -61,6 +63,12 @@ bool shouldBeSleeping() {
     lastPinStateChange = HAL_GetTick();
   }
   prevPinState = pinState;
+
+  // The user may enable tap sleep while putting the handle into a stand.
+  // If the handle stays in stand for more than 1s then clean tap sleep flag.
+  if (inTapSleep && pinState == GPIO_PIN_RESET && ((now - lastPinStateChange) >= TICKS_SECOND)) {
+    inTapSleep = false;
+  }
 
   return pinState == GPIO_PIN_RESET || (tapToSleepEnabled && inTapSleep);
 #endif
