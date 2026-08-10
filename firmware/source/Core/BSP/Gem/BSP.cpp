@@ -36,13 +36,8 @@ static bool infastPWM;
 
 static volatile bool     currentSamplingActive   = false;
 static volatile uint32_t lastCurrentSamplingTick = 0;
-// While idling we want to stop timer after N pulses
-static const uint8_t    idleSamplingPulseCount = 4;
-static volatile uint8_t idlePulseCounter       = 0;
 
 extern OperatingMode currentOperatingMode;
-
-static history<uint32_t, idleSamplingPulseCount> rawCurrentSamplesFilter = {{0}, 0, 0};
 
 void resetWatchdog() { HAL_IWDG_Refresh(&hiwdg); }
 #ifdef TEMP_NTC
@@ -120,7 +115,7 @@ uint16_t getInputVoltageX10(uint16_t divisor, uint8_t sample) {
 }
 
 uint32_t getCurrentMilliamps() {
-  uint32_t adc      = rawCurrentSamplesFilter.average();
+  uint32_t adc      = HAL_ADC_GetValue(&hadc2);
   uint32_t v_adc_mV = ((uint32_t)adc * ADC_VDD_MV) / 4096;
   return (v_adc_mV * 1000) / (CURRENT_SENSE_SHUNT_RESISTANCE_mOhms * OP_AMP_CURRENT_SENSE_GAIN_STAGE);
 }
@@ -211,7 +206,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
         // Enable pulse-counting only for idle measurement bursts
         __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC1);
         __HAL_TIM_ENABLE_IT(&htimTip, TIM_IT_CC1);
-        idlePulseCounter = 0;
       }
     } else {
       __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF); // Set unreachable count to skip ADC trigger
@@ -250,21 +244,12 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
     }
   } else if (htim->Instance == TIM3 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
     if (currentSamplingActive && pendingPWM == 0) {
-      if (++idlePulseCounter >= idleSamplingPulseCount) {
-        HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
-        __HAL_TIM_DISABLE_IT(&htimTip, TIM_IT_CC1);
-        __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC1);
-        // currentSamplingActive left set so the CH4 handler finalizes
-        // lastCurrentSamplingTick and gates the next burst.
-      }
+      HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
+      __HAL_TIM_DISABLE_IT(&htimTip, TIM_IT_CC1);
+      __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC1);
+      // currentSamplingActive left set so the CH4 handler finalizes
+      // lastCurrentSamplingTick and gates the next burst.
     }
-  }
-}
-
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
-  if (hadc == &hadc2) {
-    // ADC2 regular conversion (CURRENT_SENSE) complete
-    rawCurrentSamplesFilter.update(HAL_ADC_GetValue(hadc));
   }
 }
 
