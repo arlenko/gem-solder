@@ -18,7 +18,7 @@ void power_check() {
 
 bool getIsPoweredByDCIN() {
 #ifdef POW_PD_STUSB4500
-  return !STUSB4500::is_attached(); // Must be DC if Type-C cable not attached
+  return !STUSB4500::is_vbus_ready();
 #endif
   return true;
 }

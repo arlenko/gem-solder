@@ -144,6 +144,7 @@ public:
   static bool                            has_run_selection();
   static const STUSB_PD_SRC_PDO_TypeDef *get_last_seen_capabilities(uint8_t *count);
   static stusb_debug_state_t             debug_get_state();
+  static bool                            is_vbus_ready();
 
 private:
   static bool update_PDO(uint8_t PDO_number, int voltage_mV, int current_mA);
