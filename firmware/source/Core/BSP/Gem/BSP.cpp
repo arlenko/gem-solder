@@ -36,10 +36,13 @@ static bool infastPWM;
 
 static volatile bool     currentSamplingActive   = false;
 static volatile uint32_t lastCurrentSamplingTick = 0;
+// While idling we want to stop timer after N pulses
+static const uint8_t    idleSamplingPulseCount = 4;
+static volatile uint8_t idlePulseCounter       = 0;
 
 extern OperatingMode currentOperatingMode;
 
-static history<uint32_t, 6> rawCurrentSamplesFilter = {{0}, 0, 0};
+static history<uint32_t, idleSamplingPulseCount> rawCurrentSamplesFilter = {{0}, 0, 0};
 
 void resetWatchdog() { HAL_IWDG_Refresh(&hiwdg); }
 #ifdef TEMP_NTC
@@ -204,6 +207,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
       thisCyclePWM = pendingPWM >= TIP_MEASUREMENT_DUTY ? pendingPWM : TIP_MEASUREMENT_DUTY;
       __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, thisCyclePWM / 2);
       currentSamplingActive = true;
+      if (pendingPWM == 0) {
+        // Enable pulse-counting only for idle measurement bursts
+        __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC1);
+        __HAL_TIM_ENABLE_IT(&htimTip, TIM_IT_CC1);
+        idlePulseCounter = 0;
+      }
     } else {
       __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF); // Set unreachable count to skip ADC trigger
     }
@@ -237,6 +246,17 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
     if (currentSamplingActive) {
       lastCurrentSamplingTick = HAL_GetTick();
       currentSamplingActive   = false;
+      __HAL_TIM_DISABLE_IT(&htimTip, TIM_IT_CC1); // covers natural burst end / soldering bursts
+    }
+  } else if (htim->Instance == TIM3 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
+    if (currentSamplingActive && pendingPWM == 0) {
+      if (++idlePulseCounter >= idleSamplingPulseCount) {
+        HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
+        __HAL_TIM_DISABLE_IT(&htimTip, TIM_IT_CC1);
+        __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC1);
+        // currentSamplingActive left set so the CH4 handler finalizes
+        // lastCurrentSamplingTick and gates the next burst.
+      }
     }
   }
 }
