@@ -301,7 +301,7 @@ static void MX_TIP_CONTROL_TIMER_Init(void) {
 
   htimTip.Instance = TIP_CONTROL_TIMER;
 #ifdef TIP_HAS_DIRECT_PWM
-  htimTip.Init.Prescaler = 100;
+  htimTip.Init.Prescaler = 311;
 #else
   htimTip.Init.Prescaler = 3;
 #endif
