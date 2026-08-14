@@ -25,9 +25,9 @@ WS2812<GPIOB_BASE, WS2812_Pin, 1> ws2812;
 volatile uint16_t PWMSafetyTimer = 0;
 volatile uint8_t  pendingPWM     = 0;
 
-const uint16_t       powerPWM         = 255;
-static const uint8_t holdoffTicks     = 14; // delay of 8 ms
-static const uint8_t tempMeasureTicks = 14;
+const uint16_t       powerPWM         = TIP_PWM_ARR;
+static const uint8_t holdoffTicks     = 15; // delay of ~8 ms
+static const uint8_t tempMeasureTicks = 15;
 
 uint16_t totalPWM; // htimADC.Init.Period, the full PWM cycle
 
@@ -151,14 +151,15 @@ bool currentSamplingAllowed(OperatingMode opMode) {
 }
 
 static void switchToFastPWM(void) {
-  // 10Hz
+  // 20Hz
   infastPWM              = true;
   totalPWM               = powerPWM + tempMeasureTicks + holdoffTicks;
   htimADC.Instance->ARR  = totalPWM;
   htimADC.Instance->CCR1 = powerPWM + holdoffTicks;
-  htimADC.Instance->PSC  = 2690;
+  htimADC.Instance->PSC  = 1500;
 }
 
+/*
 static void switchToSlowPWM(void) {
   // 5Hz
   infastPWM              = false;
@@ -167,6 +168,7 @@ static void switchToSlowPWM(void) {
   htimADC.Instance->CCR1 = powerPWM + holdoffTicks / 2;
   htimADC.Instance->PSC  = 2690 * 2;
 }
+*/
 
 void setTipPWM(const uint8_t pulse, const bool shouldUseFastModePWM) {
   PWMSafetyTimer = 20; // This is decremented in the handler for PWM so that the tip pwm is
@@ -219,12 +221,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
       HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
     }
 
-    if (fastPWM != infastPWM) {
-      if (fastPWM) {
-        switchToFastPWM();
-      } else {
-        switchToSlowPWM();
-      }
+    if (!infastPWM) {
+      switchToFastPWM();
     }
 
   } else if (htim->Instance == TIM1) {
