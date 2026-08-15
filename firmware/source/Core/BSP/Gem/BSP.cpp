@@ -34,8 +34,9 @@ uint16_t totalPWM; // htimADC.Init.Period, the full PWM cycle
 static bool fastPWM;
 static bool infastPWM;
 
-static volatile bool     currentSamplingActive   = false;
-static volatile uint32_t lastCurrentSamplingTick = 0;
+static volatile bool        currentSamplingActive   = false;
+static volatile uint32_t    lastCurrentSamplingTick = 0;
+static history<uint32_t, 2> rawCurrentSamplesFilter = {{0}, 0, 0};
 
 extern OperatingMode currentOperatingMode;
 
@@ -115,7 +116,7 @@ uint16_t getInputVoltageX10(uint16_t divisor, uint8_t sample) {
 }
 
 uint32_t getCurrentMilliamps() {
-  uint32_t adc      = HAL_ADC_GetValue(&hadc2);
+  uint32_t adc      = rawCurrentSamplesFilter.average();
   uint32_t v_adc_mV = ((uint32_t)adc * ADC_VDD_MV) / 4096;
   return (v_adc_mV * 1000) / (CURRENT_SENSE_SHUNT_RESISTANCE_mOhms * OP_AMP_CURRENT_SENSE_GAIN_STAGE);
 }
@@ -190,11 +191,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     // While we could assume this could never happen, its a small price for
     // increased safety
 
-    uint32_t now          = HAL_GetTick();
-    uint8_t  thisCyclePWM = pendingPWM; // Use callback scoped variable to avoid pendingPWM overwrite
-    uint32_t currentSamplingInterval =
-        currentOperatingMode == OperatingMode::Soldering ? TICKS_100MS * 5 : TICKS_SECOND;
-    bool shouldSampleCurrent =
+    uint32_t              now          = HAL_GetTick();
+    uint8_t               thisCyclePWM = pendingPWM; // Use callback scoped variable to avoid pendingPWM overwrite
+    static const uint32_t currentSamplingInterval = TICKS_SECOND / 2;
+    bool                  shouldSampleCurrent =
         (lastCurrentSamplingTick == 0 || (now - lastCurrentSamplingTick) > currentSamplingInterval);
 
     // Force higher duty cycle if current sampling needed. In soldering mode skip sampling
@@ -202,13 +202,15 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     if (shouldSampleCurrent && currentSamplingAllowed(currentOperatingMode) &&
         (currentOperatingMode != OperatingMode::Soldering || pendingPWM >= TIP_MEASUREMENT_DUTY)) {
       thisCyclePWM = pendingPWM >= TIP_MEASUREMENT_DUTY ? pendingPWM : TIP_MEASUREMENT_DUTY;
-      __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, thisCyclePWM / 2);
+      // At 20khz duration of a single pulse at 100% duty is 50us. Actual current sampling duty is ~80%.
+      // It takes ~4us for the ADC to complete conversion so we are safe to measure current at the
+      // middle of a pulse or a bit past the middle
+      uint8_t currentSamplingChannelPeriod = (thisCyclePWM * 7) / 10;
+      __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, currentSamplingChannelPeriod);
       currentSamplingActive = true;
-      if (pendingPWM == 0) {
-        // Enable pulse-counting only for idle measurement bursts
-        __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC1);
-        __HAL_TIM_ENABLE_IT(&htimTip, TIM_IT_CC1);
-      }
+      // Enable interrupt trigger at the end of each PWM pulse
+      __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC2);
+      __HAL_TIM_ENABLE_IT(&htimTip, TIM_IT_CC2);
     } else {
       __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF); // Set unreachable count to skip ADC trigger
     }
@@ -232,22 +234,29 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
-  // This was a when the PWM for the output has timed out
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4) {
+    // This was a when the PWM for the output has timed out
     HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
+  } else if (htim->Instance == TIM3 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
+    // This is when a single PWM pulse finished
     if (currentSamplingActive) {
       lastCurrentSamplingTick = HAL_GetTick();
       currentSamplingActive   = false;
-      __HAL_TIM_DISABLE_IT(&htimTip, TIM_IT_CC1); // covers natural burst end / soldering bursts
+      __HAL_TIM_DISABLE_IT(&htimTip, TIM_IT_CC2);
+      __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC2);
+      __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF); // Stop the ADC trigger
+      if (pendingPWM == 0) {
+        // Stop PWM output if the iron is idling
+        HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
+      }
     }
-  } else if (htim->Instance == TIM3 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_1) {
-    if (currentSamplingActive && pendingPWM == 0) {
-      HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
-      __HAL_TIM_DISABLE_IT(&htimTip, TIM_IT_CC1);
-      __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC1);
-      // currentSamplingActive left set so the CH4 handler finalizes
-      // lastCurrentSamplingTick and gates the next burst.
-    }
+  }
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
+  if (hadc == &hadc2) {
+    // ADC2 regular conversion (CURRENT_SENSE) complete
+    rawCurrentSamplesFilter.update(HAL_ADC_GetValue(hadc));
   }
 }
 

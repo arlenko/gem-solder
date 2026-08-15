@@ -158,9 +158,9 @@
 #define TIP_DISCONNECT_CURRENT_MA            10    // threshold below which tip is considered disconnected
 #define TIP_SHORT_CURRENT_MA                 12000 // threshold above which tip is considered shorted
 
-#define TIP_PWM_PSC          1   // PWM timer prescaler
-#define TIP_PWM_ARR          199 // PWM timer period. 199 at prescaler 1 gives 20 khz
-#define TIP_MEASUREMENT_DUTY 120 // PWM duty required for a valid current measurement
+#define TIP_PWM_PSC          1                  // PWM timer prescaler
+#define TIP_PWM_ARR          199                // PWM timer period. 199 at prescaler 1 gives 20 khz
+#define TIP_MEASUREMENT_DUTY (TIP_PWM_ARR - 40) // PWM duty required for a valid current measurement
 
 #define VOLTAGE_DIV           282 // Resistive divider from schematic
 #define CALIBRATION_OFFSET    900 // 900 - Default adc offset in uV

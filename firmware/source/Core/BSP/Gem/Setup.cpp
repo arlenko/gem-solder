@@ -52,7 +52,7 @@ void        Setup_HAL() {
   HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ADCReadings, (ADC_SAMPLES)); // start DMA of normal readings
   HAL_ADCEx_InjectedStart(&hadc1);                                   // enable injected readings
   HAL_ADCEx_InjectedStart(&hadc2);                                   // enable injected readings
-  HAL_ADC_Start(&hadc2);                                             // enable regular readings
+  HAL_ADC_Start_IT(&hadc2);                                          // enable regular readings
 }
 
 uint16_t getADCHandleTemp(uint8_t sample) {
