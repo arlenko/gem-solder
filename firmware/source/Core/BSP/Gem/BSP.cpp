@@ -197,18 +197,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     bool                  shouldSampleCurrent =
         (lastCurrentSamplingTick == 0 || (now - lastCurrentSamplingTick) > currentSamplingInterval);
 
-    // Force higher duty cycle if current sampling needed. In soldering mode skip sampling
-    // if pending PWM is too low to avoid PID regulartion interruption by forced duty cycle
-    if (shouldSampleCurrent && currentSamplingAllowed(currentOperatingMode) &&
-        (currentOperatingMode != OperatingMode::Soldering || pendingPWM >= TIP_MEASUREMENT_DUTY)) {
+    // Force higher duty cycle if current sampling needed.
+    // Once interrupt callback fires it will set duty cycle to pendingPWM
+    if (shouldSampleCurrent && currentSamplingAllowed(currentOperatingMode)) {
       thisCyclePWM = pendingPWM >= TIP_MEASUREMENT_DUTY ? pendingPWM : TIP_MEASUREMENT_DUTY;
       // At 20khz duration of a single pulse at 100% duty is 50us. Actual current sampling duty is ~80%.
       // It takes ~4us for the ADC to complete conversion so we are safe to measure current at the
       // middle of a pulse or a bit past the middle
-      uint8_t currentSamplingChannelPeriod = (thisCyclePWM * 7) / 10;
+      uint8_t currentSamplingChannelPeriod = (thisCyclePWM * 6) / 10;
       __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, currentSamplingChannelPeriod);
       currentSamplingActive = true;
-      // Enable interrupt trigger at the end of each PWM pulse
+      // Enable interrupt trigger
       __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC2);
       __HAL_TIM_ENABLE_IT(&htimTip, TIM_IT_CC2);
     } else {
@@ -245,6 +244,7 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
       __HAL_TIM_DISABLE_IT(&htimTip, TIM_IT_CC2);
       __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC2);
       __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF); // Stop the ADC trigger
+      __HAL_TIM_SET_COMPARE(&htimTip, PWM_Out_CHANNEL, pendingPWM);
       if (pendingPWM == 0) {
         // Stop PWM output if the iron is idling
         HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
