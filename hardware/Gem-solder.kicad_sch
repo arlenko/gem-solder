@@ -10701,10 +10701,6 @@
 		(uuid "3e705a57-9edf-46a3-97f8-77616b0c928e")
 	)
 	(no_connect
-		(at 331.47 66.04)
-		(uuid "40cd8091-e38f-42a4-8e64-41d802e9a0da")
-	)
-	(no_connect
 		(at 331.47 58.42)
 		(uuid "469ea37b-8bfb-41b1-8e18-87a01c5e82b9")
 	)
@@ -10751,10 +10747,6 @@
 	(no_connect
 		(at 203.2 215.9)
 		(uuid "94a991f8-448e-48f0-ae44-7d1869d813c1")
-	)
-	(no_connect
-		(at 331.47 68.58)
-		(uuid "98049056-166e-4825-8c79-e580fb69f008")
 	)
 	(no_connect
 		(at 295.91 50.8)
@@ -13716,6 +13708,16 @@
 	)
 	(wire
 		(pts
+			(xy 331.47 68.58) (xy 334.01 68.58)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c772efaf-b54d-4f92-b656-038c0a137424")
+	)
+	(wire
+		(pts
 			(xy 130.81 77.47) (xy 130.81 78.74)
 		)
 		(stroke
@@ -13823,6 +13825,16 @@
 			(type default)
 		)
 		(uuid "ce82803a-d346-423f-b035-26371eee7ce0")
+	)
+	(wire
+		(pts
+			(xy 331.47 66.04) (xy 334.01 66.04)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "cfdcdd4c-f3a8-456b-8de5-f6a9f12780b7")
 	)
 	(wire
 		(pts
@@ -15110,6 +15122,16 @@
 		)
 		(uuid "ccc69a9f-6c0d-478f-b6d2-e826dd1eca9c")
 	)
+	(label "USB_D+"
+		(at 334.01 68.58 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "cd0f3e5b-4e1e-4b71-85b8-870ac8418da2")
+	)
 	(label "SWCLK"
 		(at 50.8 106.68 0)
 		(effects
@@ -15129,6 +15151,16 @@
 			(justify left bottom)
 		)
 		(uuid "d2b6c5c9-141d-4984-b439-58926ce4aa2a")
+	)
+	(label "USB_D-"
+		(at 334.01 66.04 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d3215142-ba51-4201-bb19-e72073921e28")
 	)
 	(label "VDDA"
 		(at 318.77 27.94 90)
@@ -16091,7 +16123,7 @@
 		(dnp no)
 		(uuid "111c4e4b-c1ab-43cf-aa35-c08fa37ee27e")
 		(property "Reference" "D11"
-			(at 50.8 162.052 0)
+			(at 53.086 162.052 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16100,8 +16132,8 @@
 				)
 			)
 		)
-		(property "Value" "1N4148WS"
-			(at 50.546 164.084 0)
+		(property "Value" "1N4448WSF-7"
+			(at 48.006 164.084 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16110,7 +16142,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_SOD-323"
+		(property "Footprint" "Diode_SMD:D_SOD-323_HandSoldering"
 			(at 50.8 166.37 90)
 			(hide yes)
 			(show_name no)
@@ -27935,7 +27967,7 @@
 		(dnp no)
 		(uuid "c2d6a8a1-8775-4d6d-81e3-3baad2c9918b")
 		(property "Reference" "D10"
-			(at 60.96 153.924 0)
+			(at 53.086 155.448 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -27944,8 +27976,8 @@
 				)
 			)
 		)
-		(property "Value" "1N4148WS"
-			(at 60.96 158.75 0)
+		(property "Value" "1N4448WSF-7"
+			(at 48.006 157.734 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -27954,7 +27986,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_SOD-323"
+		(property "Footprint" "Diode_SMD:D_SOD-323_HandSoldering"
 			(at 60.96 156.21 90)
 			(hide yes)
 			(show_name no)
