@@ -31407,7 +31407,7 @@
 				)
 			)
 		)
-		(property "Footprint" "LED_SMD:LED_WS2812B-2020_PLCC4_2.0x2.0mm"
+		(property "Footprint" "Footprints:RGB_LED_WS2812B-2020_2.0x2.0mm"
 			(at 257.81 201.93 0)
 			(hide yes)
 			(show_name no)
