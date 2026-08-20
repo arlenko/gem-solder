@@ -138,8 +138,8 @@
 #define PID_TIM_HZ             (8) // Tick rate of the PID loop
 #define MAX_TEMP_C             450 // Max soldering temp selectable °C
 #define MAX_TEMP_F             850 // Max soldering temp selectable °F
-#define MIN_TEMP_C             10  // Min soldering temp selectable °C
-#define MIN_TEMP_F             50  // Min soldering temp selectable °F
+#define MIN_TEMP_C             40  // Min soldering temp selectable °C
+#define MIN_TEMP_F             100 // Min soldering temp selectable °F
 #define MIN_BOOST_TEMP_C       250 // The min settable temp for boost mode °C
 #define MIN_BOOST_TEMP_F       480 // The min settable temp for boost mode °F
 
@@ -150,30 +150,30 @@
 #define NO_ACCEL    1
 #define STAND_SENSE 1
 
-#define OP_AMP_CURRENT_SENSE_Rf              240 * 1000
-#define OP_AMP_CURRENT_SENSE_Rin             5.1 * 1000
-#define OP_AMP_CURRENT_SENSE_GAIN_STAGE      ((OP_AMP_CURRENT_SENSE_Rf) / (OP_AMP_CURRENT_SENSE_Rin))
-#define CURRENT_SENSE_SHUNT_RESISTANCE_mOhms 5
+#define OP_AMP_CURRENT_SENSE_Rf         240 * 1000
+#define OP_AMP_CURRENT_SENSE_Rin        5.1 * 1000
+#define OP_AMP_CURRENT_SENSE_GAIN_STAGE ((OP_AMP_CURRENT_SENSE_Rf) / (OP_AMP_CURRENT_SENSE_Rin))
+// Effective shunt resistance is 5mOhm plus ~1mOhm parasitic resistance of traces and solder joints
+#define CURRENT_SENSE_SHUNT_RESISTANCE_mOhms (5 + 1)
 #define TIP_DISCONNECT_CURRENT_MA            10    // threshold below which tip is considered disconnected
 #define TIP_SHORT_CURRENT_MA                 12000 // threshold above which tip is considered shorted
-// With a fast PWM at 100% duty duration of a pulse is ~3.2 ms or ~320 us at 10% duty.
-// It takes 5-10us to fully enhance the mosfet and ADC conversion takes ~4 us.
-// As we measure current at 1/2 of HIGH pulse 10% duty gives enough time for the current flow
-// through heater inductance to settle and perform a valid measurement without significantly heating the tip
-#define TIP_MEASUREMENT_DUTY 20
+
+#define TIP_PWM_PSC          1                  // PWM timer prescaler
+#define TIP_PWM_ARR          199                // PWM timer period. 199 at prescaler 1 gives 20 khz
+#define TIP_MEASUREMENT_DUTY (TIP_PWM_ARR - 40) // PWM duty required for a valid current measurement
 
 #define VOLTAGE_DIV           282 // Resistive divider from schematic
 #define CALIBRATION_OFFSET    900 // 900 - Default adc offset in uV
-#define PID_POWER_LIMIT       100 // Sets the max pwm power limit
-#define POWER_LIMIT           0   // 0 watts default limit
-#define MAX_POWER_LIMIT       100
+#define PID_POWER_LIMIT       100 // Sets the max pwm power limit. Seems that nothing reads it but let's keep for now
+#define POWER_LIMIT           0   // 0 watts default limit. User dettings power limit
+#define MAX_POWER_LIMIT       140 // Crank it up to 140W
 #define POWER_LIMIT_STEPS     5
 #define OP_AMP_Rf_Gem         390 * 1000 // 390  Kilo-ohms -> From schematic
 #define OP_AMP_Rin_Gem        1500       // 1.5 Kilo-ohms -> From schematic
 #define OP_AMP_GAIN_STAGE_Gem ((OP_AMP_Rf_Gem) / (OP_AMP_Rin_Gem))
 #define OP_AMP_GAIN_STAGE     OP_AMP_GAIN_STAGE_Gem
 #define TEMP_uV_LOOKUP_C245
-#define HARDWARE_MAX_WATTAGE_X10  1000
+#define HARDWARE_MAX_WATTAGE_X10  1400
 #define TIP_THERMAL_MASS          65 // X10 watts to raise 1 deg C in 1 second
 #define TIP_RESISTANCE            30 // x10 ohms
 #define FILTER_DISPLAYED_TIP_TEMP 4  // Filtering for GUI display
@@ -193,6 +193,7 @@
 #define HAS_POWER_DEBUG_MENU
 #define DEBUG_POWER_MENU_BUTTON_B
 
+#define WS2812_ENABLE 1 // This feature is in testing yet and not supported in v1.1 board revision
 #endif
 
 #define FLASH_LOGOADDR      (0x08000000 + (62 * 1024))

@@ -5,6 +5,7 @@
 #include "I2C_Wrapper.hpp"
 #include "OperatingModes.h"
 #include "Pins.h"
+#include "STUSB4500.hpp"
 #include "Settings.h"
 #include "Setup.h"
 #include "TipProfile.hpp"
@@ -15,24 +16,29 @@
 #include "main.hpp"
 #include <IRQ.h>
 
+#ifdef WS2812_ENABLE
+#include "WS2812.h"
+
+WS2812<GPIOB_BASE, WS2812_Pin, 1> ws2812;
+#endif
+
 volatile uint16_t PWMSafetyTimer = 0;
 volatile uint8_t  pendingPWM     = 0;
 
-const uint16_t       powerPWM         = 255;
-static const uint8_t holdoffTicks     = 14; // delay of 8 ms
-static const uint8_t tempMeasureTicks = 14;
+const uint16_t       powerPWM         = TIP_PWM_ARR;
+static const uint8_t holdoffTicks     = 15; // delay of ~8 ms
+static const uint8_t tempMeasureTicks = 15;
 
 uint16_t totalPWM; // htimADC.Init.Period, the full PWM cycle
 
 static bool fastPWM;
 static bool infastPWM;
 
-static volatile bool     currentSamplingActive   = false;
-static volatile uint32_t lastCurrentSamplingTick = 0;
+static volatile bool        currentSamplingActive   = false;
+static volatile uint32_t    lastCurrentSamplingTick = 0;
+static history<uint32_t, 2> rawCurrentSamplesFilter = {{0}, 0, 0};
 
 extern OperatingMode currentOperatingMode;
-
-static history<uint32_t, 6> rawCurrentSamplesFilter = {{0}, 0, 0};
 
 void resetWatchdog() { HAL_IWDG_Refresh(&hiwdg); }
 #ifdef TEMP_NTC
@@ -115,13 +121,27 @@ uint32_t getCurrentMilliamps() {
   return (v_adc_mV * 1000) / (CURRENT_SENSE_SHUNT_RESISTANCE_mOhms * OP_AMP_CURRENT_SENSE_GAIN_STAGE);
 }
 
+uint16_t getStandSenseVoltagemV() {
+  // The stand sense pin only reads correctly while the heater MOSFET is off: heater current
+  // couples into the tip and from there into the stand sense line, reading
+  // falsely high during conduction. Sample the pin voltage makes it more flexible
+  // and trustworhy than HAL_GPIO_ReadPin reading.
+  uint16_t adc = (hadc2.Instance->JDR3 + hadc2.Instance->JDR4) >> 1;
+  return (uint16_t)(((uint32_t)adc * ADC_VDD_MV) / 4096);
+}
+
 // We may need to disable current sampling for some operating modes
 bool currentSamplingAllowed(OperatingMode opMode) {
-  if (HAL_GetTick() < TICKS_100MS * 2)
+#if defined(POW_PD) || defined(POW_PD_STUSB4500)
+  // For PD capable device we wait for PD negotiation or time out
+  if (!STUSB4500::has_negotiated() && HAL_GetTick() < TICKS_SECOND * 2)
+    return false;
+#else
+  if (HAL_GetTick() < TICKS_SECOND * 0.5)
     return false; // Startup delay to allow hardware to settle
+#endif
 
   switch (opMode) {
-  case OperatingMode::Sleeping:
   case OperatingMode::Hibernating:
   case OperatingMode::ThermalRunaway:
   case OperatingMode::CJCCalibration:
@@ -132,14 +152,15 @@ bool currentSamplingAllowed(OperatingMode opMode) {
 }
 
 static void switchToFastPWM(void) {
-  // 10Hz
+  // 20Hz
   infastPWM              = true;
   totalPWM               = powerPWM + tempMeasureTicks + holdoffTicks;
   htimADC.Instance->ARR  = totalPWM;
   htimADC.Instance->CCR1 = powerPWM + holdoffTicks;
-  htimADC.Instance->PSC  = 2690;
+  htimADC.Instance->PSC  = 1500;
 }
 
+/*
 static void switchToSlowPWM(void) {
   // 5Hz
   infastPWM              = false;
@@ -148,6 +169,7 @@ static void switchToSlowPWM(void) {
   htimADC.Instance->CCR1 = powerPWM + holdoffTicks / 2;
   htimADC.Instance->PSC  = 2690 * 2;
 }
+*/
 
 void setTipPWM(const uint8_t pulse, const bool shouldUseFastModePWM) {
   PWMSafetyTimer = 20; // This is decremented in the handler for PWM so that the tip pwm is
@@ -169,20 +191,25 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
     // While we could assume this could never happen, its a small price for
     // increased safety
 
-    uint32_t now          = HAL_GetTick();
-    uint8_t  thisCyclePWM = pendingPWM; // Use callback scoped variable to avoid pendingPWM overwrite
-    uint32_t currentSamplingInterval =
-        currentOperatingMode == OperatingMode::Soldering ? TICKS_100MS * 5 : TICKS_SECOND;
-    bool shouldSampleCurrent =
+    uint32_t              now          = HAL_GetTick();
+    uint8_t               thisCyclePWM = pendingPWM; // Use callback scoped variable to avoid pendingPWM overwrite
+    static const uint32_t currentSamplingInterval = TICKS_SECOND / 2;
+    bool                  shouldSampleCurrent =
         (lastCurrentSamplingTick == 0 || (now - lastCurrentSamplingTick) > currentSamplingInterval);
 
-    // Force higher duty cycle if current sampling needed. In soldering mode skip sampling
-    // if pending PWM is too low to avoid PID regulartion interruption by forced duty cycle
-    if (shouldSampleCurrent && currentSamplingAllowed(currentOperatingMode) &&
-        (currentOperatingMode != OperatingMode::Soldering || pendingPWM >= TIP_MEASUREMENT_DUTY)) {
+    // Force higher duty cycle if current sampling needed.
+    // Once interrupt callback fires it will set duty cycle to pendingPWM
+    if (shouldSampleCurrent && currentSamplingAllowed(currentOperatingMode)) {
       thisCyclePWM = pendingPWM >= TIP_MEASUREMENT_DUTY ? pendingPWM : TIP_MEASUREMENT_DUTY;
-      __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, thisCyclePWM / 2);
+      // At 20khz duration of a single pulse at 100% duty is 50us. Actual current sampling duty is ~80%.
+      // It takes ~4us for the ADC to complete conversion so we are safe to measure current at the
+      // middle of a pulse or a bit past the middle
+      uint8_t currentSamplingChannelPeriod = (thisCyclePWM * 6) / 10;
+      __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, currentSamplingChannelPeriod);
       currentSamplingActive = true;
+      // Enable interrupt trigger
+      __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC2);
+      __HAL_TIM_ENABLE_IT(&htimTip, TIM_IT_CC2);
     } else {
       __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF); // Set unreachable count to skip ADC trigger
     }
@@ -195,12 +222,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
       HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
     }
 
-    if (fastPWM != infastPWM) {
-      if (fastPWM) {
-        switchToFastPWM();
-      } else {
-        switchToSlowPWM();
-      }
+    if (!infastPWM) {
+      switchToFastPWM();
     }
 
   } else if (htim->Instance == TIM1) {
@@ -210,12 +233,22 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
-  // This was a when the PWM for the output has timed out
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4) {
+    // This was a when the PWM for the output has timed out
     HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
+  } else if (htim->Instance == TIM3 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
+    // This is when a single PWM pulse finished
     if (currentSamplingActive) {
       lastCurrentSamplingTick = HAL_GetTick();
       currentSamplingActive   = false;
+      __HAL_TIM_DISABLE_IT(&htimTip, TIM_IT_CC2);
+      __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC2);
+      __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF); // Stop the ADC trigger
+      __HAL_TIM_SET_COMPARE(&htimTip, PWM_Out_CHANNEL, pendingPWM);
+      if (pendingPWM == 0) {
+        // Stop PWM output if the iron is idling
+        HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
+      }
     }
   }
 }
@@ -302,7 +335,12 @@ void unstick_I2C() {
 uint8_t getButtonA() { return HAL_GPIO_ReadPin(KEY_A_GPIO_Port, KEY_A_Pin) == GPIO_PIN_SET ? 1 : 0; }
 uint8_t getButtonB() { return HAL_GPIO_ReadPin(KEY_B_GPIO_Port, KEY_B_Pin) == GPIO_PIN_SET ? 1 : 0; }
 
-void BSPInit(void) { switchToFastPWM(); }
+void BSPInit(void) {
+  switchToFastPWM();
+#ifdef WS2812_ENABLE
+  ws2812.init();
+#endif
+}
 
 void reboot() { NVIC_SystemReset(); }
 
@@ -322,7 +360,49 @@ bool isTipDisconnected() {
   return getCurrentMilliamps() <= TIP_DISCONNECT_CURRENT_MA;
 }
 
-void setStatusLED(const enum StatusLED state) {}
+void setStatusLED(const enum StatusLED state) {
+#ifdef WS2812_ENABLE
+  static enum StatusLED lastState = LED_UNKNOWN;
+
+  if (lastState != state || state == LED_HEATING || state == LED_COOLING_STILL_HOT) {
+    switch (state) {
+    default:
+    case LED_UNKNOWN:
+    case LED_OFF:
+      ws2812.led_set_color(0, 0, 0, 0);
+      break;
+    case LED_STANDBY:
+      ws2812.led_set_color(0, 0, 0x9E, 0); // green
+      break;
+    case LED_HEATING: {
+      static const uint32_t half_period = 960; // ms for dim->saturated (tune speed here)
+      const uint32_t        t           = HAL_GetTick() % (half_period * 2);
+      const uint32_t        tri         = (t < half_period) ? t : (half_period * 2 - t);
+      const uint8_t         red         = (uint8_t)(64 + (tri * (255 - 64)) / half_period);
+      ws2812.led_set_color(0, red, 0, 0);
+    } break;
+    case LED_HOT:
+      ws2812.led_set_color(0, 0xFF, 0, 0); // red
+      break;
+    case LED_COOLING_STILL_HOT: {
+      // black -> orange -> black, repeating
+      static const uint32_t half_period = 1500; // ms for dim->saturated (tune speed here)
+      const uint32_t        t           = HAL_GetTick() % (half_period * 2);
+      const uint32_t        tri         = (t < half_period) ? t : (half_period * 2 - t);
+      const uint8_t         red         = (uint8_t)(64 + (tri * (255 - 64)) / half_period);
+      const uint8_t         green       = (uint8_t)(32 + (tri * (128 - 32)) / half_period);
+      ws2812.led_set_color(0, red, green, 0);
+    } break;
+    case LED_SLEEPING:
+      ws2812.led_set_color(0, 0x40, 0x00, 0x80); // dark violet #400080
+      break;
+    }
+    ws2812.led_update();
+    lastState = state;
+  }
+#endif
+}
+
 void setBuzzer(bool on) {}
 
 uint8_t preStartChecks() { return 1; }
@@ -350,5 +430,6 @@ bool isTipShorted() { return getCurrentMilliamps() >= TIP_SHORT_CURRENT_MA; }
 
 uint16_t getTipThermalMass() { return TIP_C245.thermalMass; }
 uint16_t getTipInertia() { return TIP_C245.inertia; }
+uint8_t  getTipPowerRating() { return TIP_C245.powerRating; }
 
 void showBootLogo(void) { BootLogo::handleShowingLogo((uint8_t *)FLASH_LOGOADDR); }

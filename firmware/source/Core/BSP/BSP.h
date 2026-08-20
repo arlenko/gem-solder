@@ -76,6 +76,8 @@ void log_system_state(int32_t PWMWattsx10);
 // Returns true if the tip is disconnected
 bool isTipDisconnected();
 
+uint8_t getTipPowerRating();
+
 // Return hardware unique ID if possible
 uint64_t getDeviceID();
 
@@ -83,6 +85,8 @@ uint64_t getDeviceID();
 uint32_t getDeviceValidation();
 // If device validation passes returns 0
 uint8_t getDeviceValidationStatus();
+
+uint16_t getStandSenseVoltagemV();
 
 // Status LED controls
 
@@ -92,6 +96,7 @@ enum StatusLED {
   LED_HEATING,           // The unit is heating up to temperature
   LED_HOT,               // The unit is at operating temperature
   LED_COOLING_STILL_HOT, // The unit is off and cooling but still hot
+  LED_SLEEPING,          // The unit is in sleep mode
   LED_UNKNOWN,           //
 };
 void setStatusLED(const enum StatusLED state);

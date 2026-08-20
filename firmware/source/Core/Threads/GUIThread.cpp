@@ -36,13 +36,14 @@ extern "C" {
 #define MOVEMENT_INACTIVITY_TIME (60 * configTICK_RATE_HZ)
 #define BUTTON_INACTIVITY_TIME   (60 * configTICK_RATE_HZ)
 
-ButtonState   buttonsAtDeviceBoot;                                      // We record button state at startup, incase of jumping to debug modes
+ButtonState   buttonsAtDeviceBoot; // We record button state at startup, incase of jumping to debug modes
 OperatingMode currentOperatingMode = OperatingMode::InitialisationDone; // Current mode we are rendering
-guiContext    context;                                                  // Context passed to functions to aid in state during render passes
+guiContext    context; // Context passed to functions to aid in state during render passes
 
 OperatingMode handle_post_init_state();
 OperatingMode guiHandleDraw(void) {
-  OLED::clearScreen(); // Clear ready for render pass
+  static bool ledCoolingStillHot = false; // Hysteresis: stays "hot" until tip drops to 55°C
+  OLED::clearScreen();                    // Clear ready for render pass
   // Read button state
   ButtonState buttons = getButtonState();
   // Enforce screen on if buttons pressed, movement, hot tip etc
@@ -52,18 +53,27 @@ OperatingMode guiHandleDraw(void) {
     // Buttons are none; check if we can sleep display
     uint32_t tipTemp = TipThermoModel::getTipInC();
     if ((tipTemp < 50) && getSettingValue(SettingsOptions::Sensitivity) &&
-        (((xTaskGetTickCount() - lastMovementTime) > MOVEMENT_INACTIVITY_TIME) && ((xTaskGetTickCount() - lastButtonTime) > BUTTON_INACTIVITY_TIME))) {
+        (((xTaskGetTickCount() - lastMovementTime) > MOVEMENT_INACTIVITY_TIME) &&
+         ((xTaskGetTickCount() - lastButtonTime) > BUTTON_INACTIVITY_TIME))) {
       OLED::setDisplayState(OLED::DisplayState::OFF);
       setStatusLED(LED_OFF);
     } else {
       OLED::setDisplayState(OLED::DisplayState::ON);
     }
-    if (currentOperatingMode != OperatingMode::Soldering && currentOperatingMode != OperatingMode::SolderingProfile) {
-      // Not in soldering mode, so set this based on temp
-      if (tipTemp > 55) {
+    // Set status LED
+    if (currentOperatingMode == OperatingMode::Sleeping) {
+      setStatusLED(LED_SLEEPING);
+    } else if (currentOperatingMode != OperatingMode::Soldering &&
+               currentOperatingMode != OperatingMode::SolderingProfile &&
+               currentOperatingMode != OperatingMode::TemperatureAdjust) {
+      // Not in soldering mode, so set this based on temp.
+      // Hysteresis: enter "still hot" at >= 60°C, leave it (to standby) at <= 55°C.
+      if (tipTemp >= 60 || (ledCoolingStillHot && tipTemp > 55)) {
         setStatusLED(LED_COOLING_STILL_HOT);
+        ledCoolingStillHot = true;
       } else {
         setStatusLED(LED_STANDBY);
+        ledCoolingStillHot = false;
       }
     }
   }
@@ -84,14 +94,16 @@ OperatingMode guiHandleDraw(void) {
     showBootLogo();
 
     if (getSettingValue(SettingsOptions::AutoStartMode) == autoStartMode_t::SLEEP) {
-      lastMovementTime = lastButtonTime = 0; // We mask the values so that sleep goes until user moves again or presses a button
-      newMode                           = OperatingMode::Sleeping;
+      lastMovementTime = lastButtonTime =
+          0; // We mask the values so that sleep goes until user moves again or presses a button
+      newMode = OperatingMode::Sleeping;
     } else if (getSettingValue(SettingsOptions::AutoStartMode) == autoStartMode_t::SOLDER) {
       lastMovementTime = lastButtonTime = xTaskGetTickCount(); // Move forward so we dont go to sleep
       newMode                           = OperatingMode::Soldering;
     } else if (getSettingValue(SettingsOptions::AutoStartMode) == autoStartMode_t::ZERO) {
-      lastMovementTime = lastButtonTime = 0; // We mask the values so that sleep goes until user moves again or presses a button
-      newMode                           = OperatingMode::Hibernating;
+      lastMovementTime = lastButtonTime =
+          0; // We mask the values so that sleep goes until user moves again or presses a button
+      newMode = OperatingMode::Hibernating;
     } else {
       newMode = OperatingMode::HomeScreen;
     }
@@ -131,6 +143,7 @@ OperatingMode guiHandleDraw(void) {
     context.scratch_state.state4 = 1;
     gui_SolderingSleepingMode(buttons, &context);
     if (lastButtonTime > 0 || lastMovementTime > 0) {
+      clearTapToSleep();
       newMode = OperatingMode::Soldering;
     }
     break;
@@ -149,7 +162,8 @@ void guiRenderLoop(void) {
   if (newMode != currentOperatingMode) {
     context.viewEnterTime = xTaskGetTickCount();
     context.previousMode  = currentOperatingMode;
-    // If the previous mode is the startup logo; we dont want to return to it, but instead dispatch out to either home or soldering
+    // If the previous mode is the startup logo; we dont want to return to it, but instead dispatch out to either home
+    // or soldering
     if (currentOperatingMode == OperatingMode::StartupLogo) {
       if (getSettingValue(SettingsOptions::AutoStartMode)) {
         context.previousMode = OperatingMode::Soldering;
@@ -161,7 +175,8 @@ void guiRenderLoop(void) {
     currentOperatingMode = newMode;
   }
 
-  // If the transition marker is set, we need to make the next draw occur to the secondary buffer so we have something to transition to
+  // If the transition marker is set, we need to make the next draw occur to the secondary buffer so we have something
+  // to transition to
   if (context.transitionMode != TransitionAnimation::None) {
     OLED::useSecondaryFramebuffer(true);
     // Now we need to fill the secondary buffer with the _next_ frame to transistion to
@@ -239,6 +254,8 @@ void startGUITask(void const *argument) {
   for (;;) {
     guiRenderLoop();
     resetWatchdog();
-    vTaskDelayUntil(&startRender, TICKS_100MS * 4 / 10); // Try and maintain 20-25fps ish update rate, way to fast but if we can its nice
+    vTaskDelayUntil(&startRender,
+                    TICKS_100MS * 4 /
+                        10); // Try and maintain 20-25fps ish update rate, way to fast but if we can its nice
   }
 }

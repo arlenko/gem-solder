@@ -626,7 +626,7 @@
           "group_by": false,
           "label": "Опис",
           "name": "Description",
-          "show": true
+          "show": false
         },
         {
           "group_by": false,
@@ -707,7 +707,7 @@
         "uuid": "e995e176-4cc5-4712-82b3-f345b748de65"
       }
     ],
-    "used_designators": "#FLG6,F2,Q1,Q3-4,#PWR60-62,R10,R33-39,D6,D9",
+    "used_designators": "#FLG6,F2,Q1,Q3-5,#PWR60-63,R10,R33-40,C28,D6,D9-12",
     "variants": []
   },
   "sheets": [

@@ -251,4 +251,15 @@ const STUSB_PD_SRC_PDO_TypeDef *STUSB4500::get_last_seen_capabilities(uint8_t *c
   return srcPDO;
 }
 
+bool STUSB4500::is_vbus_ready() {
+  uint8_t                            Data;
+  STUSB_MONITORING_STATUS_RegTypeDef monitoringStatus;
+
+  if (!stusb_read(STUSB_TYPEC_MONITORING_STATUS_1, &Data, 1)) {
+    return false; // I2C error
+  }
+  monitoringStatus.d8 = Data;
+  return monitoringStatus.b.VBUS_READY == 1; // 1 = ready, 0 = not ready
+}
+
 #endif

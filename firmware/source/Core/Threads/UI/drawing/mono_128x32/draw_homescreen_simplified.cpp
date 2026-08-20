@@ -10,16 +10,14 @@ void ui_draw_homescreen_simplified(TemperatureType_t tipTemp) {
   bool tempOnDisplay          = false;
   bool tipDisconnectedDisplay = false;
   if (OLED::getRotation()) {
-    OLED::drawArea(68, 0, 56, 32, buttonAF);
-    OLED::drawArea(12, 0, 56, 32, buttonBF);
-    OLED::setCursor(0, 0);
-    ui_draw_power_source_icon();
+    OLED::drawArea(58, 0, 56, 32, buttonAF);
+    OLED::drawArea(0, 0, 56, 32, buttonBF);
   } else {
     OLED::drawArea(0, 0, 56, 32, buttonA);  // Needs to be flipped so button ends up
     OLED::drawArea(58, 0, 56, 32, buttonB); // on right side of screen
-    OLED::setCursor(116, 0);
-    ui_draw_power_source_icon();
   }
+  OLED::setCursor(116, 0);
+  ui_draw_power_source_icon();
   tipDisconnectedDisplay = false;
   if (tipTemp > 55) {
     tempOnDisplay = true;
@@ -35,8 +33,8 @@ void ui_draw_homescreen_simplified(TemperatureType_t tipTemp) {
     // Location changes on screen rotation
     if (OLED::getRotation()) {
       // in right handed mode we want to draw over the first part
-      OLED::fillArea(68, 0, 56, 32, 0); // clear the area for the temp
-      OLED::setCursor(68, 4);           // y=4 centres the 24px temp; x=68 over the cleared area
+      OLED::fillArea(58, 0, 56, 32, 0); // clear the area for the temp
+      OLED::setCursor(58, 4);           // y=4 centres the 24px temp; x=68 over the cleared area
     } else {
       OLED::fillArea(0, 0, 56, 32, 0); // clear the area
       OLED::setCursor(12, 4);          // y=4 centres the 24px temp; x=12 nudges it one digit right
@@ -45,13 +43,16 @@ void ui_draw_homescreen_simplified(TemperatureType_t tipTemp) {
     if (!tipDisconnectedDisplay) {
       // draw in the temp
       if (!(getSettingValue(SettingsOptions::CoolingTempBlink) && (xTaskGetTickCount() % 1000 < 300))) {
+        if (OLED::getRotation()) {
+          OLED::setCursor(OLED::getCursorX() + 8, 4);
+        }
         ui_draw_tip_temperature(false, FontStyle::LARGE); // draw in the temp
       }
     } else {
       // Draw in missing tip symbol
       if (OLED::getRotation()) {
         // in right handed mode we want to draw over the first part
-        OLED::drawArea(54, 0, 56, 32, disconnectedTipF);
+        OLED::drawArea(56, 0, 56, 32, disconnectedTipF);
       } else {
         OLED::drawArea(0, 0, 56, 32, disconnectedTip);
       }
