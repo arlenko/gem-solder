@@ -135,7 +135,6 @@
 
 #define MIN_CALIBRATION_OFFSET 100 // Min value for calibration
 #define SOLDERING_TEMP         320 // Default soldering temp is 320.0 °C
-#define PID_TIM_HZ             (8) // Tick rate of the PID loop
 #define MAX_TEMP_C             450 // Max soldering temp selectable °C
 #define MAX_TEMP_F             850 // Max soldering temp selectable °F
 #define MIN_TEMP_C             40  // Min soldering temp selectable °C
@@ -174,8 +173,6 @@
 #define OP_AMP_GAIN_STAGE     OP_AMP_GAIN_STAGE_Gem
 #define TEMP_uV_LOOKUP_C245
 #define HARDWARE_MAX_WATTAGE_X10  1400
-#define TIP_THERMAL_MASS          65 // X10 watts to raise 1 deg C in 1 second
-#define TIP_RESISTANCE            30 // x10 ohms
 #define FILTER_DISPLAYED_TIP_TEMP 4  // Filtering for GUI display
 
 #define TIP_HAS_DIRECT_PWM 1
