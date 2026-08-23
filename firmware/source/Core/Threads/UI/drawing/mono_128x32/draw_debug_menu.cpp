@@ -7,6 +7,7 @@
 extern osThreadId GUITaskHandle;
 // extern osThreadId MOVTaskHandle;
 extern osThreadId PIDTaskHandle;
+extern int32_t    powerSupplyWattageLimit;
 
 void ui_draw_debug_menu(const uint8_t item_number) {
   OLED::setCursor(0, 0);                                   // Position the cursor at the 0,0 (top left)
@@ -62,8 +63,9 @@ void ui_draw_debug_menu(const uint8_t item_number) {
   case 9: // Movement Timestamp
     OLED::printNumber(lastMovementTime / TICKS_100MS, 8, FontStyle::SMALL);
     break;
-  case 10:                                                              // Tip Resistance in Ω
-    OLED::printNumber(getTipResistanceX10() / 10, 6, FontStyle::SMALL); // large to pad over so that we cover ID left overs
+  case 10: // Tip Resistance in Ω
+    OLED::printNumber(getTipResistanceX10() / 10, 6,
+                      FontStyle::SMALL); // large to pad over so that we cover ID left overs
     OLED::print(SmallSymbolDot, FontStyle::SMALL);
     OLED::printNumber(getTipResistanceX10() % 10, 1, FontStyle::SMALL);
     break;
@@ -82,9 +84,11 @@ void ui_draw_debug_menu(const uint8_t item_number) {
   case 15: // High Water Mark for PID Task
     OLED::printNumber(uxTaskGetStackHighWaterMark(PIDTaskHandle), 8, FontStyle::SMALL);
     break;
+  case 16: // Power supply wattage limit
+    OLED::printNumber(powerSupplyWattageLimit, 4, FontStyle::SMALL);
     break;
 #ifdef HALL_SENSOR
-  case 16: // Raw Hall Effect Value
+  case 17: // Raw Hall Effect Value
   {
     int16_t hallEffectStrength = getRawHallEffect();
     if (hallEffectStrength < 0) {

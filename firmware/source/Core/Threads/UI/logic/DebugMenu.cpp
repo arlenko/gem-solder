@@ -19,9 +19,9 @@ OperatingMode showDebugMenu(const ButtonState buttons, guiContext *cxt) {
     }
 #endif
 #ifdef HALL_SENSOR
-    cxt->scratch_state.state1 = cxt->scratch_state.state1 % 17;
+    cxt->scratch_state.state1 = cxt->scratch_state.state1 % 18;
 #else
-    cxt->scratch_state.state1 = cxt->scratch_state.state1 % 16;
+    cxt->scratch_state.state1 = cxt->scratch_state.state1 % 17;
 #endif
   }
   return OperatingMode::DebugMenuReadout; // Stay in debug menu
