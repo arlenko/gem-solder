@@ -173,7 +173,12 @@
 #define OP_AMP_GAIN_STAGE     OP_AMP_GAIN_STAGE_Gem
 #define TEMP_uV_LOOKUP_C245
 #define HARDWARE_MAX_WATTAGE_X10  1400
-#define FILTER_DISPLAYED_TIP_TEMP 4  // Filtering for GUI display
+#define FILTER_DISPLAYED_TIP_TEMP 8 // Filtering for GUI display
+
+#define TIP_CONTROL_PID // We use PID rather than integrator
+#define TIP_PID_KP      45
+#define TIP_PID_KI      9
+#define TIP_PID_KD      75
 
 #define TIP_HAS_DIRECT_PWM 1
 #define POW_DC             1
