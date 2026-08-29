@@ -152,12 +152,12 @@ bool currentSamplingAllowed(OperatingMode opMode) {
 }
 
 static void switchToFastPWM(void) {
-  // 20Hz
+  // 22Hz
   infastPWM              = true;
   totalPWM               = powerPWM + tempMeasureTicks + holdoffTicks;
   htimADC.Instance->ARR  = totalPWM;
   htimADC.Instance->CCR1 = powerPWM + holdoffTicks;
-  htimADC.Instance->PSC  = 1500;
+  htimADC.Instance->PSC  = 1580;
 }
 
 /*
