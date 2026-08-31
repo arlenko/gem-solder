@@ -204,7 +204,7 @@ int32_t getPIDResultX10Watts(TemperatureType_t set_point, TemperatureType_t curr
   static TickType_t lastCall = 0;
 
 #ifdef TIP_CONTROL_PID
-  static PID<TemperatureType_t, TIP_PID_KP, TIP_PID_KI, TIP_PID_KD, 5> pid = {0, 0};
+  static PID<TemperatureType_t, TIP_PID_KP, TIP_PID_KI, TIP_PID_KD, TIP_PID_INTEGRAL_LIMIT_SCALE> pid = {0, 0};
 
   const TickType_t interval = (xTaskGetTickCount() - lastCall);
 
