@@ -11,6 +11,7 @@ void clearTapToSleep(void) { inTapSleep = false; }
 
 bool shouldBeSleeping() {
 #ifndef NO_SLEEP_MODE
+#ifndef NO_ACCEL
   // Return true if the iron should be in sleep mode
   if (getSettingValue(SettingsOptions::Sensitivity) && getSettingValue(SettingsOptions::SleepTime)) {
     // In auto start we are asleep until movement
@@ -24,6 +25,7 @@ bool shouldBeSleeping() {
       }
     }
   }
+#endif
 
 #ifdef HALL_SENSOR
   // If the hall effect sensor is enabled in the build, check if its over
