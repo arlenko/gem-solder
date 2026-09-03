@@ -385,12 +385,11 @@ void setStatusLED(const enum StatusLED state) {
       ws2812.led_set_color(0, 0xFF, 0, 0); // red
       break;
     case LED_COOLING_STILL_HOT: {
-      // black -> orange -> black, repeating
       static const uint32_t half_period = 1500; // ms for dim->saturated (tune speed here)
       const uint32_t        t           = HAL_GetTick() % (half_period * 2);
       const uint32_t        tri         = (t < half_period) ? t : (half_period * 2 - t);
-      const uint8_t         red         = (uint8_t)(64 + (tri * (255 - 64)) / half_period);
-      const uint8_t         green       = (uint8_t)(32 + (tri * (128 - 32)) / half_period);
+      const uint8_t         red         = (uint8_t)(64 + (tri * (194 - 64)) / half_period);
+      const uint8_t         green       = (uint8_t)(64 + (tri * (194 - 64)) / half_period);
       ws2812.led_set_color(0, red, green, 0);
     } break;
     case LED_SLEEPING:
