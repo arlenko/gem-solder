@@ -34,9 +34,10 @@ uint16_t totalPWM; // htimADC.Init.Period, the full PWM cycle
 static bool fastPWM;
 static bool infastPWM;
 
-static volatile bool        currentSamplingActive   = false;
-static volatile uint32_t    lastCurrentSamplingTick = 0;
-static history<uint32_t, 2> rawCurrentSamplesFilter = {{0}, 0, 0};
+static volatile bool                            currentSamplingActive   = false;
+static volatile uint32_t                        lastCurrentSamplingTick = 0;
+static const uint8_t                            currentSamplingPulses   = 2;
+static history<uint32_t, currentSamplingPulses> rawCurrentSamplesFilter = {{0}, 0, 0};
 
 extern OperatingMode currentOperatingMode;
 
@@ -193,7 +194,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
     uint32_t              now          = HAL_GetTick();
     uint8_t               thisCyclePWM = pendingPWM; // Use callback scoped variable to avoid pendingPWM overwrite
-    static const uint32_t currentSamplingInterval = TICKS_SECOND / 2;
+    static const uint32_t currentSamplingInterval = TICKS_SECOND;
     bool                  shouldSampleCurrent =
         (lastCurrentSamplingTick == 0 || (now - lastCurrentSamplingTick) > currentSamplingInterval);
 
@@ -233,23 +234,30 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
+  static uint8_t currentSamplingPulseCounter = 0;
+
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4) {
     // This was a when the PWM for the output has timed out
     HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
   } else if (htim->Instance == TIM3 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
-    // This is when a single PWM pulse finished
+    // This is when a single PWM pulse of current sampling timer channel finished
     if (currentSamplingActive) {
+      currentSamplingPulseCounter++;
       lastCurrentSamplingTick = HAL_GetTick();
-      currentSamplingActive   = false;
-      __HAL_TIM_DISABLE_IT(&htimTip, TIM_IT_CC2);
-      __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC2);
-      __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF); // Stop the ADC trigger
-      __HAL_TIM_SET_COMPARE(&htimTip, PWM_Out_CHANNEL, pendingPWM);
-      if (pendingPWM == 0) {
-        // Stop PWM output if the iron is idling
-        HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
+      // Stop current sampling after N pulses to avoid high impact on tip heating
+      if (currentSamplingPulseCounter >= currentSamplingPulses) {
+        currentSamplingPulseCounter = 0; // Reset counter
+        currentSamplingActive       = false;
+        __HAL_TIM_DISABLE_IT(&htimTip, TIM_IT_CC2);
+        __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC2);
+        __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF); // Stop the ADC trigger
+        __HAL_TIM_SET_COMPARE(&htimTip, PWM_Out_CHANNEL, pendingPWM);
+        if (pendingPWM == 0) {
+          // Stop PWM output if the iron is idling
+          HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
+        }
       }
-    }
+    } // currentSamplingActive
   }
 }
 
