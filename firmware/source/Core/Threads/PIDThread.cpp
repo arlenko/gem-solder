@@ -152,9 +152,9 @@ template <class T, T Kp, T Ki, T Kd, T integral_limit_scale> struct PID {
     // Calculate the integral term, we use a shift 100 to get precision in integral as we often need small amounts
     T ki_result = integration_running_sum / 100;
 
-    // Derivative term
+    // Derivative term. Shift it by 10 to match integral term ms -> Seconds / 100 gain
     T derivative = (target_delta - previous_error_term);
-    T kd_result  = ((Kd * derivative) / (T)(interval_ms));
+    T kd_result  = ((Kd * derivative * 10) / (T)(interval_ms));
 
     // Summation of the outputs
     T output = kp_result + ki_result + kd_result;
