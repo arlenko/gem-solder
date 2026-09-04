@@ -161,7 +161,6 @@ static void switchToFastPWM(void) {
   htimADC.Instance->PSC  = 1580;
 }
 
-/*
 static void switchToSlowPWM(void) {
   // 5Hz
   infastPWM              = false;
@@ -170,7 +169,6 @@ static void switchToSlowPWM(void) {
   htimADC.Instance->CCR1 = powerPWM + holdoffTicks / 2;
   htimADC.Instance->PSC  = 2690 * 2;
 }
-*/
 
 void setTipPWM(const uint8_t pulse, const bool shouldUseFastModePWM) {
   PWMSafetyTimer = 20; // This is decremented in the handler for PWM so that the tip pwm is
@@ -223,8 +221,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
       HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
     }
 
-    if (!infastPWM) {
-      switchToFastPWM();
+    if (fastPWM != infastPWM) {
+      if (fastPWM) {
+        switchToFastPWM();
+      } else {
+        switchToSlowPWM();
+      }
     }
 
   } else if (htim->Instance == TIM1) {

@@ -10,7 +10,7 @@
 #include <power.hpp>
 
 static int32_t PWMToX10Watts(uint8_t pwm, uint8_t sample);
-const int      fastPWMChangeoverPoint     = 128;
+const int      fastPWMChangeoverPoint     = TIP_PWM_ARR / 2;
 const int      fastPWMChangeoverTolerance = 16;
 
 expMovingAverage<uint32_t, wattHistoryFilter> x10WattHistory = {0};
