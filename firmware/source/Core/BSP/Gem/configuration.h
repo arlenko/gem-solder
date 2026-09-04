@@ -133,7 +133,7 @@
 #define USB_PD_I2CBB2    1  // PD controller is on the I2C bus 2
 #define USB_PD_VMAX      20 // Max voltage to negotiate with PD source
 
-#define MIN_CALIBRATION_OFFSET 100 // Min value for calibration
+#define MIN_CALIBRATION_OFFSET 0   // Min value for calibration
 #define SOLDERING_TEMP         320 // Default soldering temp is 320.0 °C
 #define MAX_TEMP_C             450 // Max soldering temp selectable °C
 #define MAX_TEMP_F             850 // Max soldering temp selectable °F
@@ -162,7 +162,7 @@
 #define TIP_MEASUREMENT_DUTY (TIP_PWM_ARR - 40) // PWM duty required for a valid current measurement
 
 #define VOLTAGE_DIV           282 // Resistive divider from schematic
-#define CALIBRATION_OFFSET    900 // 900 - Default adc offset in uV
+#define CALIBRATION_OFFSET    20  // Default adc offset in uV
 #define PID_POWER_LIMIT       100 // Sets the max pwm power limit. Seems that nothing reads it but let's keep for now
 #define POWER_LIMIT           0   // 0 watts default limit. User dettings power limit
 #define MAX_POWER_LIMIT       140 // Crank it up to 140W
