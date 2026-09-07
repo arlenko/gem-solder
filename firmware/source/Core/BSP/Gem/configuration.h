@@ -186,15 +186,11 @@
 #define OLED_I2CBB1        1
 #define OLED_128x32        1
 #define OLED_FLIP          1
-// #define HAS_SPLIT_POWER_PATH 1
 #define TEMP_TMP36 1 // Gem uses MCP9700 which has the same characteristics as TMP36
-// #define ACCEL_I2CBB1         1
-// #define POW_EPR              1
 // #define TIP_TYPE_SUPPORT     1 // Support for tips of different types, i.e. resistance
 // #define AUTO_TIP_SELECTION   1 // Can auto-select the tip
 // #define TIPTYPE_T12          1 // Can manually pick a T12 tip
 #define HAS_POWER_DEBUG_MENU
-#define DEBUG_POWER_MENU_BUTTON_B
 
 #define WS2812_ENABLE 1 // This feature is in testing yet and not supported in v1.1 board revision
 #endif
