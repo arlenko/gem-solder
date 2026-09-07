@@ -515,7 +515,7 @@ void OLED::transitionScrollUp(const TickType_t viewEnterTime) {
 }
 
 void OLED::setRotation(bool leftHanded) {
-#ifdef OLED_FLIP
+#ifndef OLED_FLIP
   leftHanded = !leftHanded;
 #endif /* OLED_FLIP */
   if (inLeftHandedMode == leftHanded) {

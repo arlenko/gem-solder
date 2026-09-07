@@ -11,7 +11,9 @@
 
 #ifdef MODEL_Gem
 
-#define KEY_B_Pin             GPIO_PIN_9
+#define KEY_A_Pin             GPIO_PIN_9
+#define KEY_A_GPIO_Port       GPIOB
+#define KEY_B_Pin             GPIO_PIN_8
 #define KEY_B_GPIO_Port       GPIOB
 #define TMP36_INPUT_Pin       GPIO_PIN_0
 #define TMP36_INPUT_GPIO_Port GPIOA
@@ -31,8 +33,6 @@
 // #define PD_VIN_ADC2_CHANNEL   ADC_CHANNEL_6
 // #define OLED_RESET_Pin        GPIO_PIN_7
 // #define OLED_RESET_GPIO_Port  GPIOA
-#define KEY_A_Pin             GPIO_PIN_8
-#define KEY_A_GPIO_Port       GPIOB
 #define PWM_Out_Pin           GPIO_PIN_6
 #define PWM_Out_GPIO_Port     GPIOA
 #define PWM_Out_CHANNEL       TIM_CHANNEL_1
