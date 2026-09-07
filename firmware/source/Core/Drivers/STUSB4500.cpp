@@ -10,7 +10,7 @@ static STUSB_PD_SNK_PDO_TypeDef sinkPDO[3]; // Device PDOs
 static STUSB_PD_SRC_PDO_TypeDef srcPDO[7];  // Source PDOs
 static uint8_t                  srcPDOCount;
 
-enum class NegotiationState : uint8_t { NotStarted, GettingCapabilities, HaveCapabilities, Negotiating, Done };
+enum class NegotiationState : uint8_t { NotStarted, Negotiating, Fail, Done };
 static NegotiationState negotiationState = NegotiationState::NotStarted;
 
 extern int32_t powerSupplyWattageLimit;
@@ -53,66 +53,63 @@ void STUSB4500::init() {
   clear_alerts();
 }
 
+bool STUSB4500::negotiate() {
+  if (!is_attached())
+    return false;
+
+  negotiationState = NegotiationState::Negotiating;
+  wait_sink_ready();
+
+  if (!get_source_capabilities()) {
+    negotiationState = NegotiationState::Fail;
+    return false;
+  }
+
+  uint16_t vmax_mV = USB_PD_VMAX * 1000;
+  int      bestIdx = -1, best_mV = 0, best_mA = 0;
+  int      bestPower = 0;
+
+  for (uint8_t i = 0; i < srcPDOCount; i++) {
+    if (srcPDO[i].fix.FixedSupply != 0)
+      continue;
+
+    int mV = srcPDO[i].fix.Voltage * 50;
+    int mA = srcPDO[i].fix.Max_Operating_Current * 10;
+
+    if (mV > (int)vmax_mV)
+      continue;
+
+    int power = mV * mA;
+    if (power > bestPower) {
+      bestPower = power;
+      best_mV   = mV;
+      best_mA   = mA;
+      bestIdx   = i;
+    }
+  }
+
+  if (bestIdx < 0) {
+    negotiationState = NegotiationState::Fail;
+    return false;
+  }
+
+  wait_sink_ready();
+  uint8_t nPDO = 2;
+  update_PDO(nPDO, best_mV, best_mA);
+  stusb_write(STUSB_DPM_PDO_NUMB, &nPDO, 1);
+  vTaskDelay(pdMS_TO_TICKS(100));
+  send_soft_reset();
+  wait_sink_ready();
+
+  powerSupplyWattageLimit = ((best_mV * best_mA) / 1000000);
+  negotiationState        = NegotiationState::Done;
+
+  return true;
+}
+
 void STUSB4500::check_negotiation() {
-  switch (negotiationState) {
-  case NegotiationState::NotStarted:
-    if (!is_attached())
-      return;
-    negotiationState = NegotiationState::GettingCapabilities;
-  // wait until the last moment for caps to arrive
-  // (no explicit timeout here — check_negotiation is called periodically)
-  case NegotiationState::GettingCapabilities:
-    wait_sink_ready();
-    if (get_source_capabilities()) {
-      negotiationState = NegotiationState::HaveCapabilities;
-    } else {
-      break;
-    }
-  case NegotiationState::HaveCapabilities: {
-    uint16_t vmax_mV = USB_PD_VMAX * 1000;
-    int      bestIdx = -1, best_mV = 0, best_mA = 0;
-    int      bestPower = 0;
-
-    for (uint8_t i = 0; i < srcPDOCount; i++) {
-      if (srcPDO[i].fix.FixedSupply != 0)
-        continue;
-
-      int mV = srcPDO[i].fix.Voltage * 50;
-      int mA = srcPDO[i].fix.Max_Operating_Current * 10;
-
-      if (mV > (int)vmax_mV)
-        continue;
-
-      int power = mV * mA;
-      if (power > bestPower) {
-        bestPower = power;
-        best_mV   = mV;
-        best_mA   = mA;
-        bestIdx   = i;
-      }
-    }
-
-    if (bestIdx < 0) {
-      negotiationState = NegotiationState::Done;
-      break;
-    }
-
-    wait_sink_ready();
-    update_PDO(2, best_mV, best_mA);
-    uint8_t n = 2;
-    stusb_write(STUSB_DPM_PDO_NUMB, &n, 1);
-    vTaskDelay(pdMS_TO_TICKS(1000));
-    send_soft_reset();
-
-    powerSupplyWattageLimit = ((best_mV * best_mA) / 1000000) - 2; // Take off 2W for safety of overhead
-    negotiationState        = NegotiationState::Negotiating;
-  }
-  case NegotiationState::Negotiating: {
-    wait_sink_ready();
-    negotiationState = NegotiationState::Done;
-  }
-  case NegotiationState::Done:
-    break;
+  if (negotiationState == NegotiationState::NotStarted) {
+    negotiate();
   }
 }
 

@@ -152,9 +152,9 @@ template <class T, T Kp, T Ki, T Kd, T integral_limit_scale> struct PID {
     // Calculate the integral term, we use a shift 100 to get precision in integral as we often need small amounts
     T ki_result = integration_running_sum / 100;
 
-    // Derivative term
+    // Derivative term. Shift it by 10 to match integral term ms -> Seconds / 100 gain
     T derivative = (target_delta - previous_error_term);
-    T kd_result  = ((Kd * derivative) / (T)(interval_ms));
+    T kd_result  = ((Kd * derivative * 10) / (T)(interval_ms));
 
     // Summation of the outputs
     T output = kp_result + ki_result + kd_result;
@@ -180,7 +180,7 @@ template <class T = TemperatureType_t> struct Integrator {
     // Decay the old value. This is a simplified formula that still works with decent results
     // Ideally we would have used an exponential decay but the computational effort required
     // by exp function is just not justified here in respect to the outcome
-    sum = (sum * (100 - (inertia / rate))) / 100;
+    sum = (sum * (rate * 100 - inertia)) / (rate * 100);
     // Add the new value x integration interval ( 1 / rate)
     sum += (gain * val) / rate;
 
@@ -204,7 +204,7 @@ int32_t getPIDResultX10Watts(TemperatureType_t set_point, TemperatureType_t curr
   static TickType_t lastCall = 0;
 
 #ifdef TIP_CONTROL_PID
-  static PID<TemperatureType_t, TIP_PID_KP, TIP_PID_KI, TIP_PID_KD, 5> pid = {0, 0};
+  static PID<TemperatureType_t, TIP_PID_KP, TIP_PID_KI, TIP_PID_KD, TIP_PID_INTEGRAL_LIMIT_SCALE> pid = {0, 0};
 
   const TickType_t interval = (xTaskGetTickCount() - lastCall);
 

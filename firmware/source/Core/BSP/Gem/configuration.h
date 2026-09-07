@@ -133,9 +133,8 @@
 #define USB_PD_I2CBB2    1  // PD controller is on the I2C bus 2
 #define USB_PD_VMAX      20 // Max voltage to negotiate with PD source
 
-#define MIN_CALIBRATION_OFFSET 100 // Min value for calibration
+#define MIN_CALIBRATION_OFFSET 0   // Min value for calibration
 #define SOLDERING_TEMP         320 // Default soldering temp is 320.0 °C
-#define PID_TIM_HZ             (8) // Tick rate of the PID loop
 #define MAX_TEMP_C             450 // Max soldering temp selectable °C
 #define MAX_TEMP_F             850 // Max soldering temp selectable °F
 #define MIN_TEMP_C             40  // Min soldering temp selectable °C
@@ -163,7 +162,7 @@
 #define TIP_MEASUREMENT_DUTY (TIP_PWM_ARR - 40) // PWM duty required for a valid current measurement
 
 #define VOLTAGE_DIV           282 // Resistive divider from schematic
-#define CALIBRATION_OFFSET    900 // 900 - Default adc offset in uV
+#define CALIBRATION_OFFSET    20  // Default adc offset in uV
 #define PID_POWER_LIMIT       100 // Sets the max pwm power limit. Seems that nothing reads it but let's keep for now
 #define POWER_LIMIT           0   // 0 watts default limit. User dettings power limit
 #define MAX_POWER_LIMIT       140 // Crank it up to 140W
@@ -174,24 +173,24 @@
 #define OP_AMP_GAIN_STAGE     OP_AMP_GAIN_STAGE_Gem
 #define TEMP_uV_LOOKUP_C245
 #define HARDWARE_MAX_WATTAGE_X10  1400
-#define TIP_THERMAL_MASS          65 // X10 watts to raise 1 deg C in 1 second
-#define TIP_RESISTANCE            30 // x10 ohms
-#define FILTER_DISPLAYED_TIP_TEMP 4  // Filtering for GUI display
+#define FILTER_DISPLAYED_TIP_TEMP 8 // Filtering for GUI display
+
+#define TIP_CONTROL_PID              // We use PID rather than integrator
+#define TIP_PID_KP                   45
+#define TIP_PID_KI                   350
+#define TIP_PID_KD                   500
+#define TIP_PID_INTEGRAL_LIMIT_SCALE 20
 
 #define TIP_HAS_DIRECT_PWM 1
 #define POW_DC             1
 #define OLED_I2CBB1        1
 #define OLED_128x32        1
-// #define OLED_FLIP            1
-// #define HAS_SPLIT_POWER_PATH 1
+#define OLED_FLIP          1
 #define TEMP_TMP36 1 // Gem uses MCP9700 which has the same characteristics as TMP36
-// #define ACCEL_I2CBB1         1
-// #define POW_EPR              1
 // #define TIP_TYPE_SUPPORT     1 // Support for tips of different types, i.e. resistance
 // #define AUTO_TIP_SELECTION   1 // Can auto-select the tip
 // #define TIPTYPE_T12          1 // Can manually pick a T12 tip
 #define HAS_POWER_DEBUG_MENU
-#define DEBUG_POWER_MENU_BUTTON_B
 
 #define WS2812_ENABLE 1 // This feature is in testing yet and not supported in v1.1 board revision
 #endif

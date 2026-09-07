@@ -16132,7 +16132,7 @@
 				)
 			)
 		)
-		(property "Value" "1N4448WSF-7"
+		(property "Value" "1N4148WSF-7"
 			(at 48.006 164.084 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16187,6 +16187,28 @@
 			)
 		)
 		(property "Sim.Pins" "1=K 2=A"
+			(at 50.8 166.37 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC Part Number" "C119617"
+			(at 50.8 166.37 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "1N4148WSF-7"
 			(at 50.8 166.37 0)
 			(hide yes)
 			(show_name no)
@@ -20040,7 +20062,7 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C4134045"
+		(property "LCSC Part Number" "C2907011"
 			(at 46.99 176.53 0)
 			(hide yes)
 			(show_name no)
@@ -20051,7 +20073,7 @@
 				)
 			)
 		)
-		(property "MPN" "RCS060310K0JNEA"
+		(property "MPN" "FRC0603F2002TS"
 			(at 46.99 176.53 0)
 			(hide yes)
 			(show_name no)
@@ -27976,7 +27998,7 @@
 				)
 			)
 		)
-		(property "Value" "1N4448WSF-7"
+		(property "Value" "1N4148WSF-7"
 			(at 48.006 157.734 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28031,6 +28053,28 @@
 			)
 		)
 		(property "Sim.Pins" "1=K 2=A"
+			(at 60.96 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC Part Number" "C119617"
+			(at 60.96 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "1N4148WSF-7"
 			(at 60.96 156.21 0)
 			(hide yes)
 			(show_name no)
@@ -30803,7 +30847,7 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C2907091"
+		(property "LCSC Part Number" "C2930050"
 			(at 73.66 156.21 90)
 			(hide yes)
 			(show_name no)
@@ -30814,7 +30858,7 @@
 				)
 			)
 		)
-		(property "MPN" "FRC0603J100 TS"
+		(property "MPN" "FRC0603F1501TS"
 			(at 73.66 156.21 90)
 			(hide yes)
 			(show_name no)
@@ -31432,6 +31476,28 @@
 			)
 		)
 		(property "Description" "RGB LED with integrated controller, 2.0 x 2.0 mm, 12 mA"
+			(at 256.54 194.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC Part Number" "C52917434"
+			(at 256.54 194.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "WS2812B-2020-V6"
 			(at 256.54 194.31 0)
 			(hide yes)
 			(show_name no)

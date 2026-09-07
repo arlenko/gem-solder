@@ -26,17 +26,18 @@ volatile uint16_t PWMSafetyTimer = 0;
 volatile uint8_t  pendingPWM     = 0;
 
 const uint16_t       powerPWM         = TIP_PWM_ARR;
-static const uint8_t holdoffTicks     = 15; // delay of ~8 ms
-static const uint8_t tempMeasureTicks = 15;
+static const uint8_t holdoffTicks     = 20; // delay of ~4 ms
+static const uint8_t tempMeasureTicks = 20;
 
 uint16_t totalPWM; // htimADC.Init.Period, the full PWM cycle
 
 static bool fastPWM;
 static bool infastPWM;
 
-static volatile bool        currentSamplingActive   = false;
-static volatile uint32_t    lastCurrentSamplingTick = 0;
-static history<uint32_t, 2> rawCurrentSamplesFilter = {{0}, 0, 0};
+static volatile bool                            currentSamplingActive   = false;
+static volatile uint32_t                        lastCurrentSamplingTick = 0;
+static const uint8_t                            currentSamplingPulses   = 2;
+static history<uint32_t, currentSamplingPulses> rawCurrentSamplesFilter = {{0}, 0, 0};
 
 extern OperatingMode currentOperatingMode;
 
@@ -152,15 +153,14 @@ bool currentSamplingAllowed(OperatingMode opMode) {
 }
 
 static void switchToFastPWM(void) {
-  // 20Hz
+  // 22Hz
   infastPWM              = true;
   totalPWM               = powerPWM + tempMeasureTicks + holdoffTicks;
   htimADC.Instance->ARR  = totalPWM;
   htimADC.Instance->CCR1 = powerPWM + holdoffTicks;
-  htimADC.Instance->PSC  = 1500;
+  htimADC.Instance->PSC  = 1580;
 }
 
-/*
 static void switchToSlowPWM(void) {
   // 5Hz
   infastPWM              = false;
@@ -169,7 +169,6 @@ static void switchToSlowPWM(void) {
   htimADC.Instance->CCR1 = powerPWM + holdoffTicks / 2;
   htimADC.Instance->PSC  = 2690 * 2;
 }
-*/
 
 void setTipPWM(const uint8_t pulse, const bool shouldUseFastModePWM) {
   PWMSafetyTimer = 20; // This is decremented in the handler for PWM so that the tip pwm is
@@ -193,7 +192,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 
     uint32_t              now          = HAL_GetTick();
     uint8_t               thisCyclePWM = pendingPWM; // Use callback scoped variable to avoid pendingPWM overwrite
-    static const uint32_t currentSamplingInterval = TICKS_SECOND / 2;
+    static const uint32_t currentSamplingInterval = TICKS_SECOND;
     bool                  shouldSampleCurrent =
         (lastCurrentSamplingTick == 0 || (now - lastCurrentSamplingTick) > currentSamplingInterval);
 
@@ -222,8 +221,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
       HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
     }
 
-    if (!infastPWM) {
-      switchToFastPWM();
+    if (fastPWM != infastPWM) {
+      if (fastPWM) {
+        switchToFastPWM();
+      } else {
+        switchToSlowPWM();
+      }
     }
 
   } else if (htim->Instance == TIM1) {
@@ -233,23 +236,30 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef *htim) {
+  static uint8_t currentSamplingPulseCounter = 0;
+
   if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4) {
     // This was a when the PWM for the output has timed out
     HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
   } else if (htim->Instance == TIM3 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_2) {
-    // This is when a single PWM pulse finished
+    // This is when a single PWM pulse of current sampling timer channel finished
     if (currentSamplingActive) {
+      currentSamplingPulseCounter++;
       lastCurrentSamplingTick = HAL_GetTick();
-      currentSamplingActive   = false;
-      __HAL_TIM_DISABLE_IT(&htimTip, TIM_IT_CC2);
-      __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC2);
-      __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF); // Stop the ADC trigger
-      __HAL_TIM_SET_COMPARE(&htimTip, PWM_Out_CHANNEL, pendingPWM);
-      if (pendingPWM == 0) {
-        // Stop PWM output if the iron is idling
-        HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
+      // Stop current sampling after N pulses to avoid high impact on tip heating
+      if (currentSamplingPulseCounter >= currentSamplingPulses) {
+        currentSamplingPulseCounter = 0; // Reset counter
+        currentSamplingActive       = false;
+        __HAL_TIM_DISABLE_IT(&htimTip, TIM_IT_CC2);
+        __HAL_TIM_CLEAR_FLAG(&htimTip, TIM_FLAG_CC2);
+        __HAL_TIM_SET_COMPARE(&htimTip, TIM_CHANNEL_2, 0xFFFF); // Stop the ADC trigger
+        __HAL_TIM_SET_COMPARE(&htimTip, PWM_Out_CHANNEL, pendingPWM);
+        if (pendingPWM == 0) {
+          // Stop PWM output if the iron is idling
+          HAL_TIM_PWM_Stop(&htimTip, PWM_Out_CHANNEL);
+        }
       }
-    }
+    } // currentSamplingActive
   }
 }
 
@@ -385,13 +395,12 @@ void setStatusLED(const enum StatusLED state) {
       ws2812.led_set_color(0, 0xFF, 0, 0); // red
       break;
     case LED_COOLING_STILL_HOT: {
-      // black -> orange -> black, repeating
       static const uint32_t half_period = 1500; // ms for dim->saturated (tune speed here)
       const uint32_t        t           = HAL_GetTick() % (half_period * 2);
       const uint32_t        tri         = (t < half_period) ? t : (half_period * 2 - t);
-      const uint8_t         red         = (uint8_t)(64 + (tri * (255 - 64)) / half_period);
-      const uint8_t         green       = (uint8_t)(32 + (tri * (128 - 32)) / half_period);
-      ws2812.led_set_color(0, red, green, 0);
+      const uint8_t         green       = (uint8_t)(64 + (tri * (225 - 64)) / half_period);
+      const uint8_t         blue        = (uint8_t)(32 + (tri * (94 - 32)) / half_period);
+      ws2812.led_set_color(0, 0, green, blue);
     } break;
     case LED_SLEEPING:
       ws2812.led_set_color(0, 0x40, 0x00, 0x80); // dark violet #400080

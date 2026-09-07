@@ -173,6 +173,7 @@ def get_debug_menu() -> List[str]:
         "HW G   ",
         "HW M   ",
         "HW P   ",
+        "PSWL   ",
         "Hall   ",
     ]
 

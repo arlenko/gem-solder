@@ -3,6 +3,7 @@
 #include "OperatingModeUtilities.h"
 
 TickType_t        lastHallEffectSleepStart = 0;
+TickType_t        lastStandSenseSleepStart = 0;
 extern TickType_t lastMovementTime;
 static bool       inTapSleep = false;
 
@@ -10,6 +11,7 @@ void clearTapToSleep(void) { inTapSleep = false; }
 
 bool shouldBeSleeping() {
 #ifndef NO_SLEEP_MODE
+#ifndef NO_ACCEL
   // Return true if the iron should be in sleep mode
   if (getSettingValue(SettingsOptions::Sensitivity) && getSettingValue(SettingsOptions::SleepTime)) {
     // In auto start we are asleep until movement
@@ -23,6 +25,7 @@ bool shouldBeSleeping() {
       }
     }
   }
+#endif
 
 #ifdef HALL_SENSOR
   // If the hall effect sensor is enabled in the build, check if its over
@@ -70,7 +73,17 @@ bool shouldBeSleeping() {
     inTapSleep = false;
   }
 
-  return pinState == GPIO_PIN_RESET || (tapToSleepEnabled && inTapSleep);
+  const bool sleepNow = pinState == GPIO_PIN_RESET || (tapToSleepEnabled && inTapSleep);
+
+  if (sleepNow) {
+    if (lastStandSenseSleepStart == 0) {
+      lastStandSenseSleepStart = xTaskGetTickCount();
+    }
+  } else {
+    lastStandSenseSleepStart = 0;
+  }
+
+  return sleepNow;
 #endif
 #endif // ndef NO_SLEEP_MODE
   return false;
