@@ -11,6 +11,7 @@
 #include "TipThermoModel.h"
 #include "cmsis_os.h"
 #include "configuration.h"
+#include "expMovingAverage.h"
 #include "history.hpp"
 #include "main.hpp"
 #include "power.hpp"
@@ -129,6 +130,8 @@ void startPIDTask(void const *argument __unused) {
 template <class T, T Kp, T Ki, T Kd> struct PID {
   T previous_error_term;
   T integration_running_sum;
+  // Filter Kd result to reduce power swings caused by temperature measurement noise amplification
+  expMovingAverage<T, 48> kd_result_filter = {0};
 
   T update(const T set_point, const T new_reading, const TickType_t interval_ms, const T max_output) {
     const T target_delta = set_point - new_reading;
@@ -138,8 +141,10 @@ template <class T, T Kp, T Ki, T Kd> struct PID {
     // Integral probe before anti-windup decision
     T ki_probe = integration_running_sum / 100;
     // Derivative term
-    T derivative = (target_delta - previous_error_term);
-    T kd_result  = ((Kd * derivative) / (T)(interval_ms));
+    T derivative        = (target_delta - previous_error_term);
+    T kd_result_instant = ((Kd * derivative) / (T)(interval_ms));
+    kd_result_filter.update(kd_result_instant);
+    T kd_result = kd_result_filter.average();
 
     T output_probe = kp_result + ki_probe + kd_result;
 
