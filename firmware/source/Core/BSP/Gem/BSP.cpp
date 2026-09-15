@@ -162,19 +162,19 @@ static void switchToFastPWM(void) {
 }
 
 static void switchToSlowPWM(void) {
-  // 5Hz
+  // 10Hz
   infastPWM              = false;
   totalPWM               = powerPWM + tempMeasureTicks / 2 + holdoffTicks / 2;
   htimADC.Instance->ARR  = totalPWM;
   htimADC.Instance->CCR1 = powerPWM + holdoffTicks / 2;
-  htimADC.Instance->PSC  = 7350;
+  htimADC.Instance->PSC  = 3800;
 }
 
 void setTipPWM(const uint8_t pulse, const bool shouldUseFastModePWM) {
   PWMSafetyTimer = 20; // This is decremented in the handler for PWM so that the tip pwm is
                        // disabled if the PID task is not scheduled often enough.
-  fastPWM    = shouldUseFastModePWM;
-  pendingPWM = pulse;
+  fastPWM        = shouldUseFastModePWM;
+  pendingPWM     = pulse;
 }
 // These are called by the HAL after the corresponding events from the system
 // timers.
