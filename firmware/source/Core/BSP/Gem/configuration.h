@@ -177,9 +177,8 @@
 
 #define TIP_CONTROL_PID              // We use PID rather than integrator
 #define TIP_PID_KP                   45
-#define TIP_PID_KI                   350
-#define TIP_PID_KD                   500
-#define TIP_PID_INTEGRAL_LIMIT_SCALE 20
+#define TIP_PID_KI                   700
+#define TIP_PID_KD                   8000
 
 #define TIP_HAS_DIRECT_PWM 1
 #define POW_DC             1
