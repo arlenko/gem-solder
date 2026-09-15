@@ -322,6 +322,11 @@ int32_t getX10WattageLimits() {
   if (getTipPowerRating() && limit > (int32_t)getTipPowerRating() * 10) {
     limit = getTipPowerRating() * 10;
   }
+#ifdef HARDWARE_MAX_WATTAGE_X10
+  if (limit > HARDWARE_MAX_WATTAGE_X10) {
+    limit = HARDWARE_MAX_WATTAGE_X10;
+  }
+#endif
   return limit;
 }
 
