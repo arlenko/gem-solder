@@ -10155,7 +10155,7 @@
 		(uuid "04a564e2-f163-44e8-a698-ab0c317ffc8b")
 	)
 	(junction
-		(at 50.8 93.98)
+		(at 50.8 96.52)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "0be32395-ad9b-4f12-8d1e-76557d583769")
@@ -10435,6 +10435,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "7dfef4cb-11c9-4553-ba93-eb46dc56f5e1")
+	)
+	(junction
+		(at 62.23 96.52)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "83d1e22b-3cff-409a-bcee-04cbc8c030b8")
 	)
 	(junction
 		(at 130.81 78.74)
@@ -11798,16 +11804,6 @@
 	)
 	(wire
 		(pts
-			(xy 73.66 88.9) (xy 73.66 86.36)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "42186524-68e7-43fb-b88a-7a03086f8e47")
-	)
-	(wire
-		(pts
 			(xy 148.59 175.26) (xy 138.43 175.26)
 		)
 		(stroke
@@ -11868,7 +11864,7 @@
 	)
 	(wire
 		(pts
-			(xy 62.23 88.9) (xy 62.23 93.98)
+			(xy 62.23 88.9) (xy 62.23 96.52)
 		)
 		(stroke
 			(width 0)
@@ -11945,6 +11941,16 @@
 			(type default)
 		)
 		(uuid "4c731324-3394-41ba-8142-166778b8b816")
+	)
+	(wire
+		(pts
+			(xy 62.23 96.52) (xy 64.77 96.52)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "4d131e02-0b28-4135-979f-0aac677d7e0b")
 	)
 	(wire
 		(pts
@@ -12538,6 +12544,16 @@
 	)
 	(wire
 		(pts
+			(xy 69.85 96.52) (xy 73.66 96.52)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7c468de6-23fc-4eaf-8533-9d295863b3b8")
+	)
+	(wire
+		(pts
 			(xy 241.3 31.75) (xy 241.3 33.02)
 		)
 		(stroke
@@ -12718,7 +12734,7 @@
 	)
 	(wire
 		(pts
-			(xy 50.8 93.98) (xy 62.23 93.98)
+			(xy 50.8 96.52) (xy 62.23 96.52)
 		)
 		(stroke
 			(width 0)
@@ -14635,7 +14651,7 @@
 		(uuid "25174aae-26f6-4344-8c34-c6e8a2c2c8b0")
 	)
 	(label "USB_D+"
-		(at 50.8 93.98 0)
+		(at 50.8 96.52 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -26530,7 +26546,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 73.66 88.9 0)
+		(at 73.66 86.36 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -26540,7 +26556,7 @@
 		(dnp no)
 		(uuid "a6e296c3-ef39-4e08-9fee-5f1cb654e7c5")
 		(property "Reference" "#PWR014"
-			(at 73.66 95.25 0)
+			(at 73.66 92.71 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26551,7 +26567,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 73.66 93.218 0)
+			(at 73.66 90.678 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -26561,7 +26577,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 73.66 88.9 0)
+			(at 73.66 86.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26572,7 +26588,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 73.66 88.9 0)
+			(at 73.66 86.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26583,7 +26599,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 73.66 88.9 0)
+			(at 73.66 86.36 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -31066,6 +31082,108 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R_Small")
+		(at 67.31 96.52 270)
+		(mirror x)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "e686137b-e88c-42fe-b738-29726fe44034")
+		(property "Reference" "R31"
+			(at 67.31 92.71 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.016 1.016)
+				)
+			)
+		)
+		(property "Value" "1.5k"
+			(at 67.31 94.488 90)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 67.31 96.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 67.31 96.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Resistor, small symbol"
+			(at 67.31 96.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "LCSC Part Number" "C2930050"
+			(at 67.31 96.52 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "MPN" "FRC0603F1501TS"
+			(at 67.31 96.52 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "70270118-c79e-49fe-af3c-6b6807008415")
+		)
+		(pin "2"
+			(uuid "f4fbb58b-5884-4173-862c-d19cde1e87c6")
+		)
+		(instances
+			(project "Gem-solder"
+				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
+					(reference "R31")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 184.15 171.45 0)
 		(unit 1)
@@ -31627,6 +31745,83 @@
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
 					(reference "C18")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:+3.3V")
+		(at 73.66 96.52 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(uuid "eb20a46b-4a49-4fb5-9625-2e326ccd2d84")
+		(property "Reference" "#PWR064"
+			(at 73.66 100.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "+3.3V"
+			(at 73.66 92.71 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 73.66 96.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 73.66 96.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
+			(at 73.66 96.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "1"
+			(uuid "fd525303-6b0c-4433-955e-68ecad540c6f")
+		)
+		(instances
+			(project "Gem-solder"
+				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
+					(reference "#PWR064")
 					(unit 1)
 				)
 			)
