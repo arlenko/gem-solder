@@ -208,7 +208,7 @@ void guiRenderLoop(void) {
 }
 
 OperatingMode handle_post_init_state() {
-#ifdef HAS_POWER_DEBUG_MENU
+#if defined(HAS_POWER_DEBUG_MENU) && !defined(PD_DEBUG_ENTER_FROM_SYSTEM_DEBUG)
 #ifdef DEBUG_POWER_MENU_BUTTON_B
   if (buttonsAtDeviceBoot == BUTTON_B_LONG || buttonsAtDeviceBoot == BUTTON_B_SHORT) {
 #else

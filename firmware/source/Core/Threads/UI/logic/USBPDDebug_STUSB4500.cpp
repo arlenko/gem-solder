@@ -53,7 +53,7 @@ OperatingMode showPDDebug(const ButtonState buttons, guiContext *cxt) {
   }
 
   if (buttons == BUTTON_B_SHORT) {
-    return OperatingMode::InitialisationDone;
+    return cxt->previousMode;
   } else if (buttons == BUTTON_F_SHORT) {
     *screen += 1;
   }
