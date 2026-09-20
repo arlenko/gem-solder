@@ -138,7 +138,7 @@ bool currentSamplingAllowed(OperatingMode opMode) {
   if (!STUSB4500::has_negotiated() && HAL_GetTick() < TICKS_SECOND * 2)
     return false;
 #else
-  if (HAL_GetTick() < TICKS_SECOND * 0.5)
+  if (HAL_GetTick() < TICKS_100MS * 5)
     return false; // Startup delay to allow hardware to settle
 #endif
 
@@ -427,12 +427,11 @@ uint8_t preStartChecksDone() {
 }
 
 uint8_t getTipResistanceX10() {
-  // Aftermarket tips may have different resistance
-  // so would be better to rely on the actual resistance masurement
+  // Get the actual tip resistance from measured current
   uint32_t i = getCurrentMilliamps();
   uint32_t v = getInputVoltageX10(getSettingValue(SettingsOptions::VoltageDiv), 0); // 100 = 10v
-  // Disregard possible division by 0 fallback for now
-  return v * 1000 / i;
+  uint32_t res = v * 1000 / i;
+  return res > UINT8_MAX ? UINT8_MAX : res;
 }
 
 bool isTipShorted() { return getCurrentMilliamps() >= TIP_SHORT_CURRENT_MA; }
