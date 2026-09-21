@@ -371,43 +371,53 @@ bool isTipDisconnected() {
 
 void setStatusLED(const enum StatusLED state) {
 #ifdef WS2812_ENABLE
-  static enum StatusLED lastState = LED_UNKNOWN;
+  static enum StatusLED lastState      = LED_UNKNOWN;
+  static uint16_t       lastBrightness = STATUS_LED_MAX_BRIGHTNESS;
 
-  if (lastState != state || state == LED_HEATING || state == LED_COOLING_STILL_HOT) {
-    switch (state) {
-    default:
-    case LED_UNKNOWN:
-    case LED_OFF:
-      ws2812.led_set_color(0, 0, 0, 0);
-      break;
-    case LED_STANDBY:
-      ws2812.led_set_color(0, 0, 0x9E, 0); // green
-      break;
-    case LED_HEATING: {
-      static const uint32_t half_period = 960; // ms for dim->saturated (tune speed here)
-      const uint32_t        t           = HAL_GetTick() % (half_period * 2);
-      const uint32_t        tri         = (t < half_period) ? t : (half_period * 2 - t);
-      const uint8_t         red         = (uint8_t)(64 + (tri * (255 - 64)) / half_period);
-      ws2812.led_set_color(0, red, 0, 0);
-    } break;
-    case LED_HOT:
-      ws2812.led_set_color(0, 0xFF, 0, 0); // red
-      break;
-    case LED_COOLING_STILL_HOT: {
-      static const uint32_t half_period = 1500; // ms for dim->saturated (tune speed here)
-      const uint32_t        t           = HAL_GetTick() % (half_period * 2);
-      const uint32_t        tri         = (t < half_period) ? t : (half_period * 2 - t);
-      const uint8_t         green       = (uint8_t)(64 + (tri * (194 - 64)) / half_period);
-      const uint8_t         blue        = (uint8_t)(32 + (tri * (88 - 32)) / half_period);
-      ws2812.led_set_color(0, 0, green, blue);
-    } break;
-    case LED_SLEEPING:
-      ws2812.led_set_color(0, 0x40, 0x00, 0x80); // dark violet #400080
-      break;
-    }
-    ws2812.led_update();
-    lastState = state;
+  const uint16_t brightness   = getSettingValue(SettingsOptions::StatusLEDBrightness);
+  const bool     renderNeeded = (lastState != state) || (lastBrightness != brightness) || (state == LED_HEATING) ||
+                                (state == LED_COOLING_STILL_HOT);
+
+  if (!renderNeeded)
+    return;
+
+  const auto scale = [brightness](uint8_t c) {
+    return (uint8_t)(((uint16_t)c * brightness) / STATUS_LED_MAX_BRIGHTNESS);
+  };
+
+  switch (state) {
+  default:
+  case LED_UNKNOWN:
+  case LED_OFF:
+    ws2812.led_set_color(0, 0, 0, 0);
+    break;
+  case LED_STANDBY:
+    ws2812.led_set_color(0, 0, scale(0x9E), 0); // green
+    break;
+  case LED_HEATING: {
+    static const uint32_t half_period = 960; // ms for dim->saturated (tune speed here)
+    const uint32_t        t           = HAL_GetTick() % (half_period * 2);
+    const uint32_t        tri         = (t < half_period) ? t : (half_period * 2 - t);
+    const uint8_t         red         = (uint8_t)(64 + (tri * (255 - 64)) / half_period);
+    ws2812.led_set_color(0, scale(red), 0, 0);
+  } break;
+  case LED_HOT:
+    ws2812.led_set_color(0, scale(0xFF), 0, 0); // red
+    break;
+  case LED_COOLING_STILL_HOT: {
+    static const uint32_t half_period = 1500; // ms for dim->saturated (tune speed here)
+    const uint32_t        t           = HAL_GetTick() % (half_period * 2);
+    const uint32_t        tri         = (t < half_period) ? t : (half_period * 2 - t);
+    const uint8_t         green       = (uint8_t)(64 + (tri * (194 - 64)) / half_period);
+    const uint8_t         blue        = (uint8_t)(32 + (tri * (88 - 32)) / half_period);
+    ws2812.led_set_color(0, 0, scale(green), scale(blue));
+  } break;
+  case LED_SLEEPING:
+    ws2812.led_set_color(0, scale(0x40), scale(0x00), scale(0x80)); // dark violet #400080
+    break;
   }
+  ws2812.led_update();
+  lastState = state;
 #endif
 }
 

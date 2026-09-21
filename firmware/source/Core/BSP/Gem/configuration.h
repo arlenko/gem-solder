@@ -195,6 +195,10 @@
 #define PD_DEBUG_ENTER_FROM_SYSTEM_DEBUG
 
 #define WS2812_ENABLE 1 // This feature is in testing yet and not supported in v1.1 board revision
+#define STATUS_LED_MIN_BRIGHTNESS     0
+#define STATUS_LED_MAX_BRIGHTNESS     100
+#define STATUS_LED_BRIGHTNESS_STEP    5
+#define STATUS_LED_DEFAULT_BRIGHTNESS 100
 #endif
 
 #define FLASH_LOGOADDR      (0x08000000 + (62 * 1024))
