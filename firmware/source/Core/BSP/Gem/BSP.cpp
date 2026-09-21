@@ -8,7 +8,6 @@
 #include "STUSB4500.hpp"
 #include "Settings.h"
 #include "Setup.h"
-#include "TipProfile.hpp"
 #include "TipThermoModel.h"
 #include "USBPD.h"
 #include "configuration.h"
@@ -428,16 +427,17 @@ uint8_t preStartChecksDone() {
 
 uint8_t getTipResistanceX10() {
   // Get the actual tip resistance from measured current
-  uint32_t i = getCurrentMilliamps();
-  uint32_t v = getInputVoltageX10(getSettingValue(SettingsOptions::VoltageDiv), 0); // 100 = 10v
+  uint32_t i   = getCurrentMilliamps();
+  uint32_t v   = getInputVoltageX10(getSettingValue(SettingsOptions::VoltageDiv), 0); // 100 = 10v
   uint32_t res = v * 1000 / i;
   return res > UINT8_MAX ? UINT8_MAX : res;
 }
 
 bool isTipShorted() { return getCurrentMilliamps() >= TIP_SHORT_CURRENT_MA; }
 
-uint16_t getTipThermalMass() { return TIP_C245.thermalMass; }
-uint16_t getTipInertia() { return TIP_C245.inertia; }
-uint8_t  getTipPowerRating() { return TIP_C245.powerRating; }
+// Thermal mass and inertia are used for self-decay integrator heating control. We use PID instead
+uint16_t getTipThermalMass() { return 40; }
+uint16_t getTipInertia() { return 128; }
+uint8_t  getTipPowerRating() { return 140; }
 
 void showBootLogo(void) { BootLogo::handleShowingLogo((uint8_t *)FLASH_LOGOADDR); }

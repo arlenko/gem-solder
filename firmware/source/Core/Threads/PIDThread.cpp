@@ -184,7 +184,7 @@ template <class T = TemperatureType_t> struct Integrator {
     // Decay the old value. This is a simplified formula that still works with decent results
     // Ideally we would have used an exponential decay but the computational effort required
     // by exp function is just not justified here in respect to the outcome
-    sum = (sum * (rate * 100 - inertia)) / (rate * 100);
+    sum = (sum * (100 - (inertia / rate))) / 100;
     // Add the new value x integration interval ( 1 / rate)
     sum += (gain * val) / rate;
 
