@@ -392,7 +392,7 @@ void setStatusLED(const enum StatusLED state) {
     ws2812.led_set_color(0, 0, 0, 0);
     break;
   case LED_STANDBY:
-    ws2812.led_set_color(0, 0, scale(0x9E), 0); // green
+    ws2812.led_set_color(0, scale(38), scale(182), 0); // green
     break;
   case LED_HEATING: {
     static const uint32_t half_period = 960; // ms for dim->saturated (tune speed here)
