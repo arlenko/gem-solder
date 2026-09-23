@@ -3,6 +3,31 @@
 #include <OperatingModes.h>
 #ifdef OLED_128x32
 
+#ifdef PID_DEBUG
+extern volatile int32_t PIDDebugResults[3];
+void                    print_debug_result(int32_t value) {
+  if (value < 0) {
+    OLED::print(SmallSymbolMinus, FontStyle::SMALL);
+    value = -value;
+  } else {
+    OLED::print(SmallSymbolSpace, FontStyle::SMALL);
+  }
+  OLED::printNumber(value, 5, FontStyle::SMALL);
+}
+
+void ui_draw_soldering_power_status(bool boost_mode_on) {
+  OLED::setCursor(16, 0);
+  ui_draw_tip_temperature(false, FontStyle::SMALL);
+  OLED::printSymbolDeg(FontStyle::SMALL);
+  OLED::setCursor(64, 0);
+  print_debug_result(PIDDebugResults[0]);
+  OLED::setCursor(0, 16);
+  print_debug_result(PIDDebugResults[1]);
+  OLED::setCursor(64, 16);
+  print_debug_result(PIDDebugResults[2]);
+}
+#else
+
 void ui_draw_soldering_power_status(bool boost_mode_on) {
   // One-line LARGE (12x24) tip temperature flush to one edge, vertically
   // centred; two SMALL (8x16) status rows (wattage, voltage) flush to the
@@ -46,4 +71,5 @@ void ui_draw_soldering_power_status(bool boost_mode_on) {
   printVoltage();
   OLED::print(SmallSymbolVolts, FontStyle::SMALL);
 }
+#endif
 #endif

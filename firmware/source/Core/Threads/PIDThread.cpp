@@ -39,6 +39,10 @@ static void    detectThermalRunaway(const TemperatureType_t currentTipTempInC, c
 static void    setOutputx10WattsViaFilters(int32_t x10Watts);
 static int32_t getX10WattageLimits();
 
+#ifdef PID_DEBUG
+volatile int32_t PIDDebugResults[3] = {0, 0, 0};
+#endif
+
 /* StartPIDTask function */
 void startPIDTask(void const *argument __unused) {
   /*
@@ -162,6 +166,12 @@ template <class T, T Kp, T Ki, T Kd> struct PID {
 
     // Summation of the outputs
     T output = kp_result + ki_result + kd_result;
+
+#ifdef PID_DEBUG
+    PIDDebugResults[0] = kp_result;
+    PIDDebugResults[1] = ki_result;
+    PIDDebugResults[2] = kd_result;
+#endif
 
     // Restrict to max / 0
     if (output > max_output) {

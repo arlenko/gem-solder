@@ -179,6 +179,8 @@
 #define TIP_PID_KP      45
 #define TIP_PID_KI      700
 #define TIP_PID_KD      8000
+// PID_DEBUG displays PID results on the detailed soldering screen
+// #define PID_DEBUG
 
 #define TIP_HAS_DIRECT_PWM 1
 #define POW_DC             1
