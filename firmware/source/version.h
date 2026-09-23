@@ -19,6 +19,8 @@
  * * BUILD_VERSION = 'v2.22' -> from tarball:            'v2.22H'
  * * BUILD_VERSION = 'v2.22' -> from git dev branch:     'v2.22D.1A2B3C4D'
  * * BUILD_VERSION = 'v2.22' -> from stable git release: 'v2.22R.5E6F7G8H'
+ * 
+ * Gem firmware inherits IronOS v2.23 (TS101 BSP) and starts versioning from 1.00
  */
 
-#define BUILD_VERSION "v2.23"
+#define BUILD_VERSION "v1.00"
