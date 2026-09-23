@@ -9862,6 +9862,16 @@
 		)
 		(uuid "04219ab1-a8d0-4ad7-9ec8-b7a19db0b7e4")
 	)
+	(text "Test points connected to GPIO pins"
+		(exclude_from_sim no)
+		(at 255.524 118.618 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+		(uuid "1cab01e7-e55e-4cf3-a540-1c332b3ee319")
+	)
 	(text "INPUT VOLTAGE SENSE"
 		(exclude_from_sim no)
 		(at 171.45 138.684 0)
@@ -10106,9 +10116,9 @@
 		)
 		(uuid "c87c98a9-8e22-417e-8468-9961d8d9e909")
 	)
-	(text "Recommended replacement LDO: TLV75733PDBVR"
+	(text "Alternative LDO: TLV75733PDBVR"
 		(exclude_from_sim no)
-		(at 186.944 20.574 0)
+		(at 179.07 20.574 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -10435,12 +10445,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "7dfef4cb-11c9-4553-ba93-eb46dc56f5e1")
-	)
-	(junction
-		(at 62.23 96.52)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "83d1e22b-3cff-409a-bcee-04cbc8c030b8")
 	)
 	(junction
 		(at 130.81 78.74)
@@ -11134,7 +11138,7 @@
 	)
 	(wire
 		(pts
-			(xy 242.57 101.6) (xy 246.38 101.6)
+			(xy 241.3 129.54) (xy 245.11 129.54)
 		)
 		(stroke
 			(width 0)
@@ -11944,7 +11948,7 @@
 	)
 	(wire
 		(pts
-			(xy 62.23 96.52) (xy 64.77 96.52)
+			(xy 245.11 110.49) (xy 245.11 107.95)
 		)
 		(stroke
 			(width 0)
@@ -12234,7 +12238,7 @@
 	)
 	(wire
 		(pts
-			(xy 242.57 121.92) (xy 246.38 121.92)
+			(xy 269.24 129.54) (xy 273.05 129.54)
 		)
 		(stroke
 			(width 0)
@@ -12374,6 +12378,16 @@
 	)
 	(wire
 		(pts
+			(xy 241.3 110.49) (xy 245.11 110.49)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "693f62bf-77b1-40f0-b2cb-b559fcad4df0")
+	)
+	(wire
+		(pts
 			(xy 67.31 207.01) (xy 67.31 208.28)
 		)
 		(stroke
@@ -12424,7 +12438,7 @@
 	)
 	(wire
 		(pts
-			(xy 273.05 81.28) (xy 273.05 82.55)
+			(xy 261.62 100.33) (xy 261.62 101.6)
 		)
 		(stroke
 			(width 0)
@@ -12544,7 +12558,7 @@
 	)
 	(wire
 		(pts
-			(xy 69.85 96.52) (xy 73.66 96.52)
+			(xy 245.11 102.87) (xy 245.11 101.6)
 		)
 		(stroke
 			(width 0)
@@ -12584,7 +12598,7 @@
 	)
 	(wire
 		(pts
-			(xy 242.57 111.76) (xy 246.38 111.76)
+			(xy 255.27 129.54) (xy 259.08 129.54)
 		)
 		(stroke
 			(width 0)
@@ -13024,7 +13038,7 @@
 	)
 	(wire
 		(pts
-			(xy 276.86 81.28) (xy 273.05 81.28)
+			(xy 265.43 100.33) (xy 261.62 100.33)
 		)
 		(stroke
 			(width 0)
@@ -13984,7 +13998,7 @@
 	)
 	(wire
 		(pts
-			(xy 273.05 87.63) (xy 273.05 88.9)
+			(xy 261.62 106.68) (xy 261.62 107.95)
 		)
 		(stroke
 			(width 0)
@@ -14641,7 +14655,7 @@
 		(uuid "231f0633-ea95-4714-88d4-7b303ba62976")
 	)
 	(label "NRST"
-		(at 276.86 81.28 0)
+		(at 265.43 100.33 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -14853,7 +14867,7 @@
 		(uuid "6e5487c6-69c5-432c-9f8d-5e3fddb69102")
 	)
 	(label "GPIO2"
-		(at 246.38 111.76 0)
+		(at 259.08 129.54 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -14893,6 +14907,16 @@
 			(justify left bottom)
 		)
 		(uuid "77b2af32-56e2-481d-b397-ae5b3d694f6e")
+	)
+	(label "USB_D+"
+		(at 241.3 110.49 180)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "79c4260f-5969-4aab-afbf-4c02fc918e67")
 	)
 	(label "BTN_A"
 		(at 151.13 167.64 0)
@@ -15005,7 +15029,7 @@
 		(uuid "b06dcd98-c437-4ec8-90a4-855ac1de4a44")
 	)
 	(label "GPIO1"
-		(at 246.38 101.6 0)
+		(at 245.11 129.54 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -15209,7 +15233,7 @@
 		(uuid "e44477db-1e0d-438a-88a5-fd94914a851f")
 	)
 	(label "GPIO3ADC"
-		(at 246.38 121.92 0)
+		(at 273.05 129.54 0)
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -16728,7 +16752,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 273.05 88.9 0)
+		(at 261.62 107.95 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -16739,7 +16763,7 @@
 		(fields_autoplaced yes)
 		(uuid "14da27db-6f6c-468a-9a3e-728ea80a454e")
 		(property "Reference" "#PWR055"
-			(at 273.05 95.25 0)
+			(at 261.62 114.3 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16750,7 +16774,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 273.05 93.98 0)
+			(at 261.62 113.03 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -16760,7 +16784,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 273.05 88.9 0)
+			(at 261.62 107.95 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16771,7 +16795,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 273.05 88.9 0)
+			(at 261.62 107.95 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -16782,7 +16806,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
-			(at 273.05 88.9 0)
+			(at 261.62 107.95 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26700,7 +26724,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 242.57 101.6 0)
+		(at 241.3 129.54 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -26710,7 +26734,7 @@
 		(dnp no)
 		(uuid "abd0d334-6024-488d-b6ce-5159e1897f2a")
 		(property "Reference" "TP6"
-			(at 244.348 93.726 0)
+			(at 243.078 121.666 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -26721,7 +26745,7 @@
 			)
 		)
 		(property "Value" "TP_GPIO1"
-			(at 244.348 96.266 0)
+			(at 243.078 124.206 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -26732,7 +26756,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 247.65 101.6 0)
+			(at 246.38 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26743,7 +26767,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 247.65 101.6 0)
+			(at 246.38 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26754,7 +26778,7 @@
 			)
 		)
 		(property "Description" "test point"
-			(at 242.57 101.6 0)
+			(at 241.3 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26765,7 +26789,7 @@
 			)
 		)
 		(property "LCSC Part Number" ""
-			(at 242.57 101.6 0)
+			(at 241.3 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -26776,7 +26800,7 @@
 			)
 		)
 		(property "MPN" ""
-			(at 242.57 101.6 0)
+			(at 241.3 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -27031,7 +27055,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 242.57 111.76 0)
+		(at 255.27 129.54 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -27041,7 +27065,7 @@
 		(dnp no)
 		(uuid "b3d1cded-1739-4f57-b065-f5959bf03ae1")
 		(property "Reference" "TP7"
-			(at 244.348 103.886 0)
+			(at 257.048 121.666 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -27052,7 +27076,7 @@
 			)
 		)
 		(property "Value" "TP_GPIO2"
-			(at 244.348 106.426 0)
+			(at 257.048 124.206 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -27063,7 +27087,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 247.65 111.76 0)
+			(at 260.35 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -27074,7 +27098,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 247.65 111.76 0)
+			(at 260.35 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -27085,7 +27109,7 @@
 			)
 		)
 		(property "Description" "test point"
-			(at 242.57 111.76 0)
+			(at 255.27 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -27096,7 +27120,7 @@
 			)
 		)
 		(property "LCSC Part Number" ""
-			(at 242.57 111.76 0)
+			(at 255.27 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -27107,7 +27131,7 @@
 			)
 		)
 		(property "MPN" ""
-			(at 242.57 111.76 0)
+			(at 255.27 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28615,7 +28639,7 @@
 	)
 	(symbol
 		(lib_id "Connector:TestPoint")
-		(at 242.57 121.92 0)
+		(at 269.24 129.54 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -28625,7 +28649,7 @@
 		(dnp no)
 		(uuid "c6db3408-d082-4433-92c7-44f029f71ae6")
 		(property "Reference" "TP8"
-			(at 244.348 114.046 0)
+			(at 271.018 121.666 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -28636,7 +28660,7 @@
 			)
 		)
 		(property "Value" "TP_GPIO3"
-			(at 244.348 116.586 0)
+			(at 271.018 124.206 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -28647,7 +28671,7 @@
 			)
 		)
 		(property "Footprint" "TestPoint:TestPoint_Pad_D1.0mm"
-			(at 247.65 121.92 0)
+			(at 274.32 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28658,7 +28682,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 247.65 121.92 0)
+			(at 274.32 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28669,7 +28693,7 @@
 			)
 		)
 		(property "Description" "test point"
-			(at 242.57 121.92 0)
+			(at 269.24 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28680,7 +28704,7 @@
 			)
 		)
 		(property "LCSC Part Number" ""
-			(at 242.57 121.92 0)
+			(at 269.24 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -28691,7 +28715,7 @@
 			)
 		)
 		(property "MPN" ""
-			(at 242.57 121.92 0)
+			(at 269.24 129.54 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -31083,8 +31107,8 @@
 	)
 	(symbol
 		(lib_id "Device:R_Small")
-		(at 67.31 96.52 270)
-		(mirror x)
+		(at 245.11 105.41 0)
+		(mirror y)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -31094,7 +31118,7 @@
 		(dnp no)
 		(uuid "e686137b-e88c-42fe-b738-29726fe44034")
 		(property "Reference" "R31"
-			(at 67.31 92.71 90)
+			(at 241.808 106.426 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -31104,7 +31128,7 @@
 			)
 		)
 		(property "Value" "1.5k"
-			(at 67.31 94.488 90)
+			(at 241.808 104.648 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -31114,7 +31138,7 @@
 			)
 		)
 		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 67.31 96.52 0)
+			(at 245.11 105.41 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -31125,7 +31149,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 67.31 96.52 0)
+			(at 245.11 105.41 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -31136,7 +31160,7 @@
 			)
 		)
 		(property "Description" "Resistor, small symbol"
-			(at 67.31 96.52 0)
+			(at 245.11 105.41 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -31147,7 +31171,7 @@
 			)
 		)
 		(property "LCSC Part Number" "C2930050"
-			(at 67.31 96.52 90)
+			(at 245.11 105.41 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -31158,7 +31182,7 @@
 			)
 		)
 		(property "MPN" "FRC0603F1501TS"
-			(at 67.31 96.52 90)
+			(at 245.11 105.41 90)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -31752,7 +31776,7 @@
 	)
 	(symbol
 		(lib_id "power:+3.3V")
-		(at 73.66 96.52 0)
+		(at 245.11 101.6 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -31762,7 +31786,7 @@
 		(dnp no)
 		(uuid "eb20a46b-4a49-4fb5-9625-2e326ccd2d84")
 		(property "Reference" "#PWR064"
-			(at 73.66 100.33 0)
+			(at 245.11 105.41 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -31773,7 +31797,7 @@
 			)
 		)
 		(property "Value" "+3.3V"
-			(at 73.66 92.71 0)
+			(at 245.11 97.79 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -31783,7 +31807,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 73.66 96.52 0)
+			(at 245.11 101.6 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -31794,7 +31818,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 73.66 96.52 0)
+			(at 245.11 101.6 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -31805,7 +31829,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"+3.3V\""
-			(at 73.66 96.52 0)
+			(at 245.11 101.6 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -32520,7 +32544,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Small")
-		(at 273.05 85.09 0)
+		(at 261.62 104.14 0)
 		(mirror y)
 		(unit 1)
 		(body_style 1)
@@ -32531,7 +32555,7 @@
 		(dnp no)
 		(uuid "fd499e7b-8e31-41ae-9906-0a8629c1228e")
 		(property "Reference" "C25"
-			(at 271.272 83.82 0)
+			(at 259.842 102.87 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -32542,7 +32566,7 @@
 			)
 		)
 		(property "Value" "100n"
-			(at 271.272 86.36 0)
+			(at 259.842 105.41 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -32553,7 +32577,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_0603_1608Metric"
-			(at 273.05 85.09 0)
+			(at 261.62 104.14 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -32564,7 +32588,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 273.05 85.09 0)
+			(at 261.62 104.14 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -32575,7 +32599,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 273.05 85.09 0)
+			(at 261.62 104.14 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -32586,7 +32610,7 @@
 			)
 		)
 		(property "LCSC Part Number" "C346190"
-			(at 273.05 85.09 0)
+			(at 261.62 104.14 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -32597,7 +32621,7 @@
 			)
 		)
 		(property "MPN" "CL10B104KA8WPNC"
-			(at 273.05 85.09 0)
+			(at 261.62 104.14 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
