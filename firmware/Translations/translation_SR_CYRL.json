@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Сан\nна додир",
+      "description": "Пређите у стање спавања додиром постоља"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Сјај\nстатус ЛЕД",
+      "description": "Подешавање сјаја статусне ЛЕД диоде"
     }
   }
 }

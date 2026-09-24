@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Typ grotu",
       "description": "Wybierz typ zamontowanego grotu"
+    },
+    "TapToSleep": {
+      "displayText": "Stuknij\n= uśpienie",
+      "description": "Wejście w tryb uśpienia przez stuknięcie w podstawkę"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Jasność\nLED status",
+      "description": "Ustaw jasność diody statusu"
     }
   }
 }

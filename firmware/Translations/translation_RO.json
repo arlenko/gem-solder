@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Repaus\nla atingere",
+      "description": "Intră în modul de repaus atunci când atingi suportul"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Lum. LED\nstare",
+      "description": "Reglează luminozitatea LED-ului de stare"
     }
   }
 }

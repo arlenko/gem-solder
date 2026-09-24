@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Cham đe\nngu",
+      "description": "Cham vao đe đe ngu"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Đo sang\nLED trang thai",
+      "description": "Đieu chinh đo sang cua LED trang thai"
     }
   }
 }

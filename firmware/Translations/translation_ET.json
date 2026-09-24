@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Uinu\npuudutusega",
+      "description": "Puudutage alust, et minna uinuvasse režiimi"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Oleku-LED\nheledus",
+      "description": "Seadista oleku-LED-i heledust"
     }
   }
 }

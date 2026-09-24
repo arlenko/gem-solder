@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Dokun =\nuyku",
+      "description": "Standart tabana dokunarak uyku moduna geçin"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Durum-LED\nparlaklığı",
+      "description": "Durum LED'inin parlaklığını ayarlar"
     }
   }
 }

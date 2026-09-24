@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Lodde\nTip Typen",
       "description": "Vælg den type tip der er monteret"
+    },
+    "TapToSleep": {
+      "displayText": "Dvale\nved tryk",
+      "description": "Går i dvale ved at trykke på stativet"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Status-LED\nlysstyrke",
+      "description": "Juster lysstyrken på status-LED'en"
     }
   }
 }

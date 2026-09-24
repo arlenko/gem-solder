@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Spánok\nklepnutím",
+      "description": "Prejde do režimu spánku po klepnutí na stojan"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Jas LED\nstavu",
+      "description": "Nastavenie jasu stavovej LED"
     }
   }
 }

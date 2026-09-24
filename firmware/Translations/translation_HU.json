@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Alvás\nkoppintásra",
+      "description": "Alvó üzemmódba lépés a tartó megérintésével"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Áll. LED\nfényereje",
+      "description": "Állapotjelző LED fényerejének beállítása"
     }
   }
 }

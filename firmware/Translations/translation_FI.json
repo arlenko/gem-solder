@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Nuku\nnapauttamalla",
+      "description": "Siirtyy lepotilaan napauttamalla telakkaa"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Tilan LED\nkirkkaus",
+      "description": "Säädä tilan LEDin kirkkautta"
     }
   }
 }

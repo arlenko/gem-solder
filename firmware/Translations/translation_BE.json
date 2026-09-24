@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Тып\nджала",
       "description": "Абярыце тып усталяванага джала"
+    },
+    "TapToSleep": {
+      "displayText": "Сон па\nдотыку",
+      "description": "Уваход у рэжым сну пры дотыку да падстаўкі"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Статус-LED\nяркасць",
+      "description": "Рэгуляванне яркасці святлодыёда статусу"
     }
   }
 }

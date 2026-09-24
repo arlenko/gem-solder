@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "焊接头类型",
       "description": "选择安装合适的尖端类型"
+    },
+    "TapToSleep": {
+      "displayText": "轻触待机",
+      "description": "轻触支架进入待机模式"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "状态指示灯亮度",
+      "description": "调节状态指示灯的亮度"
     }
   }
 }

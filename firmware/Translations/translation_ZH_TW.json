@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "輕觸待機",
+      "description": "輕觸支架進入待機模式"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "狀態指示燈亮度",
+      "description": "調整狀態指示燈的亮度"
     }
   }
 }
