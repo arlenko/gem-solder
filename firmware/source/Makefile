@@ -85,8 +85,8 @@ DEVICE_BSP_DIR=./Core/BSP/Gem
 LDSCRIPT=./Core/BSP/Gem/stm32f103.ld
 
 flash_size=62k
-bootldr_size=0x4000
-DEVICE_DFU_ADDRESS=0x08004000
+bootldr_size=0x2000
+DEVICE_DFU_ADDRESS=0x08002000
 
 DEV_GLOBAL_DEFS=-D STM32F103C8Tx       \
                 -D STM32F1             \
