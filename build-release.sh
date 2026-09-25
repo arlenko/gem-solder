@@ -55,6 +55,10 @@ HARDWARE_PCB="$SCRIPT_DIR/hardware/Gem-solder.kicad_pcb"
 GERBER_LAYERS="F.Cu,B.Cu,F.Mask,B.Mask,F.SilkS,B.SilkS,F.Paste,B.Paste,Edge.Cuts"
 PCB_OUTPUT_DIR="$BUILD_DIR/PCB"
 
+ENCLOSURE_FCSTD="$SCRIPT_DIR/enclosure/Gem_Solder_Enclosure.FCStd"
+ENCLOSURE_OUTPUT_DIR="$BUILD_DIR/Enclosure"
+ENCLOSURE_MESH_DEFLECTION=0.1
+
 # Prefer the poetry/venv-hosted python (has bdflib + pyyaml); fall back to system python3
 if [ -x "$FIRMWARE_SOURCE/ironos-venv/bin/python" ]; then
     HOST_PYTHON="$FIRMWARE_SOURCE/ironos-venv/bin/python"
@@ -191,9 +195,87 @@ build_pcb() {
     echo "${CLR_GREEN}***** PCB files written to $PCB_OUTPUT_DIR${CLR_RESET}"
 }
 
+build_enclosure() {
+    echo "${CLR_MAGENTA}***** Exporting enclosure STL${CLR_RESET}"
+
+    if [ ! -f "$ENCLOSURE_FCSTD" ]; then
+        echo "    ${CLR_RED}[Error]${CLR_RESET} Enclosure file not found: $ENCLOSURE_FCSTD" >&2
+        exit 1
+    fi
+
+    local -a freecad_cmd=(freecadcmd)
+    if ! command -v freecadcmd >/dev/null 2>&1; then
+        if flatpak info org.freecad.FreeCAD >/dev/null 2>&1; then
+            freecad_cmd=(flatpak run --command=freecadcmd org.freecad.FreeCAD)
+        else
+            echo "    ${CLR_YELLOW}[Warning]${CLR_RESET} FreeCAD not found - skipping enclosure export"
+            return 0
+        fi
+    fi
+
+    mkdir -p "$ENCLOSURE_OUTPUT_DIR"
+
+    local script
+    script=$(cat <<'EOF'
+import os
+import sys
+import FreeCAD as App
+import Mesh
+
+try:
+    deflection = float(os.environ["ENCLOSURE_MESH_DEFLECTION"])
+
+    doc = App.openDocument(os.environ["ENCLOSURE_FCSTD"])
+    doc.recompute()
+
+    shapes = []
+    for name in ("Body", "Body001"):
+        obj = doc.getObject(name)
+        if obj is None or obj.Shape is None or obj.Shape.isNull():
+            raise RuntimeError("Missing body: %s" % name)
+        shapes.append((name, obj.Shape))
+
+    top = max(shapes, key=lambda s: s[1].BoundBox.Center.z)
+    bottom = min(shapes, key=lambda s: s[1].BoundBox.Center.z)
+
+    if abs(top[1].BoundBox.Center.z - bottom[1].BoundBox.Center.z) < 1e-6:
+        outs = ((shapes[0][1], "Gem_Enclosure_%s.stl" % shapes[0][0]),
+                (shapes[1][1], "Gem_Enclosure_%s.stl" % shapes[1][0]))
+    else:
+        outs = ((bottom[1], "Gem_Enclosure_bottom.stl"),
+                (top[1], "Gem_Enclosure_top.stl"))
+
+    outdir = os.environ["ENCLOSURE_OUTPUT_DIR"]
+    os.makedirs(outdir, exist_ok=True)
+    for shape, filename in outs:
+        print("Meshing %s ..." % filename)
+        mesh = Mesh.Mesh(shape.tessellate(deflection))
+        mesh.write(os.path.join(outdir, filename))
+
+    App.closeDocument(doc.Name)
+except Exception as e:
+    sys.stderr.write("Enclosure export failed: %s\n" % e)
+    sys.exit(1)
+EOF
+)
+
+    if [ -t 1 ]; then
+        ENCLOSURE_PY="$script" ENCLOSURE_FCSTD="$ENCLOSURE_FCSTD" \
+        ENCLOSURE_OUTPUT_DIR="$ENCLOSURE_OUTPUT_DIR" ENCLOSURE_MESH_DEFLECTION="$ENCLOSURE_MESH_DEFLECTION" \
+        "${freecad_cmd[@]}" -c "exec(os.environ['ENCLOSURE_PY'])" 2>&1 | render_last_lines
+    else
+        ENCLOSURE_PY="$script" ENCLOSURE_FCSTD="$ENCLOSURE_FCSTD" \
+        ENCLOSURE_OUTPUT_DIR="$ENCLOSURE_OUTPUT_DIR" ENCLOSURE_MESH_DEFLECTION="$ENCLOSURE_MESH_DEFLECTION" \
+        "${freecad_cmd[@]}" -c "exec(os.environ['ENCLOSURE_PY'])"
+    fi
+
+    echo "${CLR_GREEN}***** Enclosure STL written to $ENCLOSURE_OUTPUT_DIR${CLR_RESET}"
+}
+
 clean
 build_firmware
 build_bootloader
 build_pcb
+build_enclosure
 
 echo "${CLR_GREEN}***** Done.${CLR_RESET}"
