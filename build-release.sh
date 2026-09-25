@@ -77,6 +77,7 @@ render_last_lines() {
     local buf=() i printed=0 line t cols
     cols="${COLUMNS:-$(stty size 2>/dev/null | cut -d' ' -f2)}"
     cols="${cols:-80}"
+    tr '\r' '\n' |
     while IFS= read -r line; do
         [ ${#buf[@]} -ge 20 ] && buf=("${buf[@]:1}")
         t="${line//$'\r'/}"
@@ -248,7 +249,7 @@ try:
     outdir = os.environ["ENCLOSURE_OUTPUT_DIR"]
     os.makedirs(outdir, exist_ok=True)
     for shape, filename in outs:
-        print("Meshing %s ..." % filename)
+        print("Meshing %s ..." % filename, flush=True)
         mesh = Mesh.Mesh(shape.tessellate(deflection))
         mesh.write(os.path.join(outdir, filename))
 
