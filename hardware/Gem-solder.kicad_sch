@@ -7,7 +7,7 @@
 	(title_block
 		(title "Gem Solder")
 		(date "2026-06-10")
-		(rev "1.0")
+		(rev "1.2")
 		(company "Andrii Pavlenko")
 		(comment 1 "Soldering iron controller")
 	)
