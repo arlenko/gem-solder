@@ -30,6 +30,7 @@ special-purpose handle connector having to be sourced.
 - [Firmware flashing](#firmware-flashing)
 - [User interface](#user-interface)
 - [Power supply recommendations](#power-supply-recommendations)
+- [License](#license)
 
 ## Features
 
@@ -136,3 +137,8 @@ anyway.
 
 ⚠️ **Do not connect USB-C and DC power sources simultaneously!** USB and DC power paths are
 internally joined on the board, so one power source ends up connected straight to another.
+
+## License
+
+Gem Solder PCB and enclosure designs are licensed under [CERN Open Hardware Licence Version 2](LICENSE-CERN-OHL-S).
+Firmware code is covered by the [GNU General Public License v3.0](LICENSE-GPL-3.0) license unless noted elsewhere.
