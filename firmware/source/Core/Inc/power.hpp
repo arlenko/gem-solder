@@ -19,7 +19,7 @@
 //  This is necessary because of the temp noise and thermal lag in the system.
 // Once we have feed-forward temp estimation we should be able to better tune this.
 
-const uint8_t                                        wattHistoryFilter = 24; // I term look back weighting
+const uint8_t                                        wattHistoryFilter = 18; // I term look back weighting
 extern expMovingAverage<uint32_t, wattHistoryFilter> x10WattHistory;
 
 uint32_t availableW10(uint8_t sample);

@@ -8,7 +8,6 @@
 #include "STUSB4500.hpp"
 #include "Settings.h"
 #include "Setup.h"
-#include "TipProfile.hpp"
 #include "TipThermoModel.h"
 #include "USBPD.h"
 #include "configuration.h"
@@ -26,8 +25,8 @@ volatile uint16_t PWMSafetyTimer = 0;
 volatile uint8_t  pendingPWM     = 0;
 
 const uint16_t       powerPWM         = TIP_PWM_ARR;
-static const uint8_t holdoffTicks     = 20; // delay of ~4 ms
-static const uint8_t tempMeasureTicks = 20;
+static const uint8_t holdoffTicks     = 18; // delay of ~4 ms
+static const uint8_t tempMeasureTicks = 18;
 
 uint16_t totalPWM; // htimADC.Init.Period, the full PWM cycle
 
@@ -138,7 +137,7 @@ bool currentSamplingAllowed(OperatingMode opMode) {
   if (!STUSB4500::has_negotiated() && HAL_GetTick() < TICKS_SECOND * 2)
     return false;
 #else
-  if (HAL_GetTick() < TICKS_SECOND * 0.5)
+  if (HAL_GetTick() < TICKS_100MS * 5)
     return false; // Startup delay to allow hardware to settle
 #endif
 
@@ -153,28 +152,28 @@ bool currentSamplingAllowed(OperatingMode opMode) {
 }
 
 static void switchToFastPWM(void) {
-  // 22Hz
+  // 20Hz
   infastPWM              = true;
   totalPWM               = powerPWM + tempMeasureTicks + holdoffTicks;
   htimADC.Instance->ARR  = totalPWM;
   htimADC.Instance->CCR1 = powerPWM + holdoffTicks;
-  htimADC.Instance->PSC  = 1580;
+  htimADC.Instance->PSC  = 1708;
 }
 
 static void switchToSlowPWM(void) {
-  // 5Hz
+  // 10Hz
   infastPWM              = false;
   totalPWM               = powerPWM + tempMeasureTicks / 2 + holdoffTicks / 2;
   htimADC.Instance->ARR  = totalPWM;
   htimADC.Instance->CCR1 = powerPWM + holdoffTicks / 2;
-  htimADC.Instance->PSC  = 2690 * 2;
+  htimADC.Instance->PSC  = 3800;
 }
 
 void setTipPWM(const uint8_t pulse, const bool shouldUseFastModePWM) {
   PWMSafetyTimer = 20; // This is decremented in the handler for PWM so that the tip pwm is
                        // disabled if the PID task is not scheduled often enough.
-  fastPWM    = shouldUseFastModePWM;
-  pendingPWM = pulse;
+  fastPWM        = shouldUseFastModePWM;
+  pendingPWM     = pulse;
 }
 // These are called by the HAL after the corresponding events from the system
 // timers.
@@ -372,43 +371,53 @@ bool isTipDisconnected() {
 
 void setStatusLED(const enum StatusLED state) {
 #ifdef WS2812_ENABLE
-  static enum StatusLED lastState = LED_UNKNOWN;
+  static enum StatusLED lastState      = LED_UNKNOWN;
+  static uint16_t       lastBrightness = STATUS_LED_MAX_BRIGHTNESS;
 
-  if (lastState != state || state == LED_HEATING || state == LED_COOLING_STILL_HOT) {
-    switch (state) {
-    default:
-    case LED_UNKNOWN:
-    case LED_OFF:
-      ws2812.led_set_color(0, 0, 0, 0);
-      break;
-    case LED_STANDBY:
-      ws2812.led_set_color(0, 0, 0x9E, 0); // green
-      break;
-    case LED_HEATING: {
-      static const uint32_t half_period = 960; // ms for dim->saturated (tune speed here)
-      const uint32_t        t           = HAL_GetTick() % (half_period * 2);
-      const uint32_t        tri         = (t < half_period) ? t : (half_period * 2 - t);
-      const uint8_t         red         = (uint8_t)(64 + (tri * (255 - 64)) / half_period);
-      ws2812.led_set_color(0, red, 0, 0);
-    } break;
-    case LED_HOT:
-      ws2812.led_set_color(0, 0xFF, 0, 0); // red
-      break;
-    case LED_COOLING_STILL_HOT: {
-      static const uint32_t half_period = 1500; // ms for dim->saturated (tune speed here)
-      const uint32_t        t           = HAL_GetTick() % (half_period * 2);
-      const uint32_t        tri         = (t < half_period) ? t : (half_period * 2 - t);
-      const uint8_t         green       = (uint8_t)(64 + (tri * (225 - 64)) / half_period);
-      const uint8_t         blue        = (uint8_t)(32 + (tri * (94 - 32)) / half_period);
-      ws2812.led_set_color(0, 0, green, blue);
-    } break;
-    case LED_SLEEPING:
-      ws2812.led_set_color(0, 0x40, 0x00, 0x80); // dark violet #400080
-      break;
-    }
-    ws2812.led_update();
-    lastState = state;
+  const uint16_t brightness   = getSettingValue(SettingsOptions::StatusLEDBrightness);
+  const bool     renderNeeded = (lastState != state) || (lastBrightness != brightness) || (state == LED_HEATING) ||
+                                (state == LED_COOLING_STILL_HOT);
+
+  if (!renderNeeded)
+    return;
+
+  const auto scale = [brightness](uint8_t c) {
+    return (uint8_t)(((uint16_t)c * brightness) / STATUS_LED_MAX_BRIGHTNESS);
+  };
+
+  switch (state) {
+  default:
+  case LED_UNKNOWN:
+  case LED_OFF:
+    ws2812.led_set_color(0, 0, 0, 0);
+    break;
+  case LED_STANDBY:
+    ws2812.led_set_color(0, scale(38), scale(182), 0); // green
+    break;
+  case LED_HEATING: {
+    static const uint32_t half_period = 960; // ms for dim->saturated (tune speed here)
+    const uint32_t        t           = HAL_GetTick() % (half_period * 2);
+    const uint32_t        tri         = (t < half_period) ? t : (half_period * 2 - t);
+    const uint8_t         red         = (uint8_t)(64 + (tri * (255 - 64)) / half_period);
+    ws2812.led_set_color(0, scale(red), 0, 0);
+  } break;
+  case LED_HOT:
+    ws2812.led_set_color(0, scale(0xFF), 0, 0); // red
+    break;
+  case LED_COOLING_STILL_HOT: {
+    static const uint32_t half_period = 1500; // ms for dim->saturated (tune speed here)
+    const uint32_t        t           = HAL_GetTick() % (half_period * 2);
+    const uint32_t        tri         = (t < half_period) ? t : (half_period * 2 - t);
+    const uint8_t         green       = (uint8_t)(64 + (tri * (194 - 64)) / half_period);
+    const uint8_t         blue        = (uint8_t)(32 + (tri * (88 - 32)) / half_period);
+    ws2812.led_set_color(0, 0, scale(green), scale(blue));
+  } break;
+  case LED_SLEEPING:
+    ws2812.led_set_color(0, scale(0x40), scale(0x00), scale(0x80)); // dark violet #400080
+    break;
   }
+  ws2812.led_update();
+  lastState = state;
 #endif
 }
 
@@ -427,18 +436,18 @@ uint8_t preStartChecksDone() {
 }
 
 uint8_t getTipResistanceX10() {
-  // Aftermarket tips may have different resistance
-  // so would be better to rely on the actual resistance masurement
-  uint32_t i = getCurrentMilliamps();
-  uint32_t v = getInputVoltageX10(getSettingValue(SettingsOptions::VoltageDiv), 0); // 100 = 10v
-  // Disregard possible division by 0 fallback for now
-  return v * 1000 / i;
+  // Get the actual tip resistance from measured current
+  uint32_t i   = getCurrentMilliamps();
+  uint32_t v   = getInputVoltageX10(getSettingValue(SettingsOptions::VoltageDiv), 0); // 100 = 10v
+  uint32_t res = v * 1000 / i;
+  return res > UINT8_MAX ? UINT8_MAX : res;
 }
 
 bool isTipShorted() { return getCurrentMilliamps() >= TIP_SHORT_CURRENT_MA; }
 
-uint16_t getTipThermalMass() { return TIP_C245.thermalMass; }
-uint16_t getTipInertia() { return TIP_C245.inertia; }
-uint8_t  getTipPowerRating() { return TIP_C245.powerRating; }
+// Thermal mass and inertia are used for self-decay integrator heating control. We use PID instead
+uint16_t getTipThermalMass() { return 40; }
+uint16_t getTipInertia() { return 128; }
+uint8_t  getTipPowerRating() { return 140; }
 
 void showBootLogo(void) { BootLogo::handleShowingLogo((uint8_t *)FLASH_LOGOADDR); }

@@ -352,6 +352,10 @@
     "TapToSleep": {
       "displayText": "Tap to\nsleep",
       "description": "Enter sleep mode by tapping the stand"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Status LED\nbrightness",
+      "description": "Adjust the brightness of the status LED"
     }
   }
 }

@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Slaap\nna tik",
+      "description": "Gaat in slaapstand door op de standaard te tikken"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Status LED\nhelderheid",
+      "description": "Pas de helderheid van de status-LED aan"
     }
   }
 }

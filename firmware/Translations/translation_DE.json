@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Löt-\nspitzentyp",
       "description": "Wählen Sie den Typ der eingesetzten Spitze"
+    },
+    "TapToSleep": {
+      "displayText": "Tippen\n= Schlafmodus",
+      "description": "Ruhemodus durch Antippen der Halterung"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Status-LED\nHelligkeit",
+      "description": "Stellt die Helligkeit der Status-LED ein"
     }
   }
 }

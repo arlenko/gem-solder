@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Uyqu\ntegishda",
+      "description": "Tayanchni urib, uyqu rejimiga o'tish"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Status LED\nyorqinligi",
+      "description": "Status LED yorqinligini sozlash"
     }
   }
 }

@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Type\nde panne",
       "description": "Séléctionner le type de panne utilisé"
+    },
+    "TapToSleep": {
+      "displayText": "Veille\nau toucher",
+      "description": "Mise en veille en touchant le support"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "LED d'état\nluminosité",
+      "description": "Règle la luminosité de la LED d'état"
     }
   }
 }

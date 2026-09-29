@@ -80,8 +80,9 @@ enum SettingsOptions {
   SolderingTipType      = 54, // Selecting the type of soldering tip fitted
   ReverseButtonSettings = 55, // Change the A and B button assigment in Settings menu
   TapToSleep            = 56, // Stand sense feature. Tap the plate to toggle sleep mode
+  StatusLEDBrightness   = 57, // WS2812 status LED brightness
   //
-  SettingsOptionsLength = 57, // End marker
+  SettingsOptionsLength = 58, // End marker
 };
 
 // For every setting we need to store the min/max/increment values

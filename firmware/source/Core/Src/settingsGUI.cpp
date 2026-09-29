@@ -110,6 +110,9 @@ static void displayPowerPulseDuration(void);
 static void displayBrightnessLevel(void);
 static void displayInvertColor(void);
 static void displayLogoTime(void);
+#ifdef WS2812_ENABLE
+static void displayStatusLEDBrightness(void);
+#endif /* WS2812_ENABLE */
 
 #ifdef HALL_SENSOR
 static void displayHallEffect(void);
@@ -183,6 +186,7 @@ static void displayAdvancedMenu(void);
  *  Animation Speed
  *  -Animation Loop
  *  OLED Brightness
+ *  Status LED Brightness
  *  Invert Screen
  *  Logo Timeout
  *  Detailed IDLE
@@ -414,6 +418,10 @@ const menuitem UIMenu[] = {
   {SETTINGS_DESC(SettingsItemIndex::AnimLoop), nullptr, displayAnimationLoop, displayAnimationOptions, SettingsOptions::AnimationLoop, SettingsItemIndex::AnimLoop, 7},
   /* Brightness Level */
   {SETTINGS_DESC(SettingsItemIndex::Brightness), nullptr, displayBrightnessLevel, nullptr, SettingsOptions::OLEDBrightness, SettingsItemIndex::Brightness, 7},
+#ifdef WS2812_ENABLE
+  /* Status LED Brightness */
+  {SETTINGS_DESC(SettingsItemIndex::StatusLEDBrightness), nullptr, displayStatusLEDBrightness, nullptr, SettingsOptions::StatusLEDBrightness, SettingsItemIndex::StatusLEDBrightness, 5},
+#endif /* WS2812_ENABLE */
   /* Invert screen colour */
   {SETTINGS_DESC(SettingsItemIndex::ColourInversion), nullptr, displayInvertColor, nullptr, SettingsOptions::OLEDInversion, SettingsItemIndex::ColourInversion, 7},
   /* Set logo duration */
@@ -752,7 +760,7 @@ static bool showSleepOptions(void) {
 #ifdef STAND_SENSE
   return true;
 #else
-  return getSettingValue(SettingsOptions::Sensitivity) > 0; 
+  return getSettingValue(SettingsOptions::Sensitivity) > 0;
 #endif
 }
 
@@ -990,6 +998,16 @@ static void displayBrightnessLevel(void) {
   // While not optimal to apply this here, it is _very_ convenient
   OLED::setBrightness(getSettingValue(SettingsOptions::OLEDBrightness));
 }
+
+#ifdef WS2812_ENABLE
+static void displayStatusLEDBrightness(void) {
+  if (getSettingValue(SettingsOptions::StatusLEDBrightness) == 0) {
+    OLED::drawUnavailableIcon();
+  } else {
+    OLED::printNumber(getSettingValue(SettingsOptions::StatusLEDBrightness), 3, FontStyle::LARGE);
+  }
+}
+#endif
 
 static void displayInvertColor(void) {
   OLED::drawCheckbox(getSettingValue(SettingsOptions::OLEDInversion));

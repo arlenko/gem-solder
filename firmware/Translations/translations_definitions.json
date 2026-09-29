@@ -599,6 +599,13 @@
       "maxLen": 7,
       "maxLen2": 15,
       "description": "Enable entering sleep mode by tapping the stand"
+    },
+    {
+      "id": "StatusLEDBrightness",
+      "maxLen": 10,
+      "maxLen2": 15,
+      "include": ["WS2812_ENABLE"],
+      "description": "Sets the brightness of the status LED."
     }
   ]
 }

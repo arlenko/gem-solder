@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Sov vid\ntryck",
+      "description": "Går in i viloläge när du vidrör stativet"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Status-LED\nljusstyrka",
+      "description": "Justera ljusstyrkan på status-LED"
     }
   }
 }

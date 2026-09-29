@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Υπνος\nμε άγγιγμα",
+      "description": "Είσοδος σε λειτουργία ύπνου αγγίζοντας τη βάση"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Φωτ. LED\nκατάστασης",
+      "description": "Ρύθμιση φωτεινότητας του LED κατάστασης"
     }
   }
 }

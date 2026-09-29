@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Tipo de\nTpunta",
       "description": "Selecciona la punta montada"
+    },
+    "TapToSleep": {
+      "displayText": "Reposo\nal tocar",
+      "description": "Entrar en reposo al tocar el soporte"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Brillo LED\nde estado",
+      "description": "Ajusta el brillo del LED de estado"
     }
   }
 }

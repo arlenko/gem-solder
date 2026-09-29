@@ -109,6 +109,7 @@ enum class SettingsItemIndex : uint8_t {
   LanguageSwitch,
   SolderingTipType,
   TapToSleep,
+  StatusLEDBrightness,
   NUM_ITEMS,
 };
 

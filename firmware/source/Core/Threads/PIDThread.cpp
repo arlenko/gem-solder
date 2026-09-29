@@ -11,6 +11,7 @@
 #include "TipThermoModel.h"
 #include "cmsis_os.h"
 #include "configuration.h"
+#include "expMovingAverage.h"
 #include "history.hpp"
 #include "main.hpp"
 #include "power.hpp"
@@ -37,6 +38,10 @@ static int32_t getPIDResultX10Watts(TemperatureType_t set_point, TemperatureType
 static void    detectThermalRunaway(const TemperatureType_t currentTipTempInC, const uint32_t x10WattsOut);
 static void    setOutputx10WattsViaFilters(int32_t x10Watts);
 static int32_t getX10WattageLimits();
+
+#ifdef PID_DEBUG
+volatile int32_t PIDDebugResults[3] = {0, 0, 0};
+#endif
 
 /* StartPIDTask function */
 void startPIDTask(void const *argument __unused) {
@@ -126,38 +131,47 @@ void startPIDTask(void const *argument __unused) {
 }
 
 #ifdef TIP_CONTROL_PID
-template <class T, T Kp, T Ki, T Kd, T integral_limit_scale> struct PID {
+template <class T, T Kp, T Ki, T Kd> struct PID {
   T previous_error_term;
   T integration_running_sum;
+  // Filter Kd result to reduce power swings caused by temperature measurement noise amplification
+  expMovingAverage<T, 48> kd_result_filter = {0};
 
   T update(const T set_point, const T new_reading, const TickType_t interval_ms, const T max_output) {
     const T target_delta = set_point - new_reading;
 
     // Proportional term
     const T kp_result = Kp * target_delta;
+    // Integral probe before anti-windup decision
+    T ki_probe = integration_running_sum / 100;
+    // Derivative term
+    T derivative        = (target_delta - previous_error_term);
+    T kd_result_instant = ((Kd * derivative) / (T)(interval_ms));
+    kd_result_filter.update(kd_result_instant);
+    T kd_result = kd_result_filter.average();
+
+    T output_probe = kp_result + ki_probe + kd_result;
 
     // Integral term as we use mixed sampling rates, we cant assume a constant sample interval
     // Thus we multiply this out by the interval time to ~= dv/dt
-    // Then the shift by 1000 is ms -> Seconds
-
-    integration_running_sum += (target_delta * (T)interval_ms * Ki) / 1000;
-
-    // We constrain integration_running_sum to limit windup
-    // This is not overly required for most use cases but can prevent large overshoot in constrained implementations
-    if (integration_running_sum > integral_limit_scale * max_output) {
-      integration_running_sum = integral_limit_scale * max_output;
-    } else if (integration_running_sum < -integral_limit_scale * max_output) {
-      integration_running_sum = -integral_limit_scale * max_output;
+    // Then the shift by 1000 is ms -> Seconds.
+    // In order to prevent windup we don't accumulate integrator when the output is already saturated
+    bool is_saturated = (output_probe >= max_output && target_delta > 0) || (output_probe <= 0 && target_delta < 0);
+    if (!is_saturated) {
+      integration_running_sum += (target_delta * (T)interval_ms * Ki) / 1000;
     }
+
     // Calculate the integral term, we use a shift 100 to get precision in integral as we often need small amounts
     T ki_result = integration_running_sum / 100;
 
-    // Derivative term. Shift it by 10 to match integral term ms -> Seconds / 100 gain
-    T derivative = (target_delta - previous_error_term);
-    T kd_result  = ((Kd * derivative * 10) / (T)(interval_ms));
-
     // Summation of the outputs
     T output = kp_result + ki_result + kd_result;
+
+#ifdef PID_DEBUG
+    PIDDebugResults[0] = kp_result;
+    PIDDebugResults[1] = ki_result;
+    PIDDebugResults[2] = kd_result;
+#endif
 
     // Restrict to max / 0
     if (output > max_output) {
@@ -180,7 +194,7 @@ template <class T = TemperatureType_t> struct Integrator {
     // Decay the old value. This is a simplified formula that still works with decent results
     // Ideally we would have used an exponential decay but the computational effort required
     // by exp function is just not justified here in respect to the outcome
-    sum = (sum * (rate * 100 - inertia)) / (rate * 100);
+    sum = (sum * (100 - (inertia / rate))) / 100;
     // Add the new value x integration interval ( 1 / rate)
     sum += (gain * val) / rate;
 
@@ -204,7 +218,7 @@ int32_t getPIDResultX10Watts(TemperatureType_t set_point, TemperatureType_t curr
   static TickType_t lastCall = 0;
 
 #ifdef TIP_CONTROL_PID
-  static PID<TemperatureType_t, TIP_PID_KP, TIP_PID_KI, TIP_PID_KD, TIP_PID_INTEGRAL_LIMIT_SCALE> pid = {0, 0};
+  static PID<TemperatureType_t, TIP_PID_KP, TIP_PID_KI, TIP_PID_KD> pid = {0, 0};
 
   const TickType_t interval = (xTaskGetTickCount() - lastCall);
 
@@ -318,6 +332,11 @@ int32_t getX10WattageLimits() {
   if (getTipPowerRating() && limit > (int32_t)getTipPowerRating() * 10) {
     limit = getTipPowerRating() * 10;
   }
+#ifdef HARDWARE_MAX_WATTAGE_X10
+  if (limit > HARDWARE_MAX_WATTAGE_X10) {
+    limit = HARDWARE_MAX_WATTAGE_X10;
+  }
+#endif
   return limit;
 }
 

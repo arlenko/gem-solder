@@ -348,6 +348,14 @@
     "SolderingTipType": {
       "displayText": "Soldering\nTip Type",
       "description": "Select the tip type fitted"
+    },
+    "TapToSleep": {
+      "displayText": "Repouso\nao toque",
+      "description": "Entra em modo de repouso ao tocar no suporte"
+    },
+    "StatusLEDBrightness": {
+      "displayText": "Brilho\nLED de estado",
+      "description": "Ajusta o brilho do LED de estado"
     }
   }
 }

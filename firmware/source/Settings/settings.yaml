@@ -284,3 +284,8 @@ settings:
     max: 1
     min: 0
     name: TapToSleep
+  - default: STATUS_LED_DEFAULT_BRIGHTNESS
+    increment: STATUS_LED_BRIGHTNESS_STEP
+    max: STATUS_LED_MAX_BRIGHTNESS
+    min: STATUS_LED_MIN_BRIGHTNESS
+    name: StatusLEDBrightness

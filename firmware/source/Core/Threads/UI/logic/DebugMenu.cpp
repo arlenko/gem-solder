@@ -8,6 +8,12 @@ OperatingMode showDebugMenu(const ButtonState buttons, guiContext *cxt) {
   if (buttons == BUTTON_B_SHORT) {
     cxt->transitionMode = TransitionAnimation::Up;
     return OperatingMode::HomeScreen;
+#if defined(HAS_POWER_DEBUG_MENU) && defined(PD_DEBUG_ENTER_FROM_SYSTEM_DEBUG)
+  } else if (buttons == BUTTON_B_LONG) {
+    cxt->transitionMode = TransitionAnimation::Down;
+    return OperatingMode::UsbPDDebug;
+
+#endif
   } else if (buttons == BUTTON_F_SHORT) {
     cxt->scratch_state.state1++;
 #ifdef NO_ACCEL

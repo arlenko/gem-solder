@@ -85,8 +85,8 @@ DEVICE_BSP_DIR=./Core/BSP/Gem
 LDSCRIPT=./Core/BSP/Gem/stm32f103.ld
 
 flash_size=62k
-bootldr_size=0x0
-DEVICE_DFU_ADDRESS=0x08000000
+bootldr_size=0x2000
+DEVICE_DFU_ADDRESS=0x08002000
 
 DEV_GLOBAL_DEFS=-D STM32F103C8Tx       \
                 -D STM32F1             \
@@ -107,7 +107,7 @@ CPUFLAGS=-mcpu=cortex-m3  \
          -mthumb          \
          -mfloat-abi=soft
 
-DEVICE_DFU_VID_PID=0x1209:0xDB42
+DEVICE_DFU_VID_PID=0x28E9:0x0189
 endif # ALL_GEM_MODELS
 
 DEVICE_BSP_INCLUDE_DIRS:= ${shell find ${DEVICE_BSP_DIR} -type d -print}
