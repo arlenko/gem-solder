@@ -18,6 +18,16 @@ Handle connector built into the 3D-printed housing. The housing carries the conn
 matching PCB piece drops into it, so the pins and wires are soldered to that piece instead of a
 special-purpose handle connector having to be sourced.
 
+**Check out the [releases page](https://github.com/arlenko/gem-solder/releases)!**
+
+The ZIP file shipped with a release contains everything needed to build, including a
+[bill of materials](BOM/Gem%20Solder%20BOM.xlsx) for sourcing components and cost estimation,
+an [interactive BOM](BOM/ibom.html) for convenient PCB assembly by hand, compiled
+[bootloader](https://github.com/arlenko/IronOS-dfu) and firmware binaries, and STL files for
+3D printing the enclosure.
+
+**Get help and share your ideas on the [discussions](https://github.com/arlenko/gem-solder/discussions) page!**
+
 ![Gem Solder](assets/photo.jpg)
 
 ## Table of contents
