@@ -59,6 +59,9 @@ ENCLOSURE_FCSTD="$SCRIPT_DIR/enclosure/Gem_Solder_Enclosure.FCStd"
 ENCLOSURE_OUTPUT_DIR="$BUILD_DIR/Enclosure"
 ENCLOSURE_MESH_DEFLECTION=0.1
 
+BOM_DIR="$SCRIPT_DIR/BOM"
+BOM_OUTPUT_DIR="$BUILD_DIR/BOM"
+
 # Prefer the poetry/venv-hosted python (has bdflib + pyyaml); fall back to system python3
 if [ -x "$FIRMWARE_SOURCE/ironos-venv/bin/python" ]; then
     HOST_PYTHON="$FIRMWARE_SOURCE/ironos-venv/bin/python"
@@ -273,10 +276,25 @@ EOF
     echo "${CLR_GREEN}***** Enclosure STL written to $ENCLOSURE_OUTPUT_DIR${CLR_RESET}"
 }
 
+copy_bom() {
+    echo "${CLR_MAGENTA}***** Copying BOM${CLR_RESET}"
+
+    if [ ! -d "$BOM_DIR" ]; then
+        echo "    ${CLR_RED}[Error]${CLR_RESET} BOM dir not found: $BOM_DIR" >&2
+        exit 1
+    fi
+
+    mkdir -p "$BOM_OUTPUT_DIR"
+    cp -a "$BOM_DIR/." "$BOM_OUTPUT_DIR/"
+
+    echo "${CLR_GREEN}***** BOM written to $BOM_OUTPUT_DIR${CLR_RESET}"
+}
+
 clean
 build_firmware
 build_bootloader
 build_pcb
 build_enclosure
+copy_bom
 
 echo "${CLR_GREEN}***** Done.${CLR_RESET}"
