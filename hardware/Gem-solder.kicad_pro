@@ -632,13 +632,13 @@
           "group_by": false,
           "label": "#",
           "name": "${ITEM_NUMBER}",
-          "show": false
+          "show": true
         },
         {
           "group_by": false,
           "label": "LCSC Part Number",
           "name": "LCSC Part Number",
-          "show": true
+          "show": false
         },
         {
           "group_by": false,
@@ -656,6 +656,18 @@
           "group_by": false,
           "label": "MPN",
           "name": "MPN",
+          "show": true
+        },
+        {
+          "group_by": false,
+          "label": "Manufacturer",
+          "name": "Manufacturer",
+          "show": true
+        },
+        {
+          "group_by": false,
+          "label": "Type",
+          "name": "Type",
           "show": true
         }
       ],
@@ -707,7 +719,7 @@
         "uuid": "e995e176-4cc5-4712-82b3-f345b748de65"
       }
     ],
-    "used_designators": "#FLG6,F2,Q1,Q3-5,#PWR60-64,R10,R31,R33-40,C28,D6,D9-12",
+    "used_designators": "#FLG6,R10,R31,R33-40,F2,Q1,Q3-5,#PWR60-64,D6,D9-12,C28",
     "variants": []
   },
   "sheets": [

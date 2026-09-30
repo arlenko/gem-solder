@@ -10279,7 +10279,7 @@
 		(uuid "38565d1f-2ccd-4806-a888-d8d90de96dfb")
 	)
 	(junction
-		(at 110.49 162.56)
+		(at 110.49 158.75)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "38b507f4-bf4a-4063-8744-e439361c4db9")
@@ -11105,6 +11105,16 @@
 			(type default)
 		)
 		(uuid "164d1dd4-ef29-4def-aeef-968b5d07a0f2")
+	)
+	(wire
+		(pts
+			(xy 110.49 154.94) (xy 110.49 168.91)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "164fefe9-f03f-4b58-890f-b285c6b3c918")
 	)
 	(wire
 		(pts
@@ -12138,16 +12148,6 @@
 	)
 	(wire
 		(pts
-			(xy 110.49 158.75) (xy 110.49 162.56)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "58cb76b7-7194-48f8-9451-3584ebdfe831")
-	)
-	(wire
-		(pts
 			(xy 184.15 170.18) (xy 184.15 171.45)
 		)
 		(stroke
@@ -12295,16 +12295,6 @@
 			(type default)
 		)
 		(uuid "66193755-8b83-4fc7-9951-c5a6123eb7a3")
-	)
-	(wire
-		(pts
-			(xy 110.49 162.56) (xy 110.49 168.91)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "66987181-b380-4f02-9618-a89cb68f2fda")
 	)
 	(wire
 		(pts
@@ -12948,7 +12938,7 @@
 	)
 	(wire
 		(pts
-			(xy 99.06 146.05) (xy 99.06 152.4)
+			(xy 99.06 146.05) (xy 99.06 148.59)
 		)
 		(stroke
 			(width 0)
@@ -13078,7 +13068,7 @@
 	)
 	(wire
 		(pts
-			(xy 99.06 160.02) (xy 99.06 162.56)
+			(xy 99.06 156.21) (xy 99.06 158.75)
 		)
 		(stroke
 			(width 0)
@@ -13408,7 +13398,7 @@
 	)
 	(wire
 		(pts
-			(xy 110.49 153.67) (xy 110.49 146.05)
+			(xy 110.49 149.86) (xy 110.49 146.05)
 		)
 		(stroke
 			(width 0)
@@ -14438,7 +14428,7 @@
 	)
 	(wire
 		(pts
-			(xy 110.49 162.56) (xy 99.06 162.56)
+			(xy 110.49 158.75) (xy 99.06 158.75)
 		)
 		(stroke
 			(width 0)
@@ -15368,6 +15358,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Littelfuse"
+			(at 41.91 43.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 41.91 43.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "8c67d0fb-6e75-4e59-9a91-16944da0d53e")
 		)
@@ -15462,6 +15474,28 @@
 			)
 		)
 		(property "MPN" "FRM253WJR005TM"
+			(at 91.44 176.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 91.44 176.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 91.44 176.53 0)
 			(hide yes)
 			(show_name no)
@@ -15962,6 +15996,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 184.15 217.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
+			(at 184.15 217.17 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -16135,6 +16191,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FOJAN"
+			(at 134.62 120.65 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 134.62 120.65 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "c92773af-9f1b-4c08-83e5-f26c8abf5690")
 		)
@@ -16259,6 +16337,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "DIODES"
+			(at 50.8 166.37 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 50.8 166.37 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "7532541b-3845-44be-8537-5d9b21aadf0c")
 		)
@@ -16362,6 +16462,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Samsung"
+			(at 156.21 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 156.21 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "373aa29b-a538-4332-854b-c5532a263e65")
 		)
@@ -16454,6 +16576,28 @@
 			)
 		)
 		(property "MPN" ""
+			(at 210.82 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 210.82 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
 			(at 210.82 213.36 0)
 			(hide yes)
 			(show_name no)
@@ -16725,6 +16869,28 @@
 			)
 		)
 		(property "MPN" "GCM188R71E105KA64D"
+			(at 123.19 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "muRata"
+			(at 123.19 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 123.19 74.93 0)
 			(hide yes)
 			(show_name no)
@@ -17071,6 +17237,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Samsung"
+			(at 73.66 163.83 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 73.66 163.83 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "d0d74163-b474-4db5-934b-574825c9333c")
 		)
@@ -17162,6 +17350,28 @@
 			)
 		)
 		(property "MPN" "FRC0603F2002TS"
+			(at 130.81 92.71 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 130.81 92.71 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 130.81 92.71 90)
 			(hide yes)
 			(show_name no)
@@ -17265,6 +17475,28 @@
 			)
 		)
 		(property "MPN" "CL10B104KA8WPNC"
+			(at 138.43 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Samsung"
+			(at 138.43 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 138.43 171.45 0)
 			(hide yes)
 			(show_name no)
@@ -17533,6 +17765,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "muRata"
+			(at 241.3 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 241.3 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "73c519cb-0ca7-4b6b-9b88-51a610ab2c88")
 		)
@@ -17636,6 +17890,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Samsung"
+			(at 135.89 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 135.89 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "f2735a9f-7d15-4bd1-8505-2f020514a601")
 		)
@@ -17727,6 +18003,28 @@
 			)
 		)
 		(property "MPN" "FRC0603F5101TS"
+			(at 295.91 151.13 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 295.91 151.13 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 295.91 151.13 90)
 			(hide yes)
 			(show_name no)
@@ -17919,6 +18217,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Nexperia"
+			(at 190.5 80.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 190.5 80.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "3"
 			(uuid "53b2e8e5-ad72-4b1f-af97-8d662c0c6a4b")
 		)
@@ -17950,7 +18270,7 @@
 		(dnp no)
 		(uuid "24833886-cb05-40a7-bb69-7e876b83de09")
 		(property "Reference" "Q4"
-			(at 90.932 148.082 0)
+			(at 96.266 159.004 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -17960,8 +18280,8 @@
 				(justify right)
 			)
 		)
-		(property "Value" "AO4435"
-			(at 90.932 150.622 0)
+		(property "Value" "AOSP21321"
+			(at 104.648 161.29 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -18007,7 +18327,7 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C3000"
+		(property "LCSC Part Number" "C560863"
 			(at 88.9 156.21 0)
 			(hide yes)
 			(show_name no)
@@ -18018,7 +18338,29 @@
 				)
 			)
 		)
-		(property "MPN" "IRF7416TRPBF"
+		(property "MPN" "AOSP21321"
+			(at 88.9 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "AOS"
+			(at 88.9 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 88.9 156.21 0)
 			(hide yes)
 			(show_name no)
@@ -18139,6 +18481,28 @@
 			)
 		)
 		(property "MPN" "CRCW0603100RJNEAC"
+			(at 134.62 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "VISHAY"
+			(at 134.62 106.68 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 134.62 106.68 0)
 			(hide yes)
 			(show_name no)
@@ -18321,6 +18685,28 @@
 			)
 		)
 		(property "MPN" "MSASU31LBB5106KTNA01"
+			(at 87.63 44.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Taiyo Yuden"
+			(at 87.63 44.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 87.63 44.45 0)
 			(hide yes)
 			(show_name no)
@@ -18586,6 +18972,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FOJAN"
+			(at 134.62 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 134.62 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "71c32f46-a546-4b61-8a4b-5db2618447d4")
 		)
@@ -18678,6 +19086,28 @@
 			)
 		)
 		(property "MPN" "USB4105-GF-A-060"
+			(at 33.02 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 33.02 91.44 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 33.02 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -18915,6 +19345,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 184.15 212.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
+			(at 184.15 212.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -19001,6 +19453,28 @@
 			)
 		)
 		(property "MPN" "MIC5219-3.3YM5-TR"
+			(at 187.96 36.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "MICROCHIP"
+			(at 187.96 36.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 187.96 36.83 0)
 			(hide yes)
 			(show_name no)
@@ -19113,6 +19587,28 @@
 			)
 		)
 		(property "MPN" "BZV55-B12.115"
+			(at 80.01 151.13 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Nexperia"
+			(at 80.01 151.13 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 80.01 151.13 90)
 			(hide yes)
 			(show_name no)
@@ -19532,6 +20028,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FOJAN"
+			(at 72.39 223.52 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 72.39 223.52 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "410cef67-b837-4470-af9d-36aa49bc1962")
 		)
@@ -19623,6 +20141,28 @@
 			)
 		)
 		(property "MPN" "FRC0603F5101TS"
+			(at 295.91 170.18 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 295.91 170.18 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 295.91 170.18 90)
 			(hide yes)
 			(show_name no)
@@ -19727,6 +20267,28 @@
 			)
 		)
 		(property "MPN" "CL10A226MO7JZNC"
+			(at 149.86 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Samsung"
+			(at 149.86 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 149.86 35.56 0)
 			(hide yes)
 			(show_name no)
@@ -19916,6 +20478,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Shun Xiang Nuo"
+			(at 125.73 30.48 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 125.73 30.48 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "6c04d6fc-a988-46e9-8f94-3f6e9fd33884")
 		)
@@ -20010,6 +20594,28 @@
 			)
 		)
 		(property "MPN" "BAV199.215"
+			(at 39.37 226.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Nexperia"
+			(at 39.37 226.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 39.37 226.06 90)
 			(hide yes)
 			(show_name no)
@@ -20124,6 +20730,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FOJAN"
+			(at 46.99 176.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 46.99 176.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "b3126d7d-77b3-4a6f-883d-e85cfdb99798")
 		)
@@ -20226,6 +20854,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FOJAN"
+			(at 55.88 234.95 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 55.88 234.95 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "fa221c57-d518-4a80-b821-df007ca9b67e")
 		)
@@ -20317,6 +20967,28 @@
 			)
 		)
 		(property "MPN" "FRC0603F1501TS"
+			(at 30.48 226.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 30.48 226.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 30.48 226.06 90)
 			(hide yes)
 			(show_name no)
@@ -20507,6 +21179,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "ADI"
+			(at 58.42 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 58.42 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "3"
 			(uuid "e444afe0-3175-433e-af1c-3e91f3f8faef")
 		)
@@ -20626,6 +21320,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FOJAN"
+			(at 295.91 157.48 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 295.91 157.48 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "c45cc8c7-2f8f-4664-8ceb-98ea04c05ccd")
 		)
@@ -20717,6 +21433,28 @@
 			)
 		)
 		(property "MPN" "FRC0603J134 TS"
+			(at 184.15 157.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 184.15 157.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 184.15 157.48 0)
 			(hide yes)
 			(show_name no)
@@ -20900,6 +21638,28 @@
 			)
 		)
 		(property "MPN" "BAT54SW.115"
+			(at 200.66 161.29 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Nexperia"
+			(at 200.66 161.29 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 200.66 161.29 90)
 			(hide yes)
 			(show_name no)
@@ -21094,6 +21854,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "MICROCHIP"
+			(at 241.3 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 241.3 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "93bea1ab-d41a-4e02-8710-f1b356c4ea76")
 		)
@@ -21268,6 +22050,28 @@
 			)
 		)
 		(property "MPN" "TAJA475K016RNJ"
+			(at 208.28 40.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Kyocera AVX"
+			(at 208.28 40.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 208.28 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -21536,6 +22340,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Littelfuse"
+			(at 72.39 45.72 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 72.39 45.72 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "21c67439-c472-4379-bc4f-567965f483aa")
 		)
@@ -21564,7 +22390,7 @@
 		(dnp no)
 		(uuid "5f42fe2a-9f11-4432-9393-5359ed24ea02")
 		(property "Reference" "Q2"
-			(at 147.574 100.33 0)
+			(at 146.812 100.33 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21574,8 +22400,8 @@
 				(justify left)
 			)
 		)
-		(property "Value" "AO4435"
-			(at 147.574 102.87 0)
+		(property "Value" "AOSP21321"
+			(at 146.812 102.87 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -21621,7 +22447,7 @@
 				)
 			)
 		)
-		(property "LCSC Part Number" "C3000"
+		(property "LCSC Part Number" "C560863"
 			(at 142.24 101.6 0)
 			(hide yes)
 			(show_name no)
@@ -21632,7 +22458,29 @@
 				)
 			)
 		)
-		(property "MPN" "IRF7416TRPBF"
+		(property "MPN" "AOSP21321"
+			(at 142.24 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "AOS"
+			(at 142.24 101.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 142.24 101.6 0)
 			(hide yes)
 			(show_name no)
@@ -21753,6 +22601,28 @@
 			)
 		)
 		(property "MPN" "FRC0603J394 TS"
+			(at 55.88 207.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 55.88 207.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 55.88 207.01 90)
 			(hide yes)
 			(show_name no)
@@ -21943,6 +22813,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Samsung"
+			(at 139.7 111.76 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 139.7 111.76 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "6f1a7de1-ab99-41f4-b771-65a661e15a43")
 		)
@@ -22046,6 +22938,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Littelfuse"
+			(at 74.93 107.95 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 74.93 107.95 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "46b889c2-67f8-4434-b4cd-a5c6525a7974")
 		)
@@ -22139,6 +23053,28 @@
 			)
 		)
 		(property "MPN" ""
+			(at 135.89 220.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 135.89 220.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
 			(at 135.89 220.98 0)
 			(hide yes)
 			(show_name no)
@@ -22329,6 +23265,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 203.2 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
+			(at 203.2 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -22416,6 +23374,28 @@
 			)
 		)
 		(property "MPN" "ESDA6V1SC5"
+			(at 67.31 86.36 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "ST"
+			(at 67.31 86.36 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 67.31 86.36 90)
 			(hide yes)
 			(show_name no)
@@ -22770,6 +23750,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 201.93 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
+			(at 201.93 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "a2d6bf1a-7787-4608-87fd-34988d122eee")
 		)
@@ -22784,7 +23786,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Small")
-		(at 110.49 156.21 0)
+		(at 110.49 152.4 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -22794,7 +23796,7 @@
 		(dnp no)
 		(uuid "6f2a4ba3-eae7-4a8b-b9cc-1ff5f05965df")
 		(property "Reference" "C7"
-			(at 112.268 154.94 0)
+			(at 112.268 151.13 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -22805,7 +23807,7 @@
 			)
 		)
 		(property "Value" "10u"
-			(at 112.268 157.48 0)
+			(at 112.268 153.67 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -22816,7 +23818,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:C_1206_3216Metric"
-			(at 110.49 156.21 0)
+			(at 110.49 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22827,7 +23829,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 110.49 156.21 0)
+			(at 110.49 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22838,7 +23840,7 @@
 			)
 		)
 		(property "Description" "Unpolarized capacitor, small symbol"
-			(at 110.49 156.21 0)
+			(at 110.49 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22849,7 +23851,7 @@
 			)
 		)
 		(property "LCSC Part Number" "C105175"
-			(at 110.49 156.21 0)
+			(at 110.49 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22860,7 +23862,29 @@
 			)
 		)
 		(property "MPN" "MSASU31LBB5106KTNA01"
-			(at 110.49 156.21 0)
+			(at 110.49 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Taiyo Yuden"
+			(at 110.49 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 110.49 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22887,7 +23911,7 @@
 	)
 	(symbol
 		(lib_id "Device:C_Polarized")
-		(at 99.06 156.21 0)
+		(at 99.06 152.4 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -22897,7 +23921,7 @@
 		(dnp no)
 		(uuid "73b09bea-c5dc-4e34-bc45-4cc0175bf9c6")
 		(property "Reference" "C5"
-			(at 102.362 154.178 0)
+			(at 102.362 150.368 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -22908,7 +23932,7 @@
 			)
 		)
 		(property "Value" "220u"
-			(at 102.362 156.718 0)
+			(at 102.362 152.908 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
@@ -22919,7 +23943,7 @@
 			)
 		)
 		(property "Footprint" "Capacitor_SMD:CP_Elec_8x10.5"
-			(at 100.0252 160.02 0)
+			(at 100.0252 156.21 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22930,7 +23954,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 99.06 156.21 0)
+			(at 99.06 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22941,7 +23965,7 @@
 			)
 		)
 		(property "Description" "Polarized capacitor"
-			(at 99.06 156.21 0)
+			(at 99.06 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22952,7 +23976,7 @@
 			)
 		)
 		(property "LCSC Part Number" "C278406"
-			(at 99.06 156.21 0)
+			(at 99.06 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -22963,7 +23987,29 @@
 			)
 		)
 		(property "MPN" "EEEFP1V221AP"
-			(at 99.06 156.21 0)
+			(at 99.06 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "PANASONIC"
+			(at 99.06 152.4 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 99.06 152.4 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -23077,6 +24123,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 161.29 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
+			(at 161.29 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -23163,6 +24231,28 @@
 			)
 		)
 		(property "MPN" "FRC0603J244TS"
+			(at 115.57 232.41 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 115.57 232.41 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 115.57 232.41 90)
 			(hide yes)
 			(show_name no)
@@ -23275,6 +24365,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FOJAN"
+			(at 86.36 102.87 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 86.36 102.87 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "c13a0a45-1540-47c6-8185-71aeeb48c049")
 		)
@@ -23367,6 +24479,28 @@
 			)
 		)
 		(property "MPN" "ZX-PZ2.54-1-1PZZ"
+			(at 187.96 229.87 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 187.96 229.87 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "thru-hole"
 			(at 187.96 229.87 0)
 			(hide yes)
 			(show_name no)
@@ -23553,6 +24687,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FOJAN"
+			(at 180.34 80.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 180.34 80.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "ec5cdc70-73c4-4b4c-a853-a389b28eb9fa")
 		)
@@ -23645,6 +24801,28 @@
 			)
 		)
 		(property "MPN" "AP63300WU-7"
+			(at 102.87 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "DIODES"
+			(at 102.87 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 102.87 38.1 0)
 			(hide yes)
 			(show_name no)
@@ -23846,6 +25024,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "ADI"
+			(at 127 200.66 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 127 200.66 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "3"
 			(uuid "e444afe0-3175-433e-af1c-3e91f3f8faf0")
 		)
@@ -23967,6 +25167,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 35.56 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
+			(at 35.56 170.18 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "21696b68-7080-4937-aaca-ee716a970e0c")
 		)
@@ -24068,6 +25290,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Samsung"
+			(at 142.24 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 142.24 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "1d489d44-0779-4d9f-804f-14b0b7fff732")
 		)
@@ -24159,6 +25403,28 @@
 			)
 		)
 		(property "MPN" "FRC0603J134 TS"
+			(at 138.43 92.71 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 138.43 92.71 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 138.43 92.71 90)
 			(hide yes)
 			(show_name no)
@@ -24348,6 +25614,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FOJAN"
+			(at 295.91 163.83 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 295.91 163.83 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "c4620d66-2b82-4e83-873d-4c1b6aafedaf")
 		)
@@ -24441,6 +25729,28 @@
 			)
 		)
 		(property "MPN" ""
+			(at 72.39 30.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 72.39 30.48 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
 			(at 72.39 30.48 0)
 			(hide yes)
 			(show_name no)
@@ -24629,6 +25939,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "ST"
+			(at 106.68 100.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 106.68 100.33 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "18"
 			(uuid "58eedc84-d772-4648-a84f-5a9b9e94fced")
 		)
@@ -24801,6 +26133,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Samsung"
+			(at 190.5 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 190.5 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "b9a16aa6-9af1-4255-b3fb-99e7cc64dd3b")
 		)
@@ -24894,6 +26248,28 @@
 			)
 		)
 		(property "MPN" "C0603C102J3GACAUTO"
+			(at 78.74 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Samsung"
+			(at 78.74 228.6 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 78.74 228.6 0)
 			(hide yes)
 			(show_name no)
@@ -25033,6 +26409,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "onsemi"
+			(at 53.34 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 53.34 172.72 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "3"
 			(uuid "b177881e-4fb8-4f78-877a-e3d7d956668f")
 		)
@@ -25128,6 +26526,28 @@
 			)
 		)
 		(property "MPN" "B3FS-1050"
+			(at 153.67 158.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "OMRON"
+			(at 153.67 158.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 153.67 158.75 0)
 			(hide yes)
 			(show_name no)
@@ -25395,6 +26815,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "VISHAY"
+			(at 204.47 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 204.47 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "1e87d16b-eacc-48fd-823b-6b68b372398e")
 		)
@@ -25486,6 +26928,28 @@
 			)
 		)
 		(property "MPN" "FRC0603F1501TS"
+			(at 30.48 207.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 30.48 207.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 30.48 207.01 90)
 			(hide yes)
 			(show_name no)
@@ -25674,6 +27138,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FOJAN"
+			(at 60.96 146.05 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 60.96 146.05 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "36a9bebb-ede4-47c1-821f-bc644b757842")
 		)
@@ -25776,6 +27262,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "OMRON"
+			(at 135.89 158.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 135.89 158.75 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "2"
 			(uuid "26cf3f88-1e74-4708-9776-ea877bdc2e60")
 		)
@@ -25868,6 +27376,28 @@
 			)
 		)
 		(property "MPN" "FRC0603J244TS"
+			(at 109.22 210.82 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 109.22 210.82 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 109.22 210.82 90)
 			(hide yes)
 			(show_name no)
@@ -25981,6 +27511,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "JSMSEMI"
+			(at 91.44 167.64 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 91.44 167.64 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "78466650-5885-4392-8bb2-fc6f6b5e9116")
 		)
@@ -26072,6 +27624,28 @@
 			)
 		)
 		(property "MPN" "FRC0603F1501TS"
+			(at 41.91 172.72 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 41.91 172.72 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 41.91 172.72 90)
 			(hide yes)
 			(show_name no)
@@ -26183,6 +27757,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FOJAN"
+			(at 129.54 223.52 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 129.54 223.52 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "90f0e6fe-78b7-480c-9536-293015f855b8")
 		)
@@ -26274,6 +27870,28 @@
 			)
 		)
 		(property "MPN" ""
+			(at 21.59 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 21.59 38.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "thru-hole"
 			(at 21.59 38.1 0)
 			(hide yes)
 			(show_name no)
@@ -26469,6 +28087,28 @@
 			)
 		)
 		(property "MPN" ""
+			(at 78.74 220.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 78.74 220.98 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
 			(at 78.74 220.98 0)
 			(hide yes)
 			(show_name no)
@@ -26810,6 +28450,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 241.3 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
+			(at 241.3 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "10a19a43-1266-47a2-addb-7c02b94c3995")
 		)
@@ -27141,6 +28803,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 255.27 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
+			(at 255.27 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "94624eae-f916-40bf-90d1-60fba0e73cf3")
 		)
@@ -27318,6 +29002,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Samsung"
+			(at 204.47 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 204.47 85.09 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "0cf930f3-35cb-4055-99fa-f7d908cb19a7")
 		)
@@ -27412,6 +29118,28 @@
 			)
 		)
 		(property "MPN" "GCM188R71E105KA64D"
+			(at 250.19 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "muRata"
+			(at 250.19 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 250.19 35.56 0)
 			(hide yes)
 			(show_name no)
@@ -27523,6 +29251,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FH"
+			(at 134.62 44.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 134.62 44.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "4c80f362-9e73-400a-9795-ce4f19218725")
 		)
@@ -27614,6 +29364,28 @@
 			)
 		)
 		(property "MPN" "BLM18AG331SN1D"
+			(at 247.65 57.15 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "muRata"
+			(at 247.65 57.15 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 247.65 57.15 90)
 			(hide yes)
 			(show_name no)
@@ -27716,6 +29488,28 @@
 			)
 		)
 		(property "MPN" "FRC0603F5101TS"
+			(at 101.6 210.82 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 101.6 210.82 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 101.6 210.82 90)
 			(hide yes)
 			(show_name no)
@@ -27904,6 +29698,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "VISHAY"
+			(at 184.15 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 184.15 165.1 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "ac549672-a02c-4e15-b44a-4df869d59cca")
 		)
@@ -27998,6 +29814,28 @@
 			)
 		)
 		(property "MPN" ""
+			(at 161.29 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 161.29 213.36 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
 			(at 161.29 213.36 0)
 			(hide yes)
 			(show_name no)
@@ -28125,6 +29963,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "DIODES"
+			(at 60.96 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 60.96 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "f4818a27-7eb1-407a-9d71-3c01682fddac")
 		)
@@ -28227,6 +30087,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "VISHAY"
+			(at 148.59 163.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 148.59 163.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "93ee4b1e-ae43-4f50-88e8-f87cb240b354")
 		)
@@ -28319,6 +30201,28 @@
 			)
 		)
 		(property "MPN" "215298-5"
+			(at 241.3 81.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 241.3 81.28 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "thru-hole"
 			(at 241.3 81.28 0)
 			(hide yes)
 			(show_name no)
@@ -28442,6 +30346,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Samsung"
+			(at 265.43 60.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 265.43 60.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "642df573-b579-4b68-8e95-e1b432f4941e")
 		)
@@ -28534,6 +30460,28 @@
 			)
 		)
 		(property "MPN" "FRC0603F1004TS"
+			(at 59.69 39.37 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 59.69 39.37 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 59.69 39.37 0)
 			(hide yes)
 			(show_name no)
@@ -28725,6 +30673,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 269.24 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
+			(at 269.24 129.54 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "62db07a8-4af0-46e9-ab66-9122b916fb96")
 		)
@@ -28894,6 +30864,28 @@
 			)
 		)
 		(property "MPN" "STM32F103C8T6"
+			(at 313.69 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "ST"
+			(at 313.69 71.12 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 313.69 71.12 0)
 			(hide yes)
 			(show_name no)
@@ -29223,6 +31215,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 184.15 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
+			(at 184.15 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -29399,6 +31413,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "muRata"
+			(at 255.27 60.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 255.27 60.96 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "627706be-8931-4fbc-aae1-af3b40e29b32")
 		)
@@ -29491,6 +31527,28 @@
 			)
 		)
 		(property "MPN" "RCS060310K0JNEA"
+			(at 86.36 82.55 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "VISHAY"
+			(at 86.36 82.55 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 86.36 82.55 90)
 			(hide yes)
 			(show_name no)
@@ -29629,6 +31687,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "onsemi"
+			(at 66.04 151.13 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 66.04 151.13 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "3"
 			(uuid "67e53a08-9c0c-49e2-844e-c592c152a4db")
 		)
@@ -29735,6 +31815,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "muRata"
+			(at 138.43 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 138.43 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "4c08cea7-f624-462a-bc09-5aa2accb7119")
 		)
@@ -29827,6 +31929,28 @@
 			)
 		)
 		(property "MPN" "FRC0603F5101TS"
+			(at 101.6 226.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 101.6 226.06 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 101.6 226.06 90)
 			(hide yes)
 			(show_name no)
@@ -30017,6 +32141,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Samsung"
+			(at 118.11 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 118.11 34.29 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "123cf49a-d02d-404d-9dde-85ff35858ebe")
 		)
@@ -30111,6 +32257,28 @@
 			)
 		)
 		(property "MPN" "BAV199.215"
+			(at 44.45 207.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Nexperia"
+			(at 44.45 207.01 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 44.45 207.01 90)
 			(hide yes)
 			(show_name no)
@@ -30216,6 +32384,28 @@
 			)
 		)
 		(property "MPN" "ZX-PZ2.54-1-1PZZ"
+			(at 187.96 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" ""
+			(at 187.96 226.06 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "thru-hole"
 			(at 187.96 226.06 0)
 			(hide yes)
 			(show_name no)
@@ -30402,6 +32592,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "ADI"
+			(at 116.84 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 116.84 223.52 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "3"
 			(uuid "e444afe0-3175-433e-af1c-3e91f3f8faf1")
 		)
@@ -30521,6 +32733,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FOJAN"
+			(at 148.59 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 148.59 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "6695093b-09ba-459b-a2e5-1b1c5be23442")
 		)
@@ -30614,6 +32848,28 @@
 			)
 		)
 		(property "MPN" "HS91L02W2C01"
+			(at 194.31 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "HS"
+			(at 194.31 116.84 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "thru-hole"
 			(at 194.31 116.84 0)
 			(hide yes)
 			(show_name no)
@@ -30808,6 +33064,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "FOJAN"
+			(at 130.81 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 130.81 171.45 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "e0cc7d73-6e78-401c-b72c-4f28a122b25b")
 		)
@@ -30899,6 +33177,28 @@
 			)
 		)
 		(property "MPN" "FRC0603F1501TS"
+			(at 73.66 156.21 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 73.66 156.21 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 73.66 156.21 90)
 			(hide yes)
 			(show_name no)
@@ -31003,6 +33303,28 @@
 			)
 		)
 		(property "MPN" "GCM188R71E105KA64D"
+			(at 259.08 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "muRata"
+			(at 259.08 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 259.08 35.56 0)
 			(hide yes)
 			(show_name no)
@@ -31183,6 +33505,28 @@
 		)
 		(property "MPN" "FRC0603F1501TS"
 			(at 245.11 105.41 90)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "FOJAN"
+			(at 245.11 105.41 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 245.11 105.41 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -31373,6 +33717,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 161.29 219.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
+			(at 161.29 219.71 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -31547,6 +33913,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "VISHAY"
+			(at 130.81 163.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 130.81 163.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "b63fd605-726e-4307-ae9e-d0e48f90a129")
 		)
@@ -31640,6 +34028,28 @@
 			)
 		)
 		(property "MPN" "WS2812B-2020-V6"
+			(at 256.54 194.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Worldsemi"
+			(at 256.54 194.31 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 256.54 194.31 0)
 			(hide yes)
 			(show_name no)
@@ -31749,6 +34159,28 @@
 			)
 		)
 		(property "MPN" "C0603C102J3GACAUTO"
+			(at 198.12 40.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Samsung"
+			(at 198.12 40.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 198.12 40.64 0)
 			(hide yes)
 			(show_name no)
@@ -32094,6 +34526,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" ""
+			(at 161.29 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" ""
+			(at 161.29 207.01 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(instances
 			(project "Gem-solder"
 				(path "/e995e176-4cc5-4712-82b3-f345b748de65"
@@ -32181,6 +34635,28 @@
 			)
 		)
 		(property "MPN" "GCM188R71E105KA64D"
+			(at 130.81 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "muRata"
+			(at 130.81 74.93 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 130.81 74.93 0)
 			(hide yes)
 			(show_name no)
@@ -32527,6 +35003,28 @@
 				)
 			)
 		)
+		(property "Manufacturer" "Samsung"
+			(at 269.24 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
+			(at 269.24 35.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
 		(pin "1"
 			(uuid "d66a3f3d-642a-4bb2-8a8a-4e118d8e4ac8")
 		)
@@ -32621,6 +35119,28 @@
 			)
 		)
 		(property "MPN" "CL10B104KA8WPNC"
+			(at 261.62 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Manufacturer" "Samsung"
+			(at 261.62 104.14 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Type" "SMD"
 			(at 261.62 104.14 0)
 			(hide yes)
 			(show_name no)
