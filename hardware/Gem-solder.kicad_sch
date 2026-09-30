@@ -10080,16 +10080,6 @@
 		)
 		(uuid "a6392359-1145-4de5-b6c8-dd83536ba51e")
 	)
-	(text "Alt. mosfet: AOSP21321"
-		(exclude_from_sim no)
-		(at 31.496 144.78 0)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-		)
-		(uuid "aa57ee14-159f-49a9-8690-c4580f3bd57c")
-	)
 	(text "I2C PULL-UP"
 		(exclude_from_sim no)
 		(at 273.812 138.684 0)
