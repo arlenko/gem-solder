@@ -65,8 +65,7 @@ an [interactive BOM](BOM/ibom.html) for convenient PCB assembly by hand, compile
   awake and more from IronOS.
 - PD debug menu to read the power source capabilities.
 - USB-C PD and an XT60 connector make it workable from a power bank or battery pack, for soldering away from the workbench.
-- 20 kHz heater PWM keeps the switching noise of the high-current drive above the audible range, and
-  its fine resolution gives smoother power control.
+- 20 kHz heater PWM keeps the switching noise of the high-current drive above the audible range.
 
 ## Schematic
 
@@ -115,6 +114,28 @@ as ST-LINK or DAPLink, wired to the 5-pin SWD header on the board.
 
 Once the DFU bootloader has been flashed, all later updates run over a USB data cable using
 [dfu-util](https://dfu-util.sourceforge.net/).
+
+### Flashing via SWD
+
+The flashing instructions depend on the tool and software being used. A genuine ST-LINK can
+be used with STM32CubeIDE. DAPLink can be used with the OpenOCD CLI utility:
+
+```sh
+sudo openocd -f interface/cmsis-dap.cfg -c "adapter usb vid_pid 0x1a86 0x8012" \
+          -f target/stm32f1x.cfg \
+          -c "program Firmware/Gem_EN.hex verify reset exit"
+```
+
+### Flashing via USB
+
+Once the DFU bootloader has been flashed to the device using SWD, firmware can be flashed
+over a USB cable. To enter the DFU bootloader, click and hold button A and connect the USB
+cable. The IronOS splash logo should appear on the display, followed by a message reading
+"DFU bootloader". Then use dfu-util to upload the firmware:
+
+```sh
+sudo dfu-util -a 0 -D Firmware/Gem_EN.dfu -R
+```
 
 ## User interface
 
