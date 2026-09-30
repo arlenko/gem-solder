@@ -19086,7 +19086,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" ""
+		(property "Manufacturer" "Global Connector Technology"
 			(at 33.02 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -24479,7 +24479,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" ""
+		(property "Manufacturer" "Megastar"
 			(at 187.96 229.87 0)
 			(hide yes)
 			(show_name no)
@@ -27790,7 +27790,7 @@
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
@@ -30201,7 +30201,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" ""
+		(property "Manufacturer" "TE Connectivity"
 			(at 241.3 81.28 0)
 			(hide yes)
 			(show_name no)
@@ -32384,7 +32384,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" ""
+		(property "Manufacturer" "Megastar"
 			(at 187.96 226.06 0)
 			(hide yes)
 			(show_name no)
