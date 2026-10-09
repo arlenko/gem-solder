@@ -139,7 +139,8 @@ void OLED::initialize() {
   // initialisation data to the OLED.
 
   for (int tries = 0; tries < 10; tries++) {
-    if (I2C_CLASS::writeRegistersBulk(DEVICEADDR_OLED, OLED_Setup_Array, sizeof(OLED_Setup_Array) / sizeof(OLED_Setup_Array[0]))) {
+    if (I2C_CLASS::writeRegistersBulk(DEVICEADDR_OLED, OLED_Setup_Array,
+                                      sizeof(OLED_Setup_Array) / sizeof(OLED_Setup_Array[0]))) {
       tries = 11;
     }
   }
@@ -173,8 +174,15 @@ void OLED::drawChar(const uint16_t charCode, const FontStyle fontStyle, const ui
     fontHeight  = 16;
     fontWidth   = 12;
     break;
+  case FontStyle::EXTRAS_SMALL:
+    currentFont = ExtraFontCharsSmall;
+    index       = charCode;
+    fontHeight  = 12;
+    fontWidth   = 12;
+    break;
   case FontStyle::SMALL:
   case FontStyle::LARGE:
+  case FontStyle::LITTLE:
   default:
     currentFont = nullptr;
     index       = 0;
@@ -188,6 +196,10 @@ void OLED::drawChar(const uint16_t charCode, const FontStyle fontStyle, const ui
       fontHeight = 8;
       fontWidth  = 6;
 #endif
+      break;
+    case FontStyle::LITTLE:
+      fontHeight = 12;
+      fontWidth  = 6;
       break;
     case FontStyle::LARGE:
     default:
@@ -208,18 +220,29 @@ void OLED::drawChar(const uint16_t charCode, const FontStyle fontStyle, const ui
       return;
     }
 
-    currentFont = fontStyle == FontStyle::SMALL ? FontSectionInfo.font06_start_ptr : FontSectionInfo.font12_start_ptr;
-    index       = charCode - 2;
+    switch (fontStyle) {
+    case FontStyle::SMALL:
+      currentFont = FontSectionInfo.font06_start_ptr;
+      break;
+    case FontStyle::LITTLE:
+      currentFont = FontSectionInfo.font0612_start_ptr;
+      break;
+    case FontStyle::LARGE:
+    default:
+      currentFont = FontSectionInfo.font12_start_ptr;
+      break;
+    }
+    index = charCode - 2;
     break;
   }
-  const uint8_t *charPointer = currentFont + ((fontWidth * (fontHeight / 8)) * index);
+  const uint8_t *charPointer = currentFont + ((fontWidth * ((fontHeight + 7) / 8)) * index);
   const uint8_t  shift       = cursor_y & 7;
   if (shift == 0) {
     drawArea(cursor_x, cursor_y, fontWidth, fontHeight, charPointer);
   } else {
     // y is not strip-aligned: shift each column across strips so a glyph can be
     // vertically centred (e.g. a 24px large readout at y=4 on a 32px panel).
-    const uint8_t srcStrips = fontHeight / 8;
+    const uint8_t srcStrips = (fontHeight + 7) / 8;
     const int16_t baseStrip = cursor_y / 8;
     for (uint8_t col = 0; col < fontWidth; col++) {
       const int16_t x = cursor_x + col;
@@ -231,12 +254,21 @@ void OLED::drawChar(const uint16_t charCode, const FontStyle fontStyle, const ui
         bits |= (uint32_t)charPointer[(s * fontWidth) + col] << (8 * s);
       }
       bits <<= shift;
-      for (uint8_t s = 0; s <= srcStrips; s++) {
+      for (uint8_t s = 0; (s * 8) < (shift + fontHeight); s++) {
         const int16_t destStrip = baseStrip + s;
         if (destStrip < 0 || destStrip >= (OLED_HEIGHT / 8)) {
           continue;
         }
-        stripPointers[destStrip][x] = (bits >> (8 * s)) & 0xFF;
+        // Touch only the rows this glyph covers; preserve the rest of the shared strip.
+        const uint8_t stripBit0 = 8 * s;
+        const uint8_t localLo   = (uint8_t)((shift > stripBit0) ? (shift - stripBit0) : 0);
+        uint8_t       localHi   = (uint8_t)(shift + fontHeight - stripBit0);
+        if (localHi > 8) {
+          localHi = 8;
+        }
+        const uint8_t mask = (uint8_t)(((1u << (localHi - localLo)) - 1u) << localLo);
+        uint8_t      &dst  = stripPointers[destStrip][x];
+        dst                = (uint8_t)((dst & ~mask) | (((bits >> (8 * s)) & 0xFF) & mask));
       }
     }
   }
@@ -249,10 +281,11 @@ void OLED::drawChar(const uint16_t charCode, const FontStyle fontStyle, const ui
  */
 void OLED::drawScrollIndicator(uint8_t y, uint8_t height) {
 
-  const uint32_t whole = ((1 << height) - 1) << y; // preload a set of set bits of height
-                                                   // Shift down by the y value
-  const uint8_t strips[4] = {static_cast<uint8_t>(whole & 0xff), static_cast<uint8_t>((whole & 0xff00) >> 8 * 1), static_cast<uint8_t>((whole & 0xff0000) >> 8 * 2),
-                             static_cast<uint8_t>((whole & 0xff000000) >> 8 * 3)};
+  const uint32_t whole     = ((1 << height) - 1) << y; // preload a set of set bits of height
+                                                       // Shift down by the y value
+  const uint8_t  strips[4] = {static_cast<uint8_t>(whole & 0xff), static_cast<uint8_t>((whole & 0xff00) >> 8 * 1),
+                              static_cast<uint8_t>((whole & 0xff0000) >> 8 * 2),
+                              static_cast<uint8_t>((whole & 0xff000000) >> 8 * 3)};
   // Draw a one pixel wide bar to the left with a single pixel as
   // the scroll indicator.
   fillArea(OLED_WIDTH - 1, 0, 1, 8, strips[0]);
@@ -371,7 +404,8 @@ void OLED::transitionSecondaryFramebuffer(const bool forwardNavigation, const Ti
     vTaskDelayUntil(&startDraw, TICKS_100MS / 7);
     buttonsReleased |= getButtonState() == BUTTON_NONE;
     if (getButtonState() != BUTTON_NONE && buttonsReleased) {
-      memcpy(screenBuffer + FRAMEBUFFER_START, secondFrameBuffer + FRAMEBUFFER_START, sizeof(screenBuffer) - FRAMEBUFFER_START);
+      memcpy(screenBuffer + FRAMEBUFFER_START, secondFrameBuffer + FRAMEBUFFER_START,
+             sizeof(screenBuffer) - FRAMEBUFFER_START);
       refresh(); // Now refresh to write out the contents to the new page
       return;
     }
@@ -390,7 +424,8 @@ void OLED::useSecondaryFramebuffer(bool useSecondary) {
 /**
  * This assumes that the current display output buffer has the current on screen contents
  * Then the secondary buffer has the "new" contents to be slid up onto the screen
- * Sadly we cant use the hardware scroll as some devices with the 128x32 screens dont have the GRAM for holding both screens at once
+ * Sadly we cant use the hardware scroll as some devices with the 128x32 screens dont have the GRAM for holding both
+ * screens at once
  *
  * **This function blocks until the transition has completed or user presses button**
  */
@@ -414,21 +449,27 @@ void OLED::transitionScrollDown(const TickType_t viewEnterTime) {
       // Now shuffle off the third strip
       screenBuffer[thirdStripPos] = (screenBuffer[thirdStripPos] >> 1) | ((screenBuffer[fourthStripPos] & 0x01) << 7);
       // Now forth strip gets the start of the new buffer
-      screenBuffer[fourthStripPos] = (screenBuffer[fourthStripPos] >> 1) | ((secondFrameBuffer[firstStripPos] & 0x01) << 7);
+      screenBuffer[fourthStripPos] =
+          (screenBuffer[fourthStripPos] >> 1) | ((secondFrameBuffer[firstStripPos] & 0x01) << 7);
       // Now cycle all the secondary buffers
 
-      secondFrameBuffer[firstStripPos]  = (secondFrameBuffer[firstStripPos] >> 1) | ((secondFrameBuffer[secondStripPos] & 0x01) << 7);
-      secondFrameBuffer[secondStripPos] = (secondFrameBuffer[secondStripPos] >> 1) | ((secondFrameBuffer[thirdStripPos] & 0x01) << 7);
-      secondFrameBuffer[thirdStripPos]  = (secondFrameBuffer[thirdStripPos] >> 1) | ((secondFrameBuffer[fourthStripPos] & 0x01) << 7);
+      secondFrameBuffer[firstStripPos] =
+          (secondFrameBuffer[firstStripPos] >> 1) | ((secondFrameBuffer[secondStripPos] & 0x01) << 7);
+      secondFrameBuffer[secondStripPos] =
+          (secondFrameBuffer[secondStripPos] >> 1) | ((secondFrameBuffer[thirdStripPos] & 0x01) << 7);
+      secondFrameBuffer[thirdStripPos] =
+          (secondFrameBuffer[thirdStripPos] >> 1) | ((secondFrameBuffer[fourthStripPos] & 0x01) << 7);
       // Finally on the bottom row; we shuffle it up ready
       secondFrameBuffer[fourthStripPos] >>= 1;
 #else
       // Move the LSB off the first strip, and pop MSB from second strip onto the first strip
       screenBuffer[firstStripPos] = (screenBuffer[firstStripPos] >> 1) | ((screenBuffer[secondStripPos] & 0x01) << 7);
       // Now shuffle off the second strip MSB, and replace it with the LSB of the secondary buffer
-      screenBuffer[secondStripPos] = (screenBuffer[secondStripPos] >> 1) | ((secondFrameBuffer[firstStripPos] & 0x01) << 7);
+      screenBuffer[secondStripPos] =
+          (screenBuffer[secondStripPos] >> 1) | ((secondFrameBuffer[firstStripPos] & 0x01) << 7);
       // Finally, do the shuffle on the second frame buffer
-      secondFrameBuffer[firstStripPos] = (secondFrameBuffer[firstStripPos] >> 1) | ((secondFrameBuffer[secondStripPos] & 0x01) << 7);
+      secondFrameBuffer[firstStripPos] =
+          (secondFrameBuffer[firstStripPos] >> 1) | ((secondFrameBuffer[secondStripPos] & 0x01) << 7);
       // Finally on the bottom row; we shuffle it up ready
       secondFrameBuffer[secondStripPos] >>= 1;
 #endif /* OLED_128x32 */
@@ -436,7 +477,8 @@ void OLED::transitionScrollDown(const TickType_t viewEnterTime) {
     buttonsReleased |= getButtonState() == BUTTON_NONE;
     if (getButtonState() != BUTTON_NONE && buttonsReleased) {
       // Exit early, but have to transition whole buffer
-      memcpy(screenBuffer + FRAMEBUFFER_START, secondFrameBuffer + FRAMEBUFFER_START, sizeof(screenBuffer) - FRAMEBUFFER_START);
+      memcpy(screenBuffer + FRAMEBUFFER_START, secondFrameBuffer + FRAMEBUFFER_START,
+             sizeof(screenBuffer) - FRAMEBUFFER_START);
       refresh(); // Now refresh to write out the contents to the new page
       return;
     }
@@ -454,7 +496,8 @@ void OLED::transitionScrollDown(const TickType_t viewEnterTime) {
 /**
  * This assumes that the current display output buffer has the current on screen contents
  * Then the secondary buffer has the "new" contents to be slid down onto the screen
- * Sadly we cant use the hardware scroll as some devices with the 128x32 screens dont have the GRAM for holding both screens at once
+ * Sadly we cant use the hardware scroll as some devices with the 128x32 screens dont have the GRAM for holding both
+ * screens at once
  *
  * **This function blocks until the transition has completed or user presses button**
  */
@@ -475,21 +518,27 @@ void OLED::transitionScrollUp(const TickType_t viewEnterTime) {
       screenBuffer[fourthStripPos] = (screenBuffer[fourthStripPos] << 1) | ((screenBuffer[thirdStripPos] & 0x80) >> 7);
       screenBuffer[thirdStripPos]  = (screenBuffer[thirdStripPos] << 1) | ((screenBuffer[secondStripPos] & 0x80) >> 7);
       screenBuffer[secondStripPos] = (screenBuffer[secondStripPos] << 1) | ((screenBuffer[firstStripPos] & 0x80) >> 7);
-      screenBuffer[firstStripPos]  = (screenBuffer[firstStripPos] << 1) | ((secondFrameBuffer[fourthStripPos] & 0x80) >> 7);
+      screenBuffer[firstStripPos] =
+          (screenBuffer[firstStripPos] << 1) | ((secondFrameBuffer[fourthStripPos] & 0x80) >> 7);
 
-      secondFrameBuffer[fourthStripPos] = (secondFrameBuffer[fourthStripPos] << 1) | ((secondFrameBuffer[thirdStripPos] & 0x80) >> 7);
-      secondFrameBuffer[thirdStripPos]  = (secondFrameBuffer[thirdStripPos] << 1) | ((secondFrameBuffer[secondStripPos] & 0x80) >> 7);
-      secondFrameBuffer[secondStripPos] = (secondFrameBuffer[secondStripPos] << 1) | ((secondFrameBuffer[firstStripPos] & 0x80) >> 7);
+      secondFrameBuffer[fourthStripPos] =
+          (secondFrameBuffer[fourthStripPos] << 1) | ((secondFrameBuffer[thirdStripPos] & 0x80) >> 7);
+      secondFrameBuffer[thirdStripPos] =
+          (secondFrameBuffer[thirdStripPos] << 1) | ((secondFrameBuffer[secondStripPos] & 0x80) >> 7);
+      secondFrameBuffer[secondStripPos] =
+          (secondFrameBuffer[secondStripPos] << 1) | ((secondFrameBuffer[firstStripPos] & 0x80) >> 7);
       // Finally on the bottom row; we shuffle it up ready
       secondFrameBuffer[firstStripPos] <<= 1;
 #else
       // We pop the LSB off the bottom row, and replace the MSB in that byte with the LSB of the row above
       screenBuffer[secondStripPos] = (screenBuffer[secondStripPos] << 1) | ((screenBuffer[firstStripPos] & 0x80) >> 7);
       // Move the LSB off the first strip, and pop MSB from second strip onto the first strip
-      screenBuffer[firstStripPos] = (screenBuffer[firstStripPos] << 1) | ((secondFrameBuffer[secondStripPos] & 0x80) >> 7);
+      screenBuffer[firstStripPos] =
+          (screenBuffer[firstStripPos] << 1) | ((secondFrameBuffer[secondStripPos] & 0x80) >> 7);
 
       // Finally, do the shuffle on the second frame buffer
-      secondFrameBuffer[secondStripPos] = (secondFrameBuffer[secondStripPos] << 1) | ((secondFrameBuffer[firstStripPos] & 0x80) >> 7);
+      secondFrameBuffer[secondStripPos] =
+          (secondFrameBuffer[secondStripPos] << 1) | ((secondFrameBuffer[firstStripPos] & 0x80) >> 7);
       // Finally on the bottom row; we shuffle it up ready
       secondFrameBuffer[firstStripPos] <<= 1;
 #endif /* OLED_128x32 */
@@ -497,7 +546,8 @@ void OLED::transitionScrollUp(const TickType_t viewEnterTime) {
     buttonsReleased |= getButtonState() == BUTTON_NONE;
     if (getButtonState() != BUTTON_NONE && buttonsReleased) {
       // Exit early, but have to transition whole buffer
-      memcpy(screenBuffer + FRAMEBUFFER_START, secondFrameBuffer + FRAMEBUFFER_START, sizeof(screenBuffer) - FRAMEBUFFER_START);
+      memcpy(screenBuffer + FRAMEBUFFER_START, secondFrameBuffer + FRAMEBUFFER_START,
+             sizeof(screenBuffer) - FRAMEBUFFER_START);
       refresh(); // Now refresh to write out the contents to the new page
       return;
     }
@@ -540,13 +590,15 @@ void OLED::setRotation(bool leftHanded) {
   } else {
     OLED_Setup_Array[5].val = 0xC0;
   }
-  I2C_CLASS::writeRegistersBulk(DEVICEADDR_OLED, OLED_Setup_Array, sizeof(OLED_Setup_Array) / sizeof(OLED_Setup_Array[0]));
+  I2C_CLASS::writeRegistersBulk(DEVICEADDR_OLED, OLED_Setup_Array,
+                                sizeof(OLED_Setup_Array) / sizeof(OLED_Setup_Array[0]));
   osDelay(TICKS_10MS);
   inLeftHandedMode = leftHanded;
 
-  screenBuffer[5] = inLeftHandedMode ? OLED_GRAM_START_FLIP : OLED_GRAM_START; // display is shifted by 32 in left handed
-                                                                               // mode as driver ram is 128 wide
-  screenBuffer[7] = inLeftHandedMode ? OLED_GRAM_END_FLIP : OLED_GRAM_END;     // End address of the ram segment we are writing to (96 wide)
+  screenBuffer[5] = inLeftHandedMode ? OLED_GRAM_START_FLIP : OLED_GRAM_START; // display is shifted by 32 in left
+                                                                               // handed mode as driver ram is 128 wide
+  screenBuffer[7] = inLeftHandedMode ? OLED_GRAM_END_FLIP
+                                     : OLED_GRAM_END; // End address of the ram segment we are writing to (96 wide)
   screenBuffer[9] = inLeftHandedMode ? 0xC8 : 0xC0;
   // Force a screen refresh
   const int len = FRAMEBUFFER_START + (OLED_WIDTH * (OLED_HEIGHT / 8));
@@ -624,6 +676,7 @@ void OLED::printSymbolDeg(const FontStyle fontStyle) {
     OLED::print(getSettingValue(SettingsOptions::TemperatureInF) ? LargeSymbolDegF : LargeSymbolDegC, fontStyle);
     break;
   case FontStyle::SMALL:
+  case FontStyle::LITTLE:
   default:
     OLED::print(getSettingValue(SettingsOptions::TemperatureInF) ? SmallSymbolDegF : SmallSymbolDegC, fontStyle);
     break;
@@ -704,6 +757,8 @@ void OLED::drawSymbol(uint8_t symbolID) {
   drawChar(symbolID, FontStyle::EXTRAS, 0);
 }
 
+void OLED::drawSymbolSmall(uint8_t symbolID) { drawChar(symbolID, FontStyle::EXTRAS_SMALL, 0); }
+
 // Draw an area, but y must be aligned on 0/8 offset
 void OLED::drawArea(int16_t x, int8_t y, uint8_t width, uint8_t height, const uint8_t *ptr) {
   // Splat this from x->x+width in two strides
@@ -724,13 +779,14 @@ void OLED::drawArea(int16_t x, int8_t y, uint8_t width, uint8_t height, const ui
   if (x + width > OLED_WIDTH) {
     visibleEnd = OLED_WIDTH - x;
   }
-  uint8_t rowsDrawn = 0;
-  while (height > 0) {
+  const uint8_t strips = (height + 7) / 8;
+  for (uint8_t rowsDrawn = 0; rowsDrawn < strips; rowsDrawn++) {
+    const uint8_t remaining = height - (rowsDrawn * 8);
+    const uint8_t mask      = (remaining >= 8) ? 0xFF : (uint8_t)((1u << remaining) - 1u);
     for (uint8_t xx = visibleStart; xx < visibleEnd; xx++) {
-      stripPointers[(y / 8) + rowsDrawn][x + xx] = ptr[xx + (rowsDrawn * width)];
+      uint8_t &dst = stripPointers[(y / 8) + rowsDrawn][x + xx];
+      dst          = (uint8_t)((dst & ~mask) | (ptr[xx + (rowsDrawn * width)] & mask));
     }
-    height -= 8;
-    rowsDrawn++;
   }
 }
 
@@ -845,8 +901,8 @@ void OLED::drawHeatSymbol(uint8_t state) {
 
 
       <- 14 px ->
-      What we are doing is aiming to clear a section of the screen, down to the base depending on how much PWM we are using.
-      Larger numbers mean more heat, so we clear less of the screen.
+      What we are doing is aiming to clear a section of the screen, down to the base depending on how much PWM we are
+     using. Larger numbers mean more heat, so we clear less of the screen.
   */
   drawFilledRect(cursor_x_temp, 0, cursor_x_temp + 12, 2 + (8 - state), true);
 }

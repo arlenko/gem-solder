@@ -12,6 +12,7 @@
 static int32_t PWMToX10Watts(uint8_t pwm, uint8_t sample);
 const int      fastPWMChangeoverPoint     = TIP_PWM_ARR / 2;
 const int      fastPWMChangeoverTolerance = 16;
+int32_t        powerSupplyWattageLimit    = 0;
 
 expMovingAverage<uint32_t, wattHistoryFilter> x10WattHistory = {0};
 
@@ -72,6 +73,28 @@ uint8_t X10WattsToPWM(int32_t x10Watts, uint8_t sample) {
     pwm = powerPWM;
   }
   return pwm;
+}
+
+int32_t getX10WattageLimits() {
+  int32_t limit = availableW10(0);
+  // Power limit defined in user settings
+  if (getSettingValue(SettingsOptions::PowerLimit) && limit > (getSettingValue(SettingsOptions::PowerLimit) * 10)) {
+    limit = getSettingValue(SettingsOptions::PowerLimit) * 10;
+  }
+  // Power supply capability
+  if (powerSupplyWattageLimit && limit > powerSupplyWattageLimit * 10) {
+    limit = powerSupplyWattageLimit * 10;
+  }
+  // Tip profile power rating
+  if (getTipPowerRating() && limit > (int32_t)getTipPowerRating() * 10) {
+    limit = getTipPowerRating() * 10;
+  }
+#ifdef HARDWARE_MAX_WATTAGE_X10
+  if (limit > HARDWARE_MAX_WATTAGE_X10) {
+    limit = HARDWARE_MAX_WATTAGE_X10;
+  }
+#endif
+  return limit;
 }
 
 static int32_t PWMToX10Watts(uint8_t pwm, uint8_t sample) {

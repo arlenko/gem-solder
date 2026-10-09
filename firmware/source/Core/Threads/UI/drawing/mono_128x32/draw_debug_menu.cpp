@@ -38,7 +38,7 @@ void ui_draw_debug_menu(const uint8_t item_number) {
     OLED::print(PowerSourceNames[getPowerSourceNumber()], FontStyle::SMALL);
     break;
   case 4: // Input Voltage
-    printVoltage();
+    printVoltage(FontStyle::SMALL);
     break;
   case 5: // Temp in °C
     OLED::printNumber(TipThermoModel::getTipInC(), 6, FontStyle::SMALL);

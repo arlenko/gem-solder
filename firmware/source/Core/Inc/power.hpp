@@ -25,4 +25,5 @@ extern expMovingAverage<uint32_t, wattHistoryFilter> x10WattHistory;
 uint32_t availableW10(uint8_t sample);
 void     setTipX10Watts(int32_t mw);
 uint8_t  X10WattsToPWM(int32_t milliWatts, uint8_t sample = 0);
+int32_t  getX10WattageLimits();
 #endif /* POWER_HPP_ */

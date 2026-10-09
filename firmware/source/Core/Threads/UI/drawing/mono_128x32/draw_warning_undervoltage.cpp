@@ -8,7 +8,7 @@ void ui_draw_warning_undervoltage(void) {
     OLED::print(translatedString(Tr->UndervoltageString), FontStyle::SMALL);
     OLED::setCursor(0, 16);
     OLED::print(translatedString(Tr->InputVoltageString), FontStyle::SMALL);
-    printVoltage();
+    printVoltage(FontStyle::SMALL);
     OLED::print(SmallSymbolVolts, FontStyle::SMALL);
   } else {
     OLED::print(translatedString(Tr->UVLOWarningString), FontStyle::LARGE);

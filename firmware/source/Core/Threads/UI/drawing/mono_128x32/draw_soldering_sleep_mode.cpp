@@ -16,7 +16,7 @@ void ui_draw_soldering_detailed_sleep(TemperatureType_t tipTemp) {
   }
 
   OLED::print(SmallSymbolSpace, FontStyle::SMALL);
-  printVoltage();
+  printVoltage(FontStyle::SMALL);
   OLED::print(SmallSymbolVolts, FontStyle::SMALL);
 
   OLED::refresh();

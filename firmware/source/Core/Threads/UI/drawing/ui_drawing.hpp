@@ -9,8 +9,9 @@
 #include <stdint.h>
 #include <string.h>
 
-#define UI_DRAWING_TEMP_ZONE 82               // Temperature right-aligned within this zone
-#define OLED_MAX_X           (OLED_WIDTH - 1) // Max X coordinate
+#define UI_DRAWING_TEMP_ZONE 87                // Temperature right-aligned within this zone
+#define OLED_MAX_X           (OLED_WIDTH - 1)  // Max X coordinate
+#define OLED_MAX_Y           (OLED_HEIGHT - 1) // Max X coordinate
 
 void ui_draw_warning_undervoltage(void);
 void ui_draw_power_source_icon(void);                            // Draw a single character wide power source icon
@@ -21,6 +22,8 @@ void ui_draw_debug_menu(const uint8_t item_number);              // Draws the de
 void ui_draw_homescreen_detailed(TemperatureType_t tipTemp);     // Drawing the home screen -- Detailed mode
 void ui_draw_homescreen_simplified(TemperatureType_t tipTemp);   // Drawing the home screen -- Simple mode
 void ui_pre_render_assets(void);                                 // If any assets need to be pre-rendered into ram
+void ui_draw_heat_status(int16_t posX, bool boostModeOn);        // A heating tip icon with power bars
+void ui_draw_power_bar(uint8_t posX, uint8_t posY, uint8_t width, uint8_t height);
 // Soldering mode
 void ui_draw_soldering_power_status(bool boost_mode_on);
 void ui_draw_soldering_basic_status(bool boostModeOn);
@@ -28,7 +31,6 @@ void ui_draw_soldering_detailed_sleep(TemperatureType_t tipTemp);
 void ui_draw_soldering_basic_sleep(TemperatureType_t tipTemp);
 void ui_draw_soldering_profile_advanced(TemperatureType_t tipTemp, TemperatureType_t profileCurrentTargetTemp,
                                         uint32_t phaseElapsedSeconds, uint32_t phase, const uint32_t phaseTimeGoal);
-void ui_draw_heat_status(int16_t posX, bool boostModeOn);
 
 // Temp change
 void ui_draw_temperature_change(void);
@@ -37,5 +39,6 @@ void ui_draw_usb_pd_debug_state(const uint16_t vbus_sense_state, const uint8_t s
 void ui_draw_usb_pd_debug_pdo(const uint8_t entry_num, const uint16_t min_voltage, const uint16_t max_voltage,
                               const uint16_t current_a_x100, const uint16_t wattage);
 // Utils
-void printVoltage(void);
+void printVoltage(FontStyle style);
+void printPowerSource(FontStyle style);
 #endif // UI_DRAWING_UI_DRAWING_HPP_

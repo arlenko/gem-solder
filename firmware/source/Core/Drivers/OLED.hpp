@@ -74,6 +74,8 @@ enum class FontStyle {
   SMALL,
   LARGE,
   EXTRAS,
+  LITTLE,
+  EXTRAS_SMALL,
 };
 
 class OLED {
@@ -116,6 +118,7 @@ public:
   static void    setBrightness(uint8_t contrast);
   static void    setInverseDisplay(bool inverted);
   static int16_t getCursorX() { return cursor_x; }
+  static int16_t getCursorY() { return cursor_y; }
   // Draw a string to the current location, with selected font; optionally - with MAX length only
   static void print(const char *string, FontStyle fontStyle, uint8_t length = 255, const uint8_t soft_x_limit = 0);
   static void printWholeScreen(const char *string);
@@ -139,13 +142,19 @@ public:
     setCursor(getCursorX(), (OLED_HEIGHT - 16) / 2);
     drawSymbol((state) ? 16 : 17);
   }
-  inline static void drawUnavailableIcon() { drawArea(OLED_WIDTH - OLED_HEIGHT - 2, 0, OLED_HEIGHT, OLED_HEIGHT, UnavailableIcon); }
+  inline static void drawUnavailableIcon() {
+    drawArea(OLED_WIDTH - OLED_HEIGHT - 2, 0, OLED_HEIGHT, OLED_HEIGHT, UnavailableIcon);
+  }
   static void debugNumber(int32_t val, FontStyle fontStyle);
   static void drawHex(uint32_t x, FontStyle fontStyle, uint8_t digits);
-  static void drawSymbol(uint8_t symbolID);                                                           // Used for drawing symbols of a predictable width
-  static void drawArea(int16_t x, int8_t y, uint8_t wide, uint8_t height, const uint8_t *ptr);        // Draw an area, but y must be aligned on 0/8 offset
-  static void drawAreaSwapped(int16_t x, int8_t y, uint8_t wide, uint8_t height, const uint8_t *ptr); // Draw an area, but y must be aligned on 0/8 offset
-  static void fillArea(int16_t x, int8_t y, uint8_t wide, uint8_t height, const uint8_t value);       // Fill an area, but y must be aligned on 0/8 offset
+  static void drawSymbol(uint8_t symbolID); // Used for drawing symbols of a predictable width
+  static void drawSymbolSmall(uint8_t symbolID);
+  static void drawArea(int16_t x, int8_t y, uint8_t wide, uint8_t height,
+                       const uint8_t *ptr); // Draw an area, but y must be aligned on 0/8 offset
+  static void drawAreaSwapped(int16_t x, int8_t y, uint8_t wide, uint8_t height,
+                              const uint8_t *ptr); // Draw an area, but y must be aligned on 0/8 offset
+  static void fillArea(int16_t x, int8_t y, uint8_t wide, uint8_t height,
+                       const uint8_t value); // Fill an area, but y must be aligned on 0/8 offset
   static void drawFilledRect(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool clear);
   static void drawHeatSymbol(uint8_t state);
   static void drawScrollIndicator(uint8_t p, uint8_t h); // Draws a scrolling position indicator
@@ -167,7 +176,8 @@ private:
     displayChecksum = hash;
     return result;
   }
-  static void         drawChar(uint16_t charCode, FontStyle fontStyle, const uint8_t soft_x_limit); // Draw a character to the current cursor location
+  static void         drawChar(uint16_t charCode, FontStyle fontStyle,
+                               const uint8_t soft_x_limit); // Draw a character to the current cursor location
   static void         setFramebuffer(uint8_t *buffer);
   static uint8_t     *stripPointers[4]; // Pointers to the strips to allow for buffer having extra content
   static bool         inLeftHandedMode; // Whether the screen is in left or not (used for offsets in GRAM)

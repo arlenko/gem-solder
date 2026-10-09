@@ -61,6 +61,11 @@ void prepareTranslations() {
   if (FontSectionInfo.font06_compressed_source != NULL) {
     blz_depack(FontSectionInfo.font06_compressed_source, (uint8_t *)FontSectionInfo.font06_start_ptr, FontSectionInfo.font06_decompressed_size);
   }
+
+  // Font 06x12 can be compressed; if it is then we want to decompress it to ram
+  if (FontSectionInfo.font0612_compressed_source != NULL) {
+    blz_depack(FontSectionInfo.font0612_compressed_source, (uint8_t *)FontSectionInfo.font0612_start_ptr, FontSectionInfo.font0612_decompressed_size);
+  }
 }
 
 void settings_setLanguageSwitch(void) {

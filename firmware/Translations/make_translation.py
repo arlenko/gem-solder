@@ -149,6 +149,7 @@ def get_constants() -> List[Tuple[str, str]]:
         ("SmallSymbolNoVBus", "No VBus"),
         ("SmallSymbolVBus", "VBus"),
         ("LargeSymbolSleep", "Zzz "),
+        ("SmallSymbolPD", "PD"),
     ]
 
 
@@ -478,6 +479,12 @@ TERMINUS_FONTS = {
         24,
         19,
     ),  # bold weight for the large/readout font
+    "6x12": (
+        "terminus/ter-u12n.bdf",
+        6,
+        12,
+        10,
+    ),  # regular weight for the little/compact font
 }
 _terminus_cache: Dict[str, Font] = {}
 
@@ -494,7 +501,7 @@ def get_terminus_bytes(sym: str, size: str) -> bytes:
     """Render `sym` from a Terminus BDF into the IronOS column-major strip format.
     Missing glyphs (or non-single-char symbols) render blank (compresses away)."""
     _, dst_w, dst_h, ascent = TERMINUS_FONTS[size]
-    blank = bytes(dst_w * (dst_h // 8))
+    blank = bytes(dst_w * ((dst_h + 7) // 8))
     if len(sym) != 1:
         return blank
     try:
@@ -514,7 +521,7 @@ def get_terminus_bytes(sym: str, size: str) -> bytes:
         return bool(data[src_h - adj_y - 1] & (1 << (src_w - adj_x - 1)))
 
     bs = bytearray()
-    for block in range(dst_h // 8):
+    for block in range((dst_h + 7) // 8):
         for c in range(dst_w):
             b = 0
             for r in range(8):
@@ -906,6 +913,9 @@ def render_font_block(data: LanguageData, f: TextIO, compress_font: bool = False
         f.write(
             make_terminus_table_cpp("USER_FONT_6x8", "8x16", data.small_text_symbols)
         )
+        f.write(
+            make_terminus_table_cpp("USER_FONT_6x12", "6x12", data.small_text_symbols)
+        )
         f.write("#else\n")
         f.write(
             make_font_table_cpp(
@@ -921,10 +931,13 @@ def render_font_block(data: LanguageData, f: TextIO, compress_font: bool = False
             "const FontSection FontSectionInfo = {\n"
             "    .font12_start_ptr = USER_FONT_12,\n"
             "    .font06_start_ptr = USER_FONT_6x8,\n"
+            "    .font0612_start_ptr = USER_FONT_6x12,\n"
             "    .font12_decompressed_size = 0,\n"
             "    .font06_decompressed_size = 0,\n"
+            "    .font0612_decompressed_size = 0,\n"
             "    .font12_compressed_source = 0,\n"
             "    .font06_compressed_source = 0,\n"
+            "    .font0612_compressed_source = 0,\n"
             "};\n"
         )
     else:
@@ -938,10 +951,13 @@ def render_font_block(data: LanguageData, f: TextIO, compress_font: bool = False
         f.write("#ifdef OLED_128x32\n")
         t12 = terminus_block_bytes("12x24", data.large_text_symbols)
         t06 = terminus_block_bytes("8x16", data.small_text_symbols)
+        t0612 = terminus_block_bytes("6x12", data.small_text_symbols)
         emit_compressed("font_12x16_brieflz", t12)
         emit_compressed("font_06x08_brieflz", t06)
+        emit_compressed("font_06x12_brieflz", t0612)
         f.write(f"static uint8_t font12_out_buffer[{len(t12)}];\n")
         f.write(f"static uint8_t font06_out_buffer[{len(t06)}];\n")
+        f.write(f"static uint8_t font0612_out_buffer[{len(t0612)}];\n")
         f.write("#else\n")
         h12 = bytearray()
         for sym in data.large_text_symbols:
@@ -959,10 +975,13 @@ def render_font_block(data: LanguageData, f: TextIO, compress_font: bool = False
             "const FontSection FontSectionInfo = {\n"
             "    .font12_start_ptr = font12_out_buffer,\n"
             "    .font06_start_ptr = font06_out_buffer,\n"
+            "    .font0612_start_ptr = font0612_out_buffer,\n"
             "    .font12_decompressed_size = sizeof(font12_out_buffer),\n"
             "    .font06_decompressed_size = sizeof(font06_out_buffer),\n"
+            "    .font0612_decompressed_size = sizeof(font0612_out_buffer),\n"
             "    .font12_compressed_source = font_12x16_brieflz,\n"
             "    .font06_compressed_source = font_06x08_brieflz,\n"
+            "    .font0612_compressed_source = font_06x12_brieflz,\n"
             "};\n"
         )
 

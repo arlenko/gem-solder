@@ -47,6 +47,7 @@ extern const char *SmallSymbolPDDebug;
 extern const char *SmallSymbolState;
 extern const char *SmallSymbolNoVBus;
 extern const char *SmallSymbolVBus;
+extern const char *SmallSymbolPD;
 
 extern const char *LargeSymbolSleep;
 
@@ -183,10 +184,13 @@ struct TranslationData {
 struct FontSection {
   const uint8_t *font12_start_ptr;
   const uint8_t *font06_start_ptr;
+  const uint8_t *font0612_start_ptr;
   uint16_t       font12_decompressed_size;
   uint16_t       font06_decompressed_size;
-  const uint8_t *font12_compressed_source; // Pointer to compressed data or null
-  const uint8_t *font06_compressed_source; // Pointer to compressed data or null
+  uint16_t       font0612_decompressed_size;
+  const uint8_t *font12_compressed_source;   // Pointer to compressed data or null
+  const uint8_t *font06_compressed_source;   // Pointer to compressed data or null
+  const uint8_t *font0612_compressed_source; // Pointer to compressed data or null
 };
 
 extern const FontSection FontSectionInfo;
