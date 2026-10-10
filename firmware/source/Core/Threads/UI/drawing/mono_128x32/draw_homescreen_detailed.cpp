@@ -26,11 +26,13 @@ void ui_draw_homescreen_detailed(TemperatureType_t tipTemp) {
     OLED::setCursor(116, 0);
     ui_draw_power_source_icon();
   } else {
-    const uint8_t statusW  = 5 * 6;                // "NN.NW" / "NN.NV" 5 cells
-    const uint8_t tempW    = (3 * 12) + 10;        // 3 large digits + small "°C"
-    const uint8_t tempZone = UI_DRAWING_TEMP_ZONE; // Left of the status block
-    const int16_t tempX    = tempZone - tempW;
-    const int16_t statusX  = OLED_MAX_X - statusW;
+    const uint8_t statusW        = 5 * 6;                // "NN.NW" / "NN.NV" 5 cells
+    const uint8_t tempW          = (3 * 12) + 10;        // 3 large digits + small "°C"
+    const uint8_t tempZone       = UI_DRAWING_TEMP_ZONE; // Left of the status block
+    const int16_t tempX          = tempZone - tempW;
+    const int16_t statusX        = OLED_MAX_X - statusW;
+    const uint8_t powerBarWidth  = OLED_WIDTH - 2; // 1px gaps on both sides
+    const uint8_t powerBarHeight = 6;
 
     if (!(getSettingValue(SettingsOptions::CoolingTempBlink) && (tipTemp > 55) && (xTaskGetTickCount() % 1000 < 300))) {
       // Blink temp if setting enable and temp < 55° (OFF 300ms / ON 700ms)
@@ -39,7 +41,7 @@ void ui_draw_homescreen_detailed(TemperatureType_t tipTemp) {
     }
 
     // Set temperature
-    OLED::setCursor(0, 0);
+    OLED::setCursor(1, 0);
     OLED::printNumber(getSettingValue(SettingsOptions::SolderingTemp), 3, FontStyle::LITTLE);
     OLED::printSymbolDeg(FontStyle::LITTLE);
 
@@ -54,9 +56,8 @@ void ui_draw_homescreen_detailed(TemperatureType_t tipTemp) {
 
     // One slot remains empty. Can use it later once we implement a tip type support
 
-    // Underline
-    const uint8_t lineY = OLED_MAX_Y - 3;
-    OLED::drawFilledRect(1, lineY, OLED_MAX_X - 1, lineY, false);
+    // Power bar
+    ui_draw_power_bar(1, OLED_MAX_Y - powerBarHeight, powerBarWidth, powerBarHeight);
   }
 }
 #endif

@@ -9,7 +9,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#define UI_DRAWING_TEMP_ZONE 87                // Temperature right-aligned within this zone
+#define UI_DRAWING_TEMP_ZONE 88                // Temperature right-aligned within this zone
 #define OLED_MAX_X           (OLED_WIDTH - 1)  // Max X coordinate
 #define OLED_MAX_Y           (OLED_HEIGHT - 1) // Max X coordinate
 
