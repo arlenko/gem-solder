@@ -96,7 +96,7 @@ uint8_t getDCPackLevel(void) {
   // Should give us approx cell voltage X10
   // Range is 42 -> Minimum voltage setting (MinVoltageCells) = 9 steps therefore we will use battery 0-9
   if (cellV < getSettingValue(SettingsOptions::MinVoltageCells)) {
-    cellV = getSettingValue(SettingsOptions::MinVoltageCells);
+    return 0; // pack below the configured cutoff -> empty battery
   }
   cellV -= getSettingValue(SettingsOptions::MinVoltageCells); // Should leave us a number of 0-9
   if (cellV > 9) {
