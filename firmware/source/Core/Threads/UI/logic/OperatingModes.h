@@ -82,6 +82,9 @@ OperatingMode showWarnings(const ButtonState buttons, guiContext *cxt);         
 
 // Common helpers
 int8_t getPowerSourceNumber(void); // Returns number ID of power source
+#ifdef POW_DC
+uint8_t getDCPackLevel(void); // Returns the DC lithium pack charge level, 1 (flat) .. 10 (full)
+#endif
 
 extern uint8_t heaterThermalRunawayCounter;
 #endif

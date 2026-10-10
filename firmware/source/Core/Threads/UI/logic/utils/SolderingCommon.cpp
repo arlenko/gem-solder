@@ -88,6 +88,24 @@ int8_t getPowerSourceNumber(void) {
   return sourceNumber;
 }
 
+#ifdef POW_DC
+uint8_t getDCPackLevel(void) {
+  // Charge level of the lithium pack on the DC input, 1 (flat) .. 10 (full).
+  uint8_t  cellCount = getSettingValue(SettingsOptions::MinDCVoltageCells) + 2;
+  uint32_t cellV     = getInputVoltageX10(getSettingValue(SettingsOptions::VoltageDiv), 0) / cellCount;
+  // Should give us approx cell voltage X10
+  // Range is 42 -> Minimum voltage setting (MinVoltageCells) = 9 steps therefore we will use battery 0-9
+  if (cellV < getSettingValue(SettingsOptions::MinVoltageCells)) {
+    cellV = getSettingValue(SettingsOptions::MinVoltageCells);
+  }
+  cellV -= getSettingValue(SettingsOptions::MinVoltageCells); // Should leave us a number of 0-9
+  if (cellV > 9) {
+    cellV = 9;
+  }
+  return cellV + 1;
+}
+#endif
+
 // Returns temperature of the tip in *C/*F (based on user settings)
 TemperatureType_t getTipTemp(void) {
 #ifdef FILTER_DISPLAYED_TIP_TEMP

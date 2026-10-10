@@ -137,6 +137,8 @@ public:
   static void clearScreen() { memset(stripPointers[0], 0, OLED_WIDTH * (OLED_HEIGHT / 8)); }
   // Draws the battery level symbol
   static void drawBattery(uint8_t state) { drawSymbol(3 + (state > 10 ? 10 : state)); }
+  // Draws the 12px battery level symbol (small extras font)
+  static void drawBatterySmall(uint8_t state) { drawSymbolSmall(1 + (state > 10 ? 10 : state)); }
   // Draws a checkbox, vertically centred for the panel (y=0 on 96x16, y=8 on 128x32)
   static void drawCheckbox(bool state) {
     setCursor(getCursorX(), (OLED_HEIGHT - 16) / 2);
