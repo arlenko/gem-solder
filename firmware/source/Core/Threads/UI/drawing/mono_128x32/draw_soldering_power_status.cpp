@@ -35,8 +35,6 @@ void ui_draw_soldering_power_status(bool boost_mode_on) {
   const uint8_t tempZone = UI_DRAWING_TEMP_ZONE; // Left of the status block
   const int16_t tempX    = tempZone - tempW;
   const int16_t statusX  = OLED_MAX_X - statusW;
-  const uint8_t powerBarWidth  = OLED_WIDTH - 2; // 1px gaps on both sides
-  const uint8_t powerBarHeight = 6;
 
   // Temperature
   OLED::setCursor(tempX, 0);
@@ -73,7 +71,7 @@ void ui_draw_soldering_power_status(bool boost_mode_on) {
   printPowerSource(FontStyle::LITTLE);
 
   // Power bar
-  ui_draw_power_bar(1, OLED_MAX_Y - powerBarHeight, powerBarWidth, powerBarHeight);
+  ui_draw_power_bar(1, OLED_MAX_Y - POWER_BAR_HEIGHT, POWER_BAR_WIDTH, POWER_BAR_HEIGHT);
 }
 #endif
 #endif

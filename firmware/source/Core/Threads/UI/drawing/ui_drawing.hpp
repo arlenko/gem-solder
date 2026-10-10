@@ -12,6 +12,8 @@
 #define UI_DRAWING_TEMP_ZONE 88                // Temperature right-aligned within this zone
 #define OLED_MAX_X           (OLED_WIDTH - 1)  // Max X coordinate
 #define OLED_MAX_Y           (OLED_HEIGHT - 1) // Max X coordinate
+#define POWER_BAR_WIDTH      (OLED_MAX_X - 2)  // 1px gaps on both sides
+#define POWER_BAR_HEIGHT     5
 
 void ui_draw_warning_undervoltage(void);
 void ui_draw_power_source_icon(void);                            // Draw a single character wide power source icon
