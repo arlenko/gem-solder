@@ -54,8 +54,9 @@ void ui_draw_homescreen_detailed(TemperatureType_t tipTemp) {
 
     // One slot remains empty. Can use it later once we implement a tip type support
 
-    // Power bar
-    ui_draw_power_bar(1, OLED_MAX_Y - POWER_BAR_HEIGHT, POWER_BAR_WIDTH, POWER_BAR_HEIGHT);
+    // Underline
+    const uint8_t lineY = OLED_MAX_Y - 3;
+    OLED::drawFilledRect(1, lineY, POWER_BAR_WIDTH, lineY, false);
   }
 }
 #endif
