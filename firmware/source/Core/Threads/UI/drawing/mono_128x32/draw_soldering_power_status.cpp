@@ -3,32 +3,55 @@
 #include <OperatingModes.h>
 #ifdef OLED_128x32
 
+void printWattage(uint32_t x10Watt, FontStyle style) {
+  if (x10Watt > 999) {
+    // Above 99.9W drop the decimal place to keep it to 5 cells
+    OLED::print(SmallSymbolSpace, style);
+    OLED::printNumber(x10Watt / 10, 3, style);
+  } else {
+    OLED::printNumber(x10Watt / 10, 2, style);
+    OLED::print(SmallSymbolDot, style);
+    OLED::printNumber(x10Watt % 10, 1, style);
+  }
+  OLED::print(SmallSymbolWatts, style);
+}
+
 #ifdef PID_DEBUG
 extern volatile int32_t PIDDebugResults[3];
-void                    print_debug_result(int32_t value) {
-  if (value < 0) {
-    OLED::print(SmallSymbolMinus, FontStyle::SMALL);
-    value = -value;
+
+void printPIDTerm(int32_t x10Watt, FontStyle style) {
+  if (x10Watt < 0) {
+    // Print minus for negative numbers and invert to positive
+    OLED::print(SmallSymbolMinus, style);
+    x10Watt = -x10Watt;
   } else {
-    OLED::print(SmallSymbolSpace, FontStyle::SMALL);
+    OLED::print(SmallSymbolSpace, style);
   }
-  OLED::printNumber(value, 5, FontStyle::SMALL);
+
+  if (x10Watt > 9999) {
+    x10Watt = 9999; // Clamp
+  }
+
+  printWattage(x10Watt, style);
 }
+#endif
 
 void ui_draw_soldering_power_status(bool boost_mode_on) {
-  OLED::setCursor(16, 0);
-  ui_draw_tip_temperature(false, FontStyle::SMALL);
-  OLED::printSymbolDeg(FontStyle::SMALL);
-  OLED::setCursor(64, 0);
-  print_debug_result(PIDDebugResults[0]);
-  OLED::setCursor(0, 16);
-  print_debug_result(PIDDebugResults[1]);
-  OLED::setCursor(64, 16);
-  print_debug_result(PIDDebugResults[2]);
-}
+#ifdef PID_DEBUG
+  // PID terms (first row)
+  OLED::setCursor(1, 0);
+  printPIDTerm(PIDDebugResults[0], FontStyle::LITTLE);
+  OLED::setCursor(46, 0);
+  printPIDTerm(PIDDebugResults[1], FontStyle::LITTLE);
+  OLED::setCursor(OLED_MAX_X - 36, 0);
+  printPIDTerm(PIDDebugResults[2], FontStyle::LITTLE);
+  // Wattage and temperaute (second row)
+  OLED::setCursor(7, 12);
+  uint32_t x10Watt = x10WattHistory.average();
+  printWattage(x10Watt, FontStyle::LITTLE);
+  OLED::setCursor(52, 12);
+  ui_draw_tip_temperature(true, FontStyle::LITTLE);
 #else
-
-void ui_draw_soldering_power_status(bool boost_mode_on) {
   (void)boost_mode_on;
   const uint8_t statusW  = 5 * 6;                // "NN.NW" / "NN.NV" 5 cells
   const uint8_t tempW    = (3 * 12) + 10;        // 3 large digits + small "°C"
@@ -55,19 +78,8 @@ void ui_draw_soldering_power_status(bool boost_mode_on) {
 
   // Wattage
   OLED::setCursor(1, 12);
-  {
-    uint32_t x10Watt = x10WattHistory.average();
-    if (x10Watt > 999) {
-      // Above 99.9W drop the decimal place to keep it to 5 cells
-      OLED::print(SmallSymbolSpace, FontStyle::LITTLE);
-      OLED::printNumber(x10Watt / 10, 3, FontStyle::LITTLE);
-    } else {
-      OLED::printNumber(x10Watt / 10, 2, FontStyle::LITTLE);
-      OLED::print(SmallSymbolDot, FontStyle::LITTLE);
-      OLED::printNumber(x10Watt % 10, 1, FontStyle::LITTLE);
-    }
-    OLED::print(SmallSymbolWatts, FontStyle::LITTLE);
-  }
+  uint32_t x10Watt = x10WattHistory.average();
+  printWattage(x10Watt, FontStyle::LITTLE);
 
   // Input voltage
   OLED::setCursor(OLED_MAX_X - 30, 12);
@@ -77,9 +89,9 @@ void ui_draw_soldering_power_status(bool boost_mode_on) {
   // Power source
   OLED::setCursor(OLED_MAX_X - 30, 0);
   printPowerSource(FontStyle::LITTLE);
+#endif
 
   // Power bar
   ui_draw_power_bar(1, OLED_MAX_Y - POWER_BAR_HEIGHT, POWER_BAR_WIDTH, POWER_BAR_HEIGHT);
 }
-#endif
 #endif
