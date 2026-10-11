@@ -42,8 +42,16 @@ void ui_draw_soldering_power_status(bool boost_mode_on) {
 
   // Set temperature
   OLED::setCursor(1, 0);
-  OLED::printNumber(getSettingValue(SettingsOptions::SolderingTemp), 3, FontStyle::LITTLE);
-  OLED::printSymbolDeg(FontStyle::LITTLE);
+  if (boost_mode_on) {
+    if (xTaskGetTickCount() % 1000 > 300) {
+      // Blink temp if boost is active (OFF 300ms / ON 700ms)
+      OLED::printNumber(getSettingValue(SettingsOptions::BoostTemp), 3, FontStyle::LITTLE);
+      OLED::printSymbolDeg(FontStyle::LITTLE);
+    }
+  } else {
+    OLED::printNumber(getSettingValue(SettingsOptions::SolderingTemp), 3, FontStyle::LITTLE);
+    OLED::printSymbolDeg(FontStyle::LITTLE);
+  }
 
   // Wattage
   OLED::setCursor(1, 12);
