@@ -59,7 +59,7 @@ OperatingMode handleSolderingButtons(const ButtonState buttons, guiContext *cxt)
   case BUTTON_BOTH:
   /*Fall through*/
   case BUTTON_B_LONG:
-    cxt->transitionMode = detailedView ? TransitionAnimation::Down : TransitionAnimation::Right;
+    cxt->transitionMode = detailedView ? TransitionAnimation::None : TransitionAnimation::Right;
     return OperatingMode::HomeScreen;
   case BUTTON_F_LONG:
     // if boost mode is enabled turn it on

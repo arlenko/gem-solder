@@ -92,6 +92,6 @@ void ui_draw_soldering_power_status(bool boost_mode_on) {
 #endif
 
   // Power bar
-  ui_draw_power_bar(1, OLED_MAX_Y - POWER_BAR_HEIGHT, POWER_BAR_WIDTH, POWER_BAR_HEIGHT);
+  ui_draw_power_bar(1, OLED_MAX_Y - POWER_BAR_HEIGHT, POWER_BAR_WIDTH, POWER_BAR_HEIGHT, PowerBarAnimation::Unfold);
 }
 #endif

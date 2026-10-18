@@ -34,25 +34,28 @@ void ui_draw_homescreen_detailed(TemperatureType_t tipTemp) {
 
     if (!(getSettingValue(SettingsOptions::CoolingTempBlink) && (tipTemp > 55) && (xTaskGetTickCount() % 1000 < 300))) {
       // Blink temp if setting enable and temp < 55° (OFF 300ms / ON 700ms)
-      OLED::setCursor(tempX, 4); // 24px number, vertically centred (4px above/below)
+      OLED::setCursor(tempX, 0); // 24px number, vertically centred (4px above/below)
       ui_draw_tip_temperature(true, FontStyle::LARGE);
     }
 
     // Set temperature
-    OLED::setCursor(1, 4);
+    OLED::setCursor(1, 0);
     OLED::printNumber(getSettingValue(SettingsOptions::SolderingTemp), 3, FontStyle::LITTLE);
     OLED::printSymbolDeg(FontStyle::LITTLE);
 
     // Input voltage
-    OLED::setCursor(OLED_MAX_X - 30, 16);
+    OLED::setCursor(OLED_MAX_X - 30, 12);
     printVoltage(FontStyle::LITTLE);
     OLED::print(SmallSymbolVolts, FontStyle::LITTLE);
 
     // Power source
-    OLED::setCursor(OLED_MAX_X - 30, 4);
+    OLED::setCursor(OLED_MAX_X - 30, 0);
     printPowerSource(FontStyle::LITTLE);
 
     // One slot remains empty. Can use it later once we implement a tip type support
+
+    // Power bar
+    ui_draw_power_bar(1, OLED_MAX_Y - POWER_BAR_HEIGHT, POWER_BAR_WIDTH, POWER_BAR_HEIGHT, PowerBarAnimation::Fold);
   }
 }
 #endif

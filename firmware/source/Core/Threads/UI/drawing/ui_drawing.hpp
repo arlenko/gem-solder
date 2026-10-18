@@ -15,6 +15,12 @@
 #define POWER_BAR_WIDTH      (OLED_MAX_X - 2)  // 1px gaps on both sides
 #define POWER_BAR_HEIGHT     5
 
+enum class PowerBarAnimation {
+  Fold,
+  Unfold,
+  None,
+};
+
 void ui_draw_warning_undervoltage(void);
 void ui_draw_power_source_icon(void);                            // Draw a single character wide power source icon
 void ui_draw_tip_temperature(bool symbol, const FontStyle font); // Draw tip temp, aware of conversions
@@ -25,7 +31,7 @@ void ui_draw_homescreen_detailed(TemperatureType_t tipTemp);     // Drawing the 
 void ui_draw_homescreen_simplified(TemperatureType_t tipTemp);   // Drawing the home screen -- Simple mode
 void ui_pre_render_assets(void);                                 // If any assets need to be pre-rendered into ram
 void ui_draw_heat_status(int16_t posX, bool boostModeOn);        // A heating tip icon with power bars
-void ui_draw_power_bar(uint8_t posX, uint8_t posY, uint8_t width, uint8_t height);
+void ui_draw_power_bar(uint8_t posX, uint8_t posY, uint8_t width, uint8_t height, PowerBarAnimation animation);
 // Soldering mode
 void ui_draw_soldering_power_status(bool boost_mode_on);
 void ui_draw_soldering_basic_status(bool boostModeOn);
