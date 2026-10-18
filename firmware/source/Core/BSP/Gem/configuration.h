@@ -154,8 +154,10 @@
 #define OP_AMP_CURRENT_SENSE_GAIN_STAGE ((OP_AMP_CURRENT_SENSE_Rf) / (OP_AMP_CURRENT_SENSE_Rin))
 // Effective shunt resistance is 5mOhm plus ~1mOhm parasitic resistance of traces and solder joints
 #define CURRENT_SENSE_SHUNT_RESISTANCE_mOhms (5 + 1)
-#define TIP_DISCONNECT_CURRENT_MA            10    // threshold below which tip is considered disconnected
-#define TIP_SHORT_CURRENT_MA                 12000 // threshold above which tip is considered shorted
+#define TIP_DISCONNECT_CURRENT_MA            10 // threshold below which tip is considered disconnected
+// Threshold above which tip is considered shorted.
+// 11.6A is max what can be measured with the actual op-amp gain
+#define TIP_SHORT_CURRENT_MA 11500
 
 #define TIP_PWM_PSC          1                  // PWM timer prescaler
 #define TIP_PWM_ARR          199                // PWM timer period. 199 at prescaler 1 gives 20 khz
