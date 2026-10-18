@@ -104,6 +104,8 @@
 
 #define THERMAL_RUNAWAY_TIME_SEC 20
 #define THERMAL_RUNAWAY_TEMP_C   3
+// Anything within this margin of full scale counts as a pegged (saturated) reading;
+#define TIP_RAW_TEMP_PEGGED (ADC_MAX_READING - 32)
 
 #define CUT_OUT_SETTING          0  // default to no cut-off voltage
 #define RECOM_VOL_CELL           33 // Minimum voltage per cell (Recommended 3.3V (33))

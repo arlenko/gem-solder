@@ -278,15 +278,9 @@ void detectThermalRunaway(const TemperatureType_t currentTipTempInC, const uint3
   bool                     thisCycleIsHeating = x10WattsOut > 0;
   static TickType_t        heatCycleStart     = 0;
 
-  static bool haveSeenDelta = false;
-
   // Check for readings being pegged at the top of the ADC while the heater is off
-  if (!thisCycleIsHeating && (getTipRawTemp(0) > (ADC_MAX_READING - 8)) && heaterThermalRunawayCounter < 255) {
+  if (!thisCycleIsHeating && (getTipRawTemp(0) > TIP_RAW_TEMP_PEGGED) && heaterThermalRunawayCounter < 255) {
     heaterThermalRunawayCounter++;
-  }
-
-  if (haveSeenDelta) {
-    return;
   }
 
   if (currentTipTempInC < tiptempMin) {
@@ -303,15 +297,15 @@ void detectThermalRunaway(const TemperatureType_t currentTipTempInC, const uint3
     heatCycleStart = 0;
   }
 
-  if ((xTaskGetTickCount() - heatCycleStart) > (THERMAL_RUNAWAY_TIME_SEC * TICKS_SECOND)) {
-    if (tipTempMax > tiptempMin) {
-      // Have been heating for min seconds, check if the delta is large enough
-      TemperatureType_t delta = tipTempMax - tiptempMin;
-      haveSeenDelta           = true;
+  if (heatCycleStart != 0 && (xTaskGetTickCount() - heatCycleStart) > (THERMAL_RUNAWAY_TIME_SEC * TICKS_SECOND)) {
+    // Have been heating for min seconds; the tip reading must have moved from the coldest
+    // value seen since boot, otherwise the temperature sense is stuck. This is re-evaluated
+    // every cycle while we keep driving power with no response, so a stuck sense escalates
+    // the runaway counter instead of being a one-shot test.
+    TemperatureType_t delta = tipTempMax - tiptempMin;
 
-      if (delta < THERMAL_RUNAWAY_TEMP_C && heaterThermalRunawayCounter < 255) {
-        heaterThermalRunawayCounter++;
-      }
+    if (delta < THERMAL_RUNAWAY_TEMP_C && heaterThermalRunawayCounter < 255) {
+      heaterThermalRunawayCounter++;
     }
   }
 }
@@ -340,7 +334,7 @@ void setOutputx10WattsViaFilters(int32_t x10WattsOut) {
   }
 
   // Secondary safety check to forcefully disable header when within ADC noise of top of ADC
-  if (getTipRawTemp(0) > (0x7FFF - 32)) {
+  if (getTipRawTemp(0) > TIP_RAW_TEMP_PEGGED) {
     x10WattsOut = 0;
   }
   if (heaterThermalRunawayCounter > 8) {
