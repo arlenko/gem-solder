@@ -180,11 +180,15 @@
 #define FILTER_DISPLAYED_TIP_TEMP 8 // Filtering for GUI display
 
 #define TIP_CONTROL_PID // We use PID rather than integrator
-#define TIP_PID_KP      45
-#define TIP_PID_KI      700
-#define TIP_PID_KD      8000
-// PID_DEBUG displays PID results on the detailed soldering screen
-// #define PID_DEBUG
+// PID gains. Effective continuous-time gains are:
+// Kp = TIP_PID_KP                           [x10W / °C]
+// Ki = TIP_PID_KI / TIP_PID_PRECISION_SHIFT [x10W / (°C*s)]
+// Kd = TIP_PID_KD / TIP_PID_PRECISION_SHIFT [x10W / (°C/s)]
+#define TIP_PID_PRECISION_SHIFT 100
+#define TIP_PID_KP              45
+#define TIP_PID_KI              700
+#define TIP_PID_KD              800
+// #define PID_DEBUG // PID_DEBUG displays PID results on the detailed soldering screen
 
 #define TIP_HAS_DIRECT_PWM 1
 #define POW_DC             1

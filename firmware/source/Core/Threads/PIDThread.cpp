@@ -137,14 +137,19 @@ template <class T, T Kp, T Ki, T Kd> struct PID {
 
   T update(const T set_point, const T new_reading, const TickType_t interval_ms, const T max_output) {
     const T target_delta = set_point - new_reading;
+    // Shift applied to get sub-integer precision at small amounts
+    constexpr T integer_precision_shift = (T)(TIP_PID_PRECISION_SHIFT);
+    static_assert(1000 % integer_precision_shift == 0, "precision shift must divide the ms -> s shift (1000) exactly");
 
     // Proportional term
     const T kp_result = Kp * target_delta;
     // Integral probe before anti-windup decision
-    T ki_probe = integration_running_sum / 100;
-    // Derivative term
+    T ki_probe = integration_running_sum / integer_precision_shift;
+
+    // Derivative term. 1000/shift folds the ms -> s sampling shift against the precision shift,
+    // so Kd keeps the same per-second basis as Ki
     T derivative        = (target_delta - previous_error_term);
-    T kd_result_instant = ((Kd * derivative) / (T)(interval_ms));
+    T kd_result_instant = ((Kd * (1000 / integer_precision_shift) * derivative) / (T)(interval_ms));
     kd_result_filter.update(kd_result_instant);
     T kd_result = kd_result_filter.average();
 
@@ -159,8 +164,8 @@ template <class T, T Kp, T Ki, T Kd> struct PID {
       integration_running_sum += (target_delta * (T)interval_ms * Ki) / 1000;
     }
 
-    // Calculate the integral term, we use a shift 100 to get precision in integral as we often need small amounts
-    T ki_result = integration_running_sum / 100;
+    // Calculate the integral term
+    T ki_result = integration_running_sum / integer_precision_shift;
 
     // Summation of the outputs
     T output = kp_result + ki_result + kd_result;
