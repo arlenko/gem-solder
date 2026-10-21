@@ -51,8 +51,8 @@ OperatingMode guiHandleDraw(void) {
     uint32_t tipTemp = TipThermoModel::getTipInC();
     // TODO: replace this simple idle timeout with a proper screensaver implementation.
     if ((tipTemp < 50) && ((xTaskGetTickCount() - lastButtonTime) > BUTTON_INACTIVITY_TIME)) {
-      OLED::setDisplayState(OLED::DisplayState::OFF);
-      setStatusLED(LED_OFF);
+      // OLED::setDisplayState(OLED::DisplayState::OFF);
+      // setStatusLED(LED_OFF);
     } else {
       OLED::setDisplayState(OLED::DisplayState::ON);
     }
