@@ -143,10 +143,12 @@
 #define OP_AMP_CURRENT_SENSE_Rf         240 * 1000
 #define OP_AMP_CURRENT_SENSE_Rin        5.1 * 1000
 #define OP_AMP_CURRENT_SENSE_GAIN_STAGE ((OP_AMP_CURRENT_SENSE_Rf) / (OP_AMP_CURRENT_SENSE_Rin))
-// Effective shunt resistance is 5mOhm plus ~1mOhm parasitic resistance of traces and solder joints
+// Effective shunt resistance is 5 mOhm plus 1 mOhm parasitic resistance of traces and solder joints
 #define CURRENT_SENSE_SHUNT_RESISTANCE_mOhms (5 + 1)
-#define TIP_DISCONNECT_CURRENT_MA            10    // threshold below which tip is considered disconnected
-#define TIP_SHORT_CURRENT_MA                 12000 // threshold above which tip is considered shorted
+// Threshold below which tip is considered disconnected
+#define TIP_DISCONNECT_CURRENT_MA 10
+// Threshold above which tip is considered shorted. 11.6A is maximum what can be measured with actual gain
+#define TIP_SHORT_CURRENT_MA 11200
 
 #define TIP_PWM_PSC          1                  // PWM timer prescaler
 #define TIP_PWM_ARR          199                // PWM timer period. 199 at prescaler 1 gives 20 khz
@@ -166,9 +168,9 @@
 #define HARDWARE_MAX_WATTAGE_X10  1400
 #define FILTER_DISPLAYED_TIP_TEMP 8 // Filtering for GUI display
 
-#define TIP_PID_KP      45
-#define TIP_PID_KI      700
-#define TIP_PID_KD      8000
+#define TIP_PID_KP 45
+#define TIP_PID_KI 700
+#define TIP_PID_KD 8000
 // PID_DEBUG displays PID results on the detailed soldering screen
 // #define PID_DEBUG
 
