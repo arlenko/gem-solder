@@ -130,7 +130,7 @@ public:
   static void drawAreaSwapped(int16_t x, int8_t y, uint8_t wide, uint8_t height, const uint8_t *ptr); // Draw an area, but y must be aligned on 0/8 offset
   static void fillArea(int16_t x, int8_t y, uint8_t wide, uint8_t height, const uint8_t value);       // Fill an area, but y must be aligned on 0/8 offset
   static void drawFilledRect(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool clear);
-  static void drawHeatSymbol(uint8_t state);
+  static void drawHeatSymbol(uint32_t x10Watts);
   static void drawScrollIndicator(uint8_t p, uint8_t h); // Draws a scrolling position indicator
   static void maskScrollIndicatorOnOLED();
   static void transitionSecondaryFramebuffer(const bool forwardNavigation, const TickType_t viewEnterTime);

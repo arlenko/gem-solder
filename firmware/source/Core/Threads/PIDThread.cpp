@@ -37,7 +37,6 @@ uint8_t                    heaterThermalRunawayCounter = 0;
 static int32_t getPIDResultX10Watts(TemperatureType_t set_point, TemperatureType_t current_value);
 static void    detectThermalRunaway(const TemperatureType_t currentTipTempInC, const uint32_t x10WattsOut);
 static void    setOutputx10WattsViaFilters(int32_t x10Watts);
-static int32_t getX10WattageLimits();
 
 #ifdef PID_DEBUG
 volatile int32_t PIDDebugResults[3] = {0, 0, 0};
@@ -250,28 +249,6 @@ void detectThermalRunaway(const TemperatureType_t currentTipTempInC, const uint3
       }
     }
   }
-}
-
-int32_t getX10WattageLimits() {
-  int32_t limit = availableW10(0);
-  // Power limit defined in user settings
-  if (getSettingValue(SettingsOptions::PowerLimit) && limit > (getSettingValue(SettingsOptions::PowerLimit) * 10)) {
-    limit = getSettingValue(SettingsOptions::PowerLimit) * 10;
-  }
-  // Power supply capability
-  if (powerSupplyWattageLimit && limit > powerSupplyWattageLimit * 10) {
-    limit = powerSupplyWattageLimit * 10;
-  }
-  // Tip profile power rating
-  if (getTipPowerRating() && limit > (int32_t)getTipPowerRating() * 10) {
-    limit = getTipPowerRating() * 10;
-  }
-#ifdef HARDWARE_MAX_WATTAGE_X10
-  if (limit > HARDWARE_MAX_WATTAGE_X10) {
-    limit = HARDWARE_MAX_WATTAGE_X10;
-  }
-#endif
-  return limit;
 }
 
 void setOutputx10WattsViaFilters(int32_t x10WattsOut) {

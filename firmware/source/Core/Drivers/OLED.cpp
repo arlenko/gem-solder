@@ -10,6 +10,7 @@
 #include "Translation.h"
 #include "cmsis_os.h"
 #include "configuration.h"
+#include "power.hpp"
 #include <OLED.hpp>
 #include <stdint.h>
 #include <stdlib.h>
@@ -764,11 +765,17 @@ void OLED::drawFilledRect(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool c
   }
 }
 
-void OLED::drawHeatSymbol(uint8_t state) {
+void OLED::drawHeatSymbol(uint32_t x10Watts) {
   // Draw symbol 14
   // Then draw over it, the bottom 5 pixels always stay. 8 pixels above that are
   // the levels masks the symbol nicely
-  state = (state * 8) / TIP_PWM_ARR; // 0-> 8 range
+  uint8_t state = 0;
+  if (x10Watts > 0) {
+    const int32_t limit = getX10WattageLimits();
+    if (limit > 0) {
+      state = (x10Watts >= (uint32_t)limit) ? 8 : (x10Watts * 8) / (uint32_t)limit; // 0-> 8 range
+    }
+  }
   // Then we want to draw down (16-(5+state)
   uint16_t cursor_x_temp = cursor_x;
   drawSymbol(14);
@@ -781,8 +788,8 @@ void OLED::drawHeatSymbol(uint8_t state) {
 
 
       <- 14 px ->
-      What we are doing is aiming to clear a section of the screen, down to the base depending on how much PWM we are using.
-      Larger numbers mean more heat, so we clear less of the screen.
+      What we are doing is aiming to clear a section of the screen, down to the base depending on how close we are to
+      the wattage limit. Larger numbers mean more heat, so we clear less of the screen.
   */
   drawFilledRect(cursor_x_temp, 0, cursor_x_temp + 12, 2 + (8 - state), true);
 }
