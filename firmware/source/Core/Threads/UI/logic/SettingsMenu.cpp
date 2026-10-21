@@ -24,13 +24,8 @@ static void printShortDescription(SettingsItemIndex settingsItemIndex, uint16_t 
   OLED::printWholeScreen(translatedString(Tr->SettingsShortNames[shortDescIndex]));
 
   // prepare cursor for value (make room for the scroll indicator)
-#ifdef OLED_128x32
-  // The per-setting column is tuned for a 96px panel; on the wider 128px panel
-  // shift the value right to keep it edge-aligned, and centre the 24px font.
+  // Keep the value edge-aligned on the 128px panel and centre the 24px font.
   OLED::setCursor((cursorCharPosition * FONT_12_WIDTH - 2) + (OLED_WIDTH - 96), 4);
-#else
-  OLED::setCursor(cursorCharPosition * FONT_12_WIDTH - 2, 0);
-#endif
 }
 
 // Render a menu, based on the position given
