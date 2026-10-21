@@ -175,7 +175,6 @@
 #define HARDWARE_MAX_WATTAGE_X10  1400
 #define FILTER_DISPLAYED_TIP_TEMP 8 // Filtering for GUI display
 
-#define TIP_CONTROL_PID // We use PID rather than integrator
 #define TIP_PID_KP      45
 #define TIP_PID_KI      700
 #define TIP_PID_KD      8000

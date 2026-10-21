@@ -130,7 +130,6 @@ void startPIDTask(void const *argument __unused) {
   }
 }
 
-#ifdef TIP_CONTROL_PID
 template <class T, T Kp, T Ki, T Kd> struct PID {
   T previous_error_term;
   T integration_running_sum;
@@ -186,80 +185,15 @@ template <class T, T Kp, T Ki, T Kd> struct PID {
     return output;
   }
 };
-#else
-template <class T = TemperatureType_t> struct Integrator {
-  T sum;
 
-  T update(const T val, const int32_t inertia, const int32_t gain, const int32_t rate, const int32_t limit) {
-    // Decay the old value. This is a simplified formula that still works with decent results
-    // Ideally we would have used an exponential decay but the computational effort required
-    // by exp function is just not justified here in respect to the outcome
-    sum = (sum * (100 - (inertia / rate))) / 100;
-    // Add the new value x integration interval ( 1 / rate)
-    sum += (gain * val) / rate;
-
-    // constrain the output between +- our max power output, this limits windup when doing the inital heatup or when
-    // solding something large
-    if (sum > limit) {
-      sum = limit;
-    } else if (sum < -limit) {
-      sum = -limit;
-    }
-
-    return sum;
-  }
-
-  void set(T const val) { sum = val; }
-
-  T get(bool positiveOnly = true) const { return (positiveOnly) ? ((sum > 0) ? sum : 0) : sum; }
-};
-#endif
 int32_t getPIDResultX10Watts(TemperatureType_t set_point, TemperatureType_t current_reading) {
-  static TickType_t lastCall = 0;
+  static TickType_t                                                 lastCall = 0;
+  static PID<TemperatureType_t, TIP_PID_KP, TIP_PID_KI, TIP_PID_KD> pid      = {0, 0};
+  const TickType_t                                                  interval = (xTaskGetTickCount() - lastCall);
 
-#ifdef TIP_CONTROL_PID
-  static PID<TemperatureType_t, TIP_PID_KP, TIP_PID_KI, TIP_PID_KD> pid = {0, 0};
-
-  const TickType_t interval = (xTaskGetTickCount() - lastCall);
-
-#else
-  static Integrator<TemperatureType_t> powerStore = {0};
-  const TickType_t                     rate       = TICKS_SECOND / (xTaskGetTickCount() - lastCall);
-#endif
   lastCall = xTaskGetTickCount();
-  // Sandman note:
-  // PID Challenge - we have a small thermal mass that we to want heat up as fast as possible but we don't
-  // want to overshot excessively (if at all) the set point temperature. In the same time we have 'imprecise'
-  // instant temperature measurements. The nature of temperature reading imprecision is not necessarily
-  // related to the sensor (thermocouple) or DAQ system, that otherwise are fairly decent. The real issue	is
-  // the thermal inertia. We basically read the temperature in the window between two heating sessions when
-  // the output is off. However, the heater temperature does not dissipate instantly into the tip mass so
-  // at any moment right after heating, the thermocouple would sense a temperature significantly higher than
-  // moments later. We could use longer delays but that would slow the PID loop and that would lead to other
-  // negative side effects. As a result, we can only rely on the I term but with a twist. Instead of a simple
-  // integrator we are going to use a self decaying integrator that acts more like a dual I term / P term
-  // rather than a plain I term. Depending on the circumstances, like when the delta temperature is large,
-  // it acts more like a P term whereas on closing to set point it acts increasingly closer to a plain I term.
-  // So in a sense, we have a bit of both.
-  //																		 So
-  // there we go...
 
-  // P = (Thermal Mass) x (Delta Temperature ) / 1sec, where thermal mass is in X10 J / °C and
-  // delta temperature is in °C. The result is the power in X10 W needed to raise (or decrease!) the
-  // tip temperature with (Delta Temperature ) °C in 1 second.
-  // Note on powerStore. On update, if the value is provided in X10 (W) units then inertia shall be provided
-  // in X10 (J / °C) units as well.
-
-#ifdef TIP_CONTROL_PID
   return pid.update(set_point, current_reading, interval, getX10WattageLimits());
-#else
-  return powerStore.update(((TemperatureType_t)getTipThermalMass()) *
-                               (set_point - current_reading), // the required power
-                           getTipInertia(), // Inertia, smaller numbers increase dominance of the previous value
-                           2,               // gain
-                           rate,            // PID cycle frequency
-                           getX10WattageLimits());
-#endif
 }
 
 /*

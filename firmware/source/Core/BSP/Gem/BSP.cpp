@@ -445,9 +445,6 @@ uint8_t getTipResistanceX10() {
 
 bool isTipShorted() { return getCurrentMilliamps() >= TIP_SHORT_CURRENT_MA; }
 
-// Thermal mass and inertia are used for self-decay integrator heating control. We use PID instead
-uint16_t getTipThermalMass() { return 40; }
-uint16_t getTipInertia() { return 128; }
 uint8_t  getTipPowerRating() { return 140; }
 
 void showBootLogo(void) { BootLogo::handleShowingLogo((uint8_t *)FLASH_LOGOADDR); }

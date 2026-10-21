@@ -21,9 +21,6 @@ void power_check();
 // Returns the tip resistance in x10 ohms, so 7.5 = 75; 14=140 etc
 uint8_t getTipResistanceX10();
 
-uint16_t getTipThermalMass();
-uint16_t getTipInertia();
-
 TemperatureType_t getCustomTipMaxInC();
 
 #ifdef __cplusplus
