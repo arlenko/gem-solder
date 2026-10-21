@@ -5,7 +5,6 @@
 
 #ifdef OLED_128x32
 extern osThreadId GUITaskHandle;
-// extern osThreadId MOVTaskHandle;
 extern osThreadId PIDTaskHandle;
 extern int32_t    powerSupplyWattageLimit;
 
@@ -31,19 +30,16 @@ void ui_draw_debug_menu(const uint8_t item_number) {
     OLED::drawHex((uint32_t)(id >> 32), FontStyle::SMALL, 8);
     OLED::drawHex((uint32_t)(id & 0xFFFFFFFF), FontStyle::SMALL, 8);
   } break;
-  case 2: // ACC Type
-    OLED::print(AccelTypeNames[(int)DetectedAccelerometerVersion], FontStyle::SMALL);
-    break;
-  case 3: // Power Negotiation Status
+  case 2: // Power Negotiation Status
     OLED::print(PowerSourceNames[getPowerSourceNumber()], FontStyle::SMALL);
     break;
-  case 4: // Input Voltage
+  case 3: // Input Voltage
     printVoltage();
     break;
-  case 5: // Temp in °C
+  case 4: // Temp in °C
     OLED::printNumber(TipThermoModel::getTipInC(), 6, FontStyle::SMALL);
     break;
-  case 6: // Handle Temp in °C
+  case 5: // Handle Temp in °C
   {
     int32_t handleTemp = getHandleTemperature(0);
     if (handleTemp < 0) {
@@ -54,49 +50,33 @@ void ui_draw_debug_menu(const uint8_t item_number) {
     OLED::print(SmallSymbolDot, FontStyle::SMALL);
     OLED::printNumber(handleTemp % 10, 1, FontStyle::SMALL);
   } break;
-  case 7: // Max Temp Limit in °C
+  case 6: // Max Temp Limit in °C
     OLED::printNumber(TipThermoModel::getTipMaxInC(), 6, FontStyle::SMALL);
     break;
-  case 8: // System Uptime
+  case 7: // System Uptime
     OLED::printNumber(xTaskGetTickCount() / TICKS_100MS, 8, FontStyle::SMALL);
     break;
-  case 9: // Movement Timestamp
-    OLED::printNumber(lastMovementTime / TICKS_100MS, 8, FontStyle::SMALL);
-    break;
-  case 10: // Tip Resistance in Ω
+  case 8: // Tip Resistance in Ω
     OLED::printNumber(getTipResistanceX10() / 10, 6,
                       FontStyle::SMALL); // large to pad over so that we cover ID left overs
     OLED::print(SmallSymbolDot, FontStyle::SMALL);
     OLED::printNumber(getTipResistanceX10() % 10, 1, FontStyle::SMALL);
     break;
-  case 11: // Raw Tip in µV
+  case 9: // Raw Tip in µV
     OLED::printNumber(TipThermoModel::convertTipRawADCTouV(getTipRawTemp(0), true), 8, FontStyle::SMALL);
     break;
-  case 12: // Tip Cold Junction Compensation Offset in µV
+  case 10: // Tip Cold Junction Compensation Offset in µV
     OLED::printNumber(getSettingValue(SettingsOptions::CalibrationOffset), 8, FontStyle::SMALL);
     break;
-  case 13: // High Water Mark for GUI
+  case 11: // High Water Mark for GUI
     OLED::printNumber(uxTaskGetStackHighWaterMark(GUITaskHandle), 8, FontStyle::SMALL);
     break;
-  case 14: // High Water Mark for Movement Task
-    // OLED::printNumber(uxTaskGetStackHighWaterMark(MOVTaskHandle), 8, FontStyle::SMALL);
-    break;
-  case 15: // High Water Mark for PID Task
+  case 12: // High Water Mark for PID Task
     OLED::printNumber(uxTaskGetStackHighWaterMark(PIDTaskHandle), 8, FontStyle::SMALL);
     break;
-  case 16: // Power supply wattage limit
+  case 13: // Power supply wattage limit
     OLED::printNumber(powerSupplyWattageLimit, 4, FontStyle::SMALL);
     break;
-#ifdef HALL_SENSOR
-  case 17: // Raw Hall Effect Value
-  {
-    int16_t hallEffectStrength = getRawHallEffect();
-    if (hallEffectStrength < 0) {
-      hallEffectStrength = -hallEffectStrength;
-    }
-    OLED::printNumber(hallEffectStrength, 6, FontStyle::SMALL);
-  } break;
-#endif
 
   default:
     break;

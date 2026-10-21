@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Κάποιες ρυθμ.\nάλλαξαν"
     },
-    "NoAccelerometerMessage": {
-      "message": "Δεν εντοπίστηκε\nεπιταχυνσιόμετρο"
-    },
     "NoPowerDeliveryMessage": {
       "message": "Δεν εντοπίστηκε\nκύκλωμα USB-PD"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "R",
     "SettingLeftChar": "L",
-    "SettingAutoChar": "Α",
     "SettingSlowChar": "Α",
     "SettingMediumChar": "Μ",
     "SettingFastChar": "Γ",
@@ -233,29 +229,13 @@
       "displayText": "Cooldown\nSpeed",
       "description": "Cooldown at this rate at the end of profile mode (degrees per second)"
     },
-    "MotionSensitivity": {
-      "displayText": "Ευαισθησία\nκίνησης",
-      "description": "1=λιγότερο ευαίσθητο | ... | 9=περισσότερο ευαίσθητο"
-    },
     "SleepTemperature": {
       "displayText": "Θερμοκρ.\nύπνου",
       "description": "Θερμοκρασία μύτης σε λειτ. ύπνου"
     },
-    "SleepTimeout": {
-      "displayText": "Έναρξη\nύπνου",
-      "description": "Χρονικό διάστημα πρίν την ενεργοποίηση λειτουργίας ύπνου (Δ=δευτ. | Λ=λεπτά)"
-    },
     "ShutdownTimeout": {
       "displayText": "Έναρξη\nαπενεργ.",
       "description": "Χρονικό διάστημα πρίν την απενεργοποίηση του κολλητηριού (Λ=λεπτά)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Ευαισθ. αισθ. \nφαιν. Hall",
-      "description": "Ευαισθησία του αισθητήρα φαινομένου Hall για εντοπισμό αδράνειας (1=λιγότερο ευαίσθητο | ... | 9=περισσότερο ευαίσθητο)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Το διάστημα πριν από την \"λειτουργία ύπνου\" ξεκινά όταν το εφέ αίθουσας είναι πάνω από το όριο"
     },
     "TemperatureUnit": {
       "displayText": "Μονάδες\nθερμοκρασίας",

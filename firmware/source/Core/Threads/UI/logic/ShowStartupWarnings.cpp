@@ -30,20 +30,29 @@ OperatingMode showWarnings(const ButtonState buttons, guiContext *cxt) {
     cxt->scratch_state.state1 = 2;
 #endif
     break;
-  case 2: // Accelerometer detection
-#ifdef NO_ACCEL
-    cxt->scratch_state.state1 = 3;
-#else
-    if (DetectedAccelerometerVersion == AccelType::Scanning) {
-      break;
-    }
-    // Display alert if accelerometer is not detected
-    if (DetectedAccelerometerVersion == AccelType::None) {
-      if (getSettingValue(SettingsOptions::AccelMissingWarningCounter) < 2) {
-
-        if (warnUser(translatedString(Tr->NoAccelerometerMessage), buttons)) {
+  case 2:
+#ifdef POW_PD
+    // We expect pd to be present
+    if (!USBPowerDelivery::fusbPresent()) {
+      if (getSettingValue(SettingsOptions::PDMissingWarningCounter) < 2) {
+        if (warnUser(translatedString(Tr->NoPowerDeliveryMessage), buttons)) {
+          nextSettingValue(SettingsOptions::PDMissingWarningCounter);
+          saveSettings();
           cxt->scratch_state.state1 = 3;
-          nextSettingValue(SettingsOptions::AccelMissingWarningCounter);
+        }
+      } else {
+        cxt->scratch_state.state1 = 3;
+      }
+    } else {
+      cxt->scratch_state.state1 = 3;
+    }
+#else
+#if POW_PD_EXT == 1
+    if (!hub238_probe()) {
+      if (getSettingValue(SettingsOptions::PDMissingWarningCounter) < 2) {
+        if (warnUser(translatedString(Tr->NoPowerDeliveryMessage), buttons)) {
+          cxt->scratch_state.state1 = 3;
+          nextSettingValue(SettingsOptions::PDMissingWarningCounter);
           saveSettings();
         }
       } else {
@@ -52,58 +61,23 @@ OperatingMode showWarnings(const ButtonState buttons, guiContext *cxt) {
     } else {
       cxt->scratch_state.state1 = 3;
     }
-#endif
-
-    break;
-  case 3:
-
-#ifdef POW_PD
-    // We expect pd to be present
-    if (!USBPowerDelivery::fusbPresent()) {
-      if (getSettingValue(SettingsOptions::PDMissingWarningCounter) < 2) {
-        if (warnUser(translatedString(Tr->NoPowerDeliveryMessage), buttons)) {
-          nextSettingValue(SettingsOptions::PDMissingWarningCounter);
-          saveSettings();
-          cxt->scratch_state.state1 = 4;
-        }
-      } else {
-        cxt->scratch_state.state1 = 4;
-      }
-    } else {
-      cxt->scratch_state.state1 = 4;
-    }
-#else
-#if POW_PD_EXT == 1
-    if (!hub238_probe()) {
-      if (getSettingValue(SettingsOptions::PDMissingWarningCounter) < 2) {
-        if (warnUser(translatedString(Tr->NoPowerDeliveryMessage), buttons)) {
-          cxt->scratch_state.state1 = 4;
-          nextSettingValue(SettingsOptions::PDMissingWarningCounter);
-          saveSettings();
-        }
-      } else {
-        cxt->scratch_state.state1 = 4;
-      }
-    } else {
-      cxt->scratch_state.state1 = 4;
-    }
 #else
 #if POW_PD_EXT == 2
     if (!FS2711::probe()) {
       if (getSettingValue(SettingsOptions::PDMissingWarningCounter) < 2) {
         if (warnUser(translatedString(Tr->NoPowerDeliveryMessage), buttons)) {
-          cxt->scratch_state.state1 = 4;
+          cxt->scratch_state.state1 = 3;
           nextSettingValue(SettingsOptions::PDMissingWarningCounter);
           saveSettings();
         }
       } else {
-        cxt->scratch_state.state1 = 4;
+        cxt->scratch_state.state1 = 3;
       }
     } else {
-      cxt->scratch_state.state1 = 4;
+      cxt->scratch_state.state1 = 3;
     }
 #else
-    cxt->scratch_state.state1 = 4;
+    cxt->scratch_state.state1 = 3;
 #endif /*POW_PD_EXT==1*/
 #endif /*POW_PD_EXT==2*/
 #endif /*POW_PD*/

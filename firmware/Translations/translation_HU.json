@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Beállítások\nvisszaállítva!"
     },
-    "NoAccelerometerMessage": {
-      "message": "Nincs\ngyorsulásmérő!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "Nincs\nUSB-PD IC!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "J",
     "SettingLeftChar": "B",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "L",
     "SettingMediumChar": "K",
     "SettingFastChar": "Gy",
@@ -233,29 +229,13 @@
       "displayText": "Cooldown\nSpeed",
       "description": "Cooldown at this rate at the end of profile mode (degrees per second)"
     },
-    "MotionSensitivity": {
-      "displayText": "Mozgás\nérzékenység",
-      "description": "Mozgás érzékenység beállítása (1=legkevésbé érzékeny | ... | 9=legérzékenyebb)"
-    },
     "SleepTemperature": {
       "displayText": "Alvási\nhőmérséklet",
       "description": "Hőmérséklet alvó módban (C | F)"
     },
-    "SleepTimeout": {
-      "displayText": "Alvás\nidőzítő",
-      "description": "Alvási időzítő (perc | másodperc)"
-    },
     "ShutdownTimeout": {
       "displayText": "Kikapcsolás\nidőzítő",
       "description": "Kikapcsolási időzítő (perc)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Alvásérzékelő\nérzékenység",
-      "description": "Alvásérzékelő gyorsulásmérő érzékenysége (1=legkevésbé érzékeny | ... | 9=legérzékenyebb)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Az \"alvó üzemmód\" előtti intervallum akkor kezdődik, amikor a hall-effektus meghaladja a küszöbértéket"
     },
     "TemperatureUnit": {
       "displayText": "Hőmérséklet\nmértékegysége",

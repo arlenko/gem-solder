@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "¡Ajustes\nReiniciados!"
     },
-    "NoAccelerometerMessage": {
-      "message": "¡Acelerómetro no \nDetectado!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "¡USB-PD no \nDetectado!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "D",
     "SettingLeftChar": "I",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "L",
     "SettingMediumChar": "M",
     "SettingFastChar": "R",
@@ -233,29 +229,13 @@
       "displayText": "Velocidad de\nEnfriamineto",
       "description": "Enfriar a esta velocidad al final del modo perfil (grados por segundo)"
     },
-    "MotionSensitivity": {
-      "displayText": "Detección de\nmovimiento",
-      "description": "Tiempo de reacción al agarrar (1=menos sensible | ... | 9=más sensible)"
-    },
     "SleepTemperature": {
       "displayText": "Temperatura\nen reposo",
       "description": "Temperatura de la punta en \"reposo\""
     },
-    "SleepTimeout": {
-      "displayText": "Entrar\nen reposo",
-      "description": "Tiempo de inactividad para entrar en reposo (min | seg)"
-    },
     "ShutdownTimeout": {
       "displayText": "Tiempo de\napagado",
       "description": "Tiempo de inactividad para apagarse (en minutos)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Hall Eff\nSensibilidad",
-      "description": "Sensibilidad del sensor de efecto Hall en la detección de reposo (1=menos sensible | ... | 9=más sensible)"
-    },
-    "HallEffSleepTimeout": {                                           
-      "displayText": "Tiempo reposo\nSensor Hall", 
-      "description": "Intervalo antes de que \"modo resposo\" empiece cuando sensorhall supera límite"
     },
     "TemperatureUnit": {
       "displayText": "Unidad de\ntemperatura",

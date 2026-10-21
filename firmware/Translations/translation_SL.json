@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Nastavitve \nOK!"
     },
-    "NoAccelerometerMessage": {
-      "message": "Ni \npospeševalnik"
-    },
     "NoPowerDeliveryMessage": {
       "message": "Ni USB-PD \nčipa!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "D",
     "SettingLeftChar": "L",
-    "SettingAutoChar": "S",
     "SettingSlowChar": "P",
     "SettingMediumChar": "M",
     "SettingFastChar": "H",
@@ -233,29 +229,13 @@
       "displayText": "Cooldown\nSpeed",
       "description": "Cooldown at this rate at the end of profile mode (degrees per second)"
     },
-    "MotionSensitivity": {
-      "displayText": "Občutljivost\npremikanja",
-      "description": "1=najmanjša | ... | 9=največja"
-    },
     "SleepTemperature": {
       "displayText": "Temp. med\nspanjem",
       "description": "Temperatura med spanjem"
     },
-    "SleepTimeout": {
-      "displayText": "Čas do\nspanja",
-      "description": "Čas pred spanjem (s=sekunde | m=minute)"
-    },
     "ShutdownTimeout": {
       "displayText": "Čas do\nizklopa",
       "description": "Čas do izklopa (m=minute)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Občut.\nHall son",
-      "description": "Občutljivost Hallove sonde za zaznavanje spanja (1=najmanjša | ... | 9=največja)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Interval pred začetkom \"načina mirovanja\", ko je Hallov učinek nad pragom"
     },
     "TemperatureUnit": {
       "displayText": "Enota za\ntemperaturo",

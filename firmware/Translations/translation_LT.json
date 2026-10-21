@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Nust. \natstatyti!"
     },
-    "NoAccelerometerMessage": {
-      "message": "Nerastas\nakselerometras!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "Nerastas\nUSB-PD IC!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "D",
     "SettingLeftChar": "K",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "L",
     "SettingMediumChar": "V",
     "SettingFastChar": "G",
@@ -233,29 +229,13 @@
       "displayText": "Cooldown\nSpeed",
       "description": "Cooldown at this rate at the end of profile mode (degrees per second)"
     },
-    "MotionSensitivity": {
-      "displayText": "Judesio\njautrumas",
-      "description": "Judesio jautrumas (1=Mažiausias | ... | 9=Didžiausias)"
-    },
     "SleepTemperature": {
       "displayText": "Miego\ntemperat.",
       "description": "Antgalio temperatūra miego režimu"
     },
-    "SleepTimeout": {
-      "displayText": "Miego\nlaikas",
-      "description": "Užmigimo laikas (sekundės | minutės)"
-    },
     "ShutdownTimeout": {
       "displayText": "Išjungimo\nlaikas",
       "description": "Išjungimo laikas (minutės)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Holo\njutiklis",
-      "description": "Holo jutiklio jautrumas nustatant miegą (1=Mažiausias | ... | 9=Didžiausias)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Intervalas prieš \"miego režimą\" prasideda, kai salės efektas viršija slenkstį"
     },
     "TemperatureUnit": {
       "displayText": "Temperatūros\nvienetai",

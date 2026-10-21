@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Ust. \nzresetowane"
     },
-    "NoAccelerometerMessage": {
-      "message": "Nie rozpoznano\nakcelerometru!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "Nie rozpoznano\nkont. USB-PD IC!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "P",
     "SettingLeftChar": "L",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "W",
     "SettingMediumChar": "M",
     "SettingFastChar": "S",
@@ -233,29 +229,13 @@
       "displayText": "Prędk.\nschładzania",
       "description": "Tempo schładzania na koniec trybu profilu (stopnie na sekundę)"
     },
-    "MotionSensitivity": {
-      "displayText": "Czułość\nwykr. ruchu",
-      "description": "Czułość wykrywania ruchu (1: Minimalna | ... | 9: Maksymalna)"
-    },
     "SleepTemperature": {
       "displayText": "Temp.\nuśpienia",
       "description": "Temperatura w trybie uśpienia (°C)"
     },
-    "SleepTimeout": {
-      "displayText": "Czas do\nuśpienia",
-      "description": "Czas do przejścia w tryb uśpienia (minuty | sekundy)"
-    },
     "ShutdownTimeout": {
       "displayText": "Czas do\nwyłączenia",
       "description": "Czas do wyłączenia (minuty)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Czułość\ncz. Halla",
-      "description": "Czułość czujnika Halla, używanego do przechodznia w tryb uśpienia (1: Minimalna | ... | 9: Maksymalna)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Odstęp przed rozpoczęciem \"trybu uśpienia\", gdy efekt Halla przekracza próg"
     },
     "TemperatureUnit": {
       "displayText": "Jednostka\ntemperatury",

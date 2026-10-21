@@ -196,35 +196,6 @@ void prevSettingValue(const enum SettingsOptions option) {
   }
 }
 
-uint16_t lookupHallEffectThreshold() {
-  // Return the threshold above which the hall effect sensor is "activated"
-  // We want this to be roughly exponentially mapped from 0-1000
-  switch (getSettingValue(SettingsOptions::HallEffectSensitivity)) {
-  case 0:
-    return 0;
-  case 1:
-    return 1000;
-  case 2:
-    return 750;
-  case 3:
-    return 500;
-  case 4:
-    return 250;
-  case 5:
-    return 150;
-  case 6:
-    return 100;
-  case 7:
-    return 75;
-  case 8:
-    return 50;
-  case 9:
-    return 25;
-  default:
-    return 0; // Off
-  }
-}
-
 // Lookup function for cutoff setting -> X10 voltage
 /*
  * 0=DC

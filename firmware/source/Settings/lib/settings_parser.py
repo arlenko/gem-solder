@@ -39,9 +39,7 @@ def process_default_values(
     special_cases = {
         "BoostTemperature": lambda cfg: cfg.get("BOOST_TEMP", 450) if cfg else 450,
         "SleepTemperature": lambda cfg: cfg.get("SLEEP_TEMP", 150) if cfg else 150,
-        "SleepTimeout": lambda cfg: cfg.get("SLEEP_TIMEOUT", 10) if cfg else 10,
         "ShutdownTimeout": lambda cfg: cfg.get("SHUTDOWN_TIMEOUT", 10) if cfg else 10,
-        "MotionSensitivity": lambda cfg: cfg.get("SENSITIVITY", 0) if cfg else 0,
         "TemperatureUnit": lambda cfg: (
             0 if cfg and cfg.get("TEMP_UNIT", "C") == "C" else 1
         ),

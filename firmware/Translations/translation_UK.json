@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Налаштування\nскинуті!"
     },
-    "NoAccelerometerMessage": {
-      "message": "Акселерометр\nне виявлено!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "USB-PD IC\nне виявлено!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "П",
     "SettingLeftChar": "Л",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "Н",
     "SettingMediumChar": "С",
     "SettingFastChar": "М",
@@ -233,29 +229,13 @@
       "displayText": "Швидкість\nОхолодження",
       "description": "Швидкість охолодження на кінці режиму профілів (t° у сек)"
     },
-    "MotionSensitivity": {
-      "displayText": "Чутливість\nдатчику руху",
-      "description": "Акселерометр (1=мін. чутливості | ... | 9=макс. чутливість)"
-    },
     "SleepTemperature": {
       "displayText": "Темпер.\nсну",
       "description": "Температура режиму сну (C° | F°)"
     },
-    "SleepTimeout": {
-      "displayText": "Тайм-аут\nсну",
-      "description": "Час до переходу до сну (Хв | Сек)"
-    },
     "ShutdownTimeout": {
       "displayText": "Часу до\nвимкнення",
       "description": "Час до вимкнення (Хв)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Чутливість\nДатчику Холла",
-      "description": "Чутливість датчика Холла при виявленні сну (1=мін. чутливість | ... | 9=макс. чутливість)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "Датчик Холла\nЧас сну",
-      "description": "Проміжок часу до \"часу сну\" за умови спрацювання датчику Холла"
     },
     "TemperatureUnit": {
       "displayText": "Формат темпе-\nратури(C°/F°)",

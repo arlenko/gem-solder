@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Neke postavke\nsu izmijenjene!"
     },
-    "NoAccelerometerMessage": {
-      "message": "Akcelerometar\nnije pronađen!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "USB-PD IC\nnije pronađen!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "D",
     "SettingLeftChar": "L",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "S",
     "SettingMediumChar": "M",
     "SettingFastChar": "B",
@@ -233,29 +229,13 @@
       "displayText": "Cooldown\nSpeed",
       "description": "Cooldown at this rate at the end of profile mode (degrees per second)"
     },
-    "MotionSensitivity": {
-      "displayText": "Osjetljivost\npokreta",
-      "description": "Osjetljivost prepoznavanja pokreta. (1=najmanje osjetljivo | ... | 9=najosjetljivije)"
-    },
     "SleepTemperature": {
       "displayText": "Temp\nspavanja",
       "description": "Temperatura na koju se spušta lemilica nakon određenog vremena mirovanja (C | F)"
     },
-    "SleepTimeout": {
-      "displayText": "Vrijeme\nspavanja",
-      "description": "Vrijeme mirovanja nakon kojega lemilica spušta temperaturu. (Minute | Sekunde)"
-    },
     "ShutdownTimeout": {
       "displayText": "Vrijeme\ngašenja",
       "description": "Vrijeme mirovanja nakon kojega će se lemilica ugasiti (Minute)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Osjetljivost\nHall senzora",
-      "description": "Osjetljivost senzora magnetskog polja za detekciju spavanja (N=Najmanja | S=Srednja | V=Visoka)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Interval prije pokretanja \"načina mirovanja\" kada je Hall efekt iznad praga"
     },
     "TemperatureUnit": {
       "displayText": "Jedinica\ntemperature",

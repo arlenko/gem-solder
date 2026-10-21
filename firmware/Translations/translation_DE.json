@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Einstellungen\nzurückgesetzt!"
     },
-    "NoAccelerometerMessage": {
-      "message": "Bewegungssensor\nnicht erkannt!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "USB-PD IC\nnicht erkannt!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "R",
     "SettingLeftChar": "L",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "L",
     "SettingMediumChar": "M",
     "SettingFastChar": "S",
@@ -233,29 +229,13 @@
       "displayText": "Abkühl-\nrate",
       "description": "Am Ende des Profilmodus mit dieser Geschwindigkeit abkühlen (Grad pro Sekunde)"
     },
-    "MotionSensitivity": {
-      "displayText": "Bewegungs-\nempfindlichk.",
-      "description": "1=minimal | ... | 9=maximal"
-    },
     "SleepTemperature": {
       "displayText": "Ruhe-\ntemperatur",
       "description": "Ruhetemperatur der Lötspitze"
     },
-    "SleepTimeout": {
-      "displayText": "Ruhever-\nzögerung",
-      "description": "Dauer vor Übergang in den Ruhemodus (s=Sekunden | m=Minuten)"
-    },
     "ShutdownTimeout": {
       "displayText": "Abschalt-\nverzög.",
       "description": "Dauer vor automatischer Abschaltung (m=Minuten)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Empfindlichkeit\nder Hall-Sonde",
-      "description": "Empfindlichkeit der Hall-Sonde um den Ruhemodus auszulösen (1=minimal | ... | 9=maximal)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Dauer vor dem Wechsel in den \"Ruhemodus\", nachdem die Hall-Sonde auslöst"
     },
     "TemperatureUnit": {
       "displayText": "Temperatur-\neinheit",

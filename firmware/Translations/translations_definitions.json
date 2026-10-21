@@ -13,10 +13,6 @@
       "description": "Shown when certain settings are reset to factory defaults due to incompatible firmware changes."
     },
     {
-      "id": "NoAccelerometerMessage",
-      "description": "No accelerometer could be communicated with. This means that either the device's accelerometer is broken or unknown to IronOS. All motion-based settings are disabled and motion-based features will not work."
-    },
-    {
       "id": "NoPowerDeliveryMessage",
       "include": ["POW_PD"],
       "description": "The IC required for USB-PD could not be communicated with. This is an error warning that USB-PD WILL NOT FUNCTION. Generally indicative of either a hardware or software issues."
@@ -120,11 +116,6 @@
       "description": "Shown for fixed Left-handed display rotation."
     },
     {
-      "id": "SettingAutoChar",
-      "len": 1,
-      "description": "Shown for automatic display rotation."
-    },
-    {
       "id": "SettingSlowChar",
       "len": 1,
       "description": "Shown when a setting is set to a slow value i.e. animation speed"
@@ -152,7 +143,7 @@
     {
       "id": "SettingStartSleepOffChar",
       "len": 1,
-      "description": "Shown when the auto start state is set to go to an off state, but on movement wake into soldering mode."
+      "description": "Shown when the auto start state is set to go to an off state, but on button press wake into soldering mode."
     },
     {
       "id": "SettingLockBoostChar",
@@ -296,7 +287,7 @@
       "id": "AutoStart",
       "maxLen": 6,
       "maxLen2": 13,
-      "description": "When the device powers up, should it enter into a special mode. These settings set it to either start into soldering mode, sleeping mode or auto mode (Enters into soldering mode on the first movement)."
+      "description": "When the device powers up, should it enter into a special mode. These settings set it to either start into soldering mode, sleeping mode or auto mode (Enters into soldering mode on the first button press)."
     },
     {
       "id": "TempChangeShortStep",
@@ -415,12 +406,6 @@
       "description": "How fast the temperature is allowed to drop during the cooldown phase at the end of profile mode."
     },
     {
-      "id": "MotionSensitivity",
-      "maxLen": 6,
-      "maxLen2": 13,
-      "description": "Scale of how sensitive the device is to movement. Higher numbers == more sensitive. 0 == motion detection turned off."
-    },
-    {
       "id": "SleepTemperature",
       "maxLen": 4,
       "maxLen2": 9,
@@ -428,31 +413,10 @@
       "description": "Temperature the device will drop down to while asleep. Typically around halfway between off and soldering temperature."
     },
     {
-      "id": "SleepTimeout",
-      "maxLen": 4,
-      "maxLen2": 9,
-      "exclude": ["NO_SLEEP_MODE"],
-      "description": "How long of a period without movement / button-pressing is required before the device drops down to the sleep temperature."
-    },
-    {
       "id": "ShutdownTimeout",
       "maxLen": 5,
       "maxLen2": 11,
-      "description": "How long of a period without movement / button-pressing is required before the device turns off the tip heater completely and returns to the main idle screen."
-    },
-    {
-      "id": "HallEffSensitivity",
-      "maxLen": 6,
-      "maxLen2": 13,
-      "include": ["HALL_SENSOR"],
-      "description": "If the unit has a hall effect sensor (Pinecil), this adjusts how sensitive it is at detecting a magnet to put the device into sleep mode."
-    },
-    {
-      "id": "HallEffSleepTimeout",
-      "maxLen": 10,
-      "maxLen2": 10,
-      "include": ["HALL_SENSOR"],
-      "description": "If the unit has a hall effect sensor (Pinecil), this adjusts how long the device takes before it drops down to the sleep temperature when hall sensor is over threshold."
+      "description": "How long of a period without button-pressing is required before the device turns off the tip heater completely and returns to the main idle screen."
     },
     {
       "id": "TemperatureUnit",
@@ -465,7 +429,7 @@
       "maxLen": 6,
       "maxLen2": 13,
       "exclude": ["NO_DISPLAY_ROTATE"],
-      "description": "If the display should rotate automatically or if it should be fixed for left- or right-handed mode."
+      "description": "If the display should be fixed for left- or right-handed mode."
     },
     {
       "id": "CooldownBlink",

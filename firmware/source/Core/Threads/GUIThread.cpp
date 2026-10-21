@@ -10,8 +10,6 @@ extern "C" {
 #include "BootLogo.h"
 #include "Buttons.hpp"
 #include "I2CBB2.hpp"
-#include "LIS2DH12.hpp"
-#include "MMA8652FC.hpp"
 #include "OLED.hpp"
 #include "OperatingModeUtilities.h"
 #include "OperatingModes.h"
@@ -33,8 +31,7 @@ extern "C" {
 #endif
 
 // File local variables
-#define MOVEMENT_INACTIVITY_TIME (60 * configTICK_RATE_HZ)
-#define BUTTON_INACTIVITY_TIME   (60 * configTICK_RATE_HZ)
+#define BUTTON_INACTIVITY_TIME (60 * configTICK_RATE_HZ)
 
 ButtonState   buttonsAtDeviceBoot; // We record button state at startup, incase of jumping to debug modes
 OperatingMode currentOperatingMode = OperatingMode::InitialisationDone; // Current mode we are rendering
@@ -46,15 +43,14 @@ OperatingMode guiHandleDraw(void) {
   OLED::clearScreen();                    // Clear ready for render pass
   // Read button state
   ButtonState buttons = getButtonState();
-  // Enforce screen on if buttons pressed, movement, hot tip etc
+  // Enforce screen on if buttons pressed, hot tip etc
   if (buttons != BUTTON_NONE) {
     OLED::setDisplayState(OLED::DisplayState::ON);
   } else {
     // Buttons are none; check if we can sleep display
     uint32_t tipTemp = TipThermoModel::getTipInC();
-    if ((tipTemp < 50) && getSettingValue(SettingsOptions::Sensitivity) &&
-        (((xTaskGetTickCount() - lastMovementTime) > MOVEMENT_INACTIVITY_TIME) &&
-         ((xTaskGetTickCount() - lastButtonTime) > BUTTON_INACTIVITY_TIME))) {
+    // TODO: replace this simple idle timeout with a proper screensaver implementation.
+    if ((tipTemp < 50) && ((xTaskGetTickCount() - lastButtonTime) > BUTTON_INACTIVITY_TIME)) {
       OLED::setDisplayState(OLED::DisplayState::OFF);
       setStatusLED(LED_OFF);
     } else {
@@ -94,16 +90,14 @@ OperatingMode guiHandleDraw(void) {
     showBootLogo();
 
     if (getSettingValue(SettingsOptions::AutoStartMode) == autoStartMode_t::SLEEP) {
-      lastMovementTime = lastButtonTime =
-          0; // We mask the values so that sleep goes until user moves again or presses a button
-      newMode = OperatingMode::Sleeping;
+      lastButtonTime = 0; // We mask the value so that sleep goes until the user presses a button
+      newMode        = OperatingMode::Sleeping;
     } else if (getSettingValue(SettingsOptions::AutoStartMode) == autoStartMode_t::SOLDER) {
-      lastMovementTime = lastButtonTime = xTaskGetTickCount(); // Move forward so we dont go to sleep
-      newMode                           = OperatingMode::Soldering;
+      lastButtonTime = xTaskGetTickCount(); // Move forward so we dont go to sleep
+      newMode        = OperatingMode::Soldering;
     } else if (getSettingValue(SettingsOptions::AutoStartMode) == autoStartMode_t::ZERO) {
-      lastMovementTime = lastButtonTime =
-          0; // We mask the values so that sleep goes until user moves again or presses a button
-      newMode = OperatingMode::Hibernating;
+      lastButtonTime = 0; // We mask the value so that sleep goes until the user presses a button
+      newMode        = OperatingMode::Hibernating;
     } else {
       newMode = OperatingMode::HomeScreen;
     }
@@ -142,7 +136,7 @@ OperatingMode guiHandleDraw(void) {
   case OperatingMode::Hibernating:
     context.scratch_state.state4 = 1;
     gui_SolderingSleepingMode(buttons, &context);
-    if (lastButtonTime > 0 || lastMovementTime > 0) {
+    if (lastButtonTime > 0) {
       clearTapToSleep();
       newMode = OperatingMode::Soldering;
     }

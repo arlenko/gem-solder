@@ -20,16 +20,6 @@ void ui_draw_soldering_power_status(bool boost_mode_on) {
     }
     OLED::print(LargeSymbolPlus, FontStyle::LARGE);
   } else {
-#ifndef NO_SLEEP_MODE
-    if (getSettingValue(SettingsOptions::Sensitivity) && getSettingValue(SettingsOptions::SleepTime)) {
-      if (OLED::getRotation()) {
-        OLED::setCursor(32, 0);
-      } else {
-        OLED::setCursor(47, 0);
-      }
-      printCountdownUntilSleep(getSleepTimeout());
-    }
-#endif
     if (OLED::getRotation()) {
       OLED::setCursor(32, 8);
     } else {

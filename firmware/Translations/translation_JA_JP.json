@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "初期化されました"
     },
-    "NoAccelerometerMessage": {
-      "message": "加速度計未検出"
-    },
     "NoPowerDeliveryMessage": {
       "message": "PD IC未検出"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "右",
     "SettingLeftChar": "左",
-    "SettingAutoChar": "自",
     "SettingSlowChar": "遅",
     "SettingMediumChar": "中",
     "SettingFastChar": "速",
@@ -233,29 +229,13 @@
       "displayText": "Cooldown Speed",
       "description": "Cooldown at this rate at the end of profile mode (degrees per second)"
     },
-    "MotionSensitivity": {
-      "displayText": "動きの感度",
-      "description": "1=最低感度 | ... | 9=最高感度"
-    },
     "SleepTemperature": {
       "displayText": "待機温度",
       "description": "スタンバイ時のコテ先温度"
     },
-    "SleepTimeout": {
-      "displayText": "待機遅延",
-      "description": "スタンバイモードに入るまでの待機時間 <s=秒 | m=分>"
-    },
     "ShutdownTimeout": {
       "displayText": "自動オフ",
       "description": "自動電源オフまでの待機時間 <m=分>"
-    },
-    "HallEffSensitivity": {
-      "displayText": "磁界感度",
-      "description": "スタンバイモードに入るのに使用される磁場センサーの感度 <1=最低感度 | ... | 9=最高感度>"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "ホール効果が閾値を超えたときに\"「スリープモード」\"が開始されるまでの間隔"
     },
     "TemperatureUnit": {
       "displayText": "温度単位",

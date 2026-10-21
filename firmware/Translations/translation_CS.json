@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Nějaká nastavení\nbyla změněna!"
     },
-    "NoAccelerometerMessage": {
-      "message": "Akcelerometr\nnebyl detekován!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "Žádný IO USB-PD\nnebyl detekován!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "P",
     "SettingLeftChar": "L",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "P",
     "SettingMediumChar": "S",
     "SettingFastChar": "R",
@@ -233,29 +229,13 @@
       "displayText": "Rychlost\nochlazování",
       "description": "Rychlost ochlazování na konci profilového režimu (stupně za sekundu)"
     },
-    "MotionSensitivity": {
-      "displayText": "Citlivost\nna pohyb",
-      "description": "1=nejméně citlivé | ... | 9=nejvíce citlivé"
-    },
     "SleepTemperature": {
       "displayText": "Teplota\nve spánku",
       "description": "Teplota hrotu v režimu spánku."
     },
-    "SleepTimeout": {
-      "displayText": "Čas\ndo spánku",
-      "description": "\"Režim spánku\" naběhne v (s=sekundách | m=minutách)"
-    },
     "ShutdownTimeout": {
       "displayText": "Čas do\nvypnutí",
       "description": "Interval automatického vypnutí (m=minut)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Citlivost\nHall. čidla",
-      "description": "Citlivost Hallova čidla pro detekci spánku (1=nejméně citlivé | ... | 9=nejvíce citlivé)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Interval před začátkem \"režimu spánku\", kdy Hallův efekt překročí práh"
     },
     "TemperatureUnit": {
       "displayText": "Jednotka\nteploty",

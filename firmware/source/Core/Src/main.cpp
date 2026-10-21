@@ -9,7 +9,6 @@
 #include "Settings.h"
 #include "cmsis_os.h"
 #include "power.hpp"
-AccelType DetectedAccelerometerVersion = AccelType::None;
 bool      settingsWereReset            = false;
 // FreeRTOS variables
 
@@ -23,11 +22,6 @@ static const size_t PIDTaskStackSize = 1024 / 2;
 uint32_t            PIDTaskBuffer[PIDTaskStackSize];
 osStaticThreadDef_t PIDTaskControlBlock;
 
-// osThreadId          MOVTaskHandle;
-// static const size_t MOVTaskStackSize = 1024 / 2;
-// uint32_t            MOVTaskBuffer[MOVTaskStackSize];
-// osStaticThreadDef_t MOVTaskControlBlock;
-
 osThreadId          POWTaskHandle;
 static const size_t POWTaskStackSize = 512 / 2;
 uint32_t            POWTaskBuffer[POWTaskStackSize];
@@ -39,7 +33,6 @@ int main(void) {
   preRToSInit();
 
   resetWatchdog();
-  // Testing for which accelerometer is mounted
   settingsWereReset = loadSettings(); // load the settings from flash
 
   setTipX10Watts(0); // force tip off
@@ -54,10 +47,6 @@ int main(void) {
   /* definition and creation of POWTask - Power management for QC / PD */
   osThreadStaticDef(POWTask, startPOWTask, osPriorityAboveNormal, 0, POWTaskStackSize, POWTaskBuffer, &POWTaskControlBlock);
   POWTaskHandle = osThreadCreate(osThread(POWTask), NULL);
-
-  // /* definition and creation of MOVTask - Accelerometer management */
-  // osThreadStaticDef(MOVTask, startMOVTask, osPriorityNormal, 0, MOVTaskStackSize, MOVTaskBuffer, &MOVTaskControlBlock);
-  // MOVTaskHandle = osThreadCreate(osThread(MOVTask), NULL);
 
   /* definition and creation of GUITask - The OLED control & update*/
   osThreadStaticDef(GUITask, startGUITask, osPriorityBelowNormal, 0, GUITaskStackSize, GUITaskBuffer, &GUITaskControlBlock);

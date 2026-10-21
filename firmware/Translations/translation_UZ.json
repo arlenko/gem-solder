@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Ayrim sozlamalar\no'zgartirildi"
     },
-    "NoAccelerometerMessage": {
-      "message": "Akselerometr\ntopilmadi!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "USB-PD IC\ntopilmadi!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "O",
     "SettingLeftChar": "C",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "S",
     "SettingMediumChar": "O",
     "SettingFastChar": "T",
@@ -233,29 +229,13 @@
       "displayText": "Sovutish\ntezligi",
       "description": "Profil rejimi oxirida bu tezlikda sovutish (1 sekundda shuncha daraja)"
     },
-    "MotionSensitivity": {
-      "displayText": "Harakat\nsezgirligi",
-      "description": "1=quyi sezgirlik | ... | 9=eng yuqori sezgirlik"
-    },
     "SleepTemperature": {
       "displayText": "Uyqu\nharorati",
       "description": "\"Uyqu holati\"dagi uch harorati"
     },
-    "SleepTimeout": {
-      "displayText": "Uyquga ketish\nvaqti",
-      "description": "\"Uyqu holati\" boshlanishidan oldingi interval sleep mode (s=sekund | m=minut)"
-    },
     "ShutdownTimeout": {
       "displayText": "O'chish\nvaqti",
       "description": "Temirni o'chirishdan oldingi interval (m=minut)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Hall sensori\nsezgirligi",
-      "description": "Magnitlarga nisbatan sezgirlik darajasi (1=quyi sezgirlik | ... | 9=eng yuqori sezgirlik)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Interval before \"sleep mode\" starts when hall effect is above threshold"
     },
     "TemperatureUnit": {
       "displayText": "Harorat o'lchov\nbirligi",

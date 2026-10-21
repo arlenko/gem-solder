@@ -25,10 +25,8 @@
 #define COOLING_TEMP_BLINK 0 // 0: Disable 1: Enable
 
 /**
- * How many seconds/minutes we wait until going to sleep/shutdown.
- * Values -> SLEEP_TIME * 10; i.e. 5*10 = 50 Seconds!
+ * How many minutes we wait until shutdown when the iron is left idle.
  */
-#define SLEEP_TIME    5  // x10 Seconds
 #define SHUTDOWN_TIME 10 // Minutes
 
 /**
@@ -55,8 +53,8 @@
  * OLED Orientation
  *
  */
-#define ORIENTATION_MODE     0 // 0: Right 1:Left 2:Automatic - Default Automatic
-#define MAX_ORIENTATION_MODE 1 // Up to auto
+#define ORIENTATION_MODE     0 // 0: Right 1: Left
+#define MAX_ORIENTATION_MODE 1 // Up to Left
 // 0:Default 1:Reverse - Reverse the plus and minus button assigment for temperature change
 #define REVERSE_BUTTON_TEMP_CHANGE 0
 
@@ -88,12 +86,6 @@
 #define POWER_PULSE_DEFAULT          0
 #define POWER_PULSE_WAIT_DEFAULT     4 // Default rate of the power pulse: 4*2500 = 10000 ms = 10 s
 #define POWER_PULSE_DURATION_DEFAULT 1 // Default duration of the power pulse: 1*250 = 250 ms
-
-/**
- * OLED Orientation Sensitivity on Automatic mode!
- * Motion Sensitivity <0=Off 1=Least Sensitive 9=Most Sensitive>
- */
-#define SENSITIVITY 0 // Default 7
 
 /**
  * Detailed soldering screen
@@ -146,7 +138,6 @@
 #define I2C_SOFT_BUS_2 1
 
 #ifdef MODEL_Gem
-#define NO_ACCEL    1
 #define STAND_SENSE 1
 
 #define OP_AMP_CURRENT_SENSE_Rf         240 * 1000

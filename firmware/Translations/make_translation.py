@@ -159,36 +159,18 @@ def get_debug_menu() -> List[str]:
             time.gmtime(int(os.environ.get("SOURCE_DATE_EPOCH", time.time()))),
         ),
         "ID ",
-        "ACC   ",
         "PWR   ",
         "Vin        ",
         "Tip C  ",
         "Han C  ",
         "Max C  ",
         "UpTime ",
-        "Move   ",
         "Tip Res",
         "Tip R  ",
         "Tip O  ",
         "HW G   ",
-        "HW M   ",
         "HW P   ",
         "PSWL   ",
-        "Hall   ",
-    ]
-
-
-def get_accel_names_list() -> List[str]:
-    return [
-        "Scanning",
-        "None",
-        "MMA8652FC",
-        "LIS2DH12",
-        "BMA223",
-        "MSA301",
-        "SC7A20",
-        "GPIO",
-        "LIS2 CLONE",
     ]
 
 
@@ -339,7 +321,6 @@ def get_letter_counts(defs: dict, lang: dict, build_version: str) -> Dict:
     big_font_messages.append("°")
 
     small_font_messages.extend(get_debug_menu())
-    small_font_messages.extend(get_accel_names_list())
     small_font_messages.extend(get_power_source_list())
 
     # collapse all strings down into the composite letters and store totals for these
@@ -1207,15 +1188,6 @@ def get_translation_common_text(
     for c in get_debug_menu():
         translation_common_text += (
             f'\t "{convert_string(small_symbol_conversion_table, c)}",//"{c}" \n'
-        )
-    translation_common_text += "};\n\n"
-
-    # accel names
-    translation_common_text += "const char* AccelTypeNames[] = {\n"
-
-    for c in get_accel_names_list():
-        translation_common_text += (
-            f'\t "{convert_string(small_symbol_conversion_table, c)}",//{c} \n'
         )
     translation_common_text += "};\n\n"
 

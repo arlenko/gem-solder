@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Setările au fost\nresetate!"
     },
-    "NoAccelerometerMessage": {
-      "message": "Fără accelerometru\ndetectat!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "Fără USB-PD IC\ndetectat!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "D",
     "SettingLeftChar": "S",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "Î",
     "SettingMediumChar": "M",
     "SettingFastChar": "R",
@@ -233,29 +229,13 @@
       "displayText": "Cooldown\nSpeed",
       "description": "Cooldown at this rate at the end of profile mode (degrees per second)"
     },
-    "MotionSensitivity": {
-      "displayText": "Sensibilitate\nla miscare",
-      "description": "Sensibilitate senzor miscare (1=puţin sensibil | ... | 9=cel mai sensibil)"
-    },
     "SleepTemperature": {
       "displayText": "Temp\nrepaus",
       "description": "Temperatura vârfului în \"modul repaus\""
     },
-    "SleepTimeout": {
-      "displayText": "Expirare\nrepaus",
-      "description": "Interval înainte de lansarea \"modului de repaus\" în (s=secunde | m=minute)"
-    },
     "ShutdownTimeout": {
       "displayText": "Expirare\noprire",
       "description": "Interval înainte ca letconul să se oprească (m=minute)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Sensibilitate\nsenzor Hall",
-      "description": "Sensibilitate senzor cu efect Hall pentru a detecta repausul (1=putin sensibil | ... | 9=cel mai sensibil)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Intervalul înainte de începerea \"modului de repaus\" când efectul de sală este peste prag"
     },
     "TemperatureUnit": {
       "displayText": "Unitate de\ntemperatură",

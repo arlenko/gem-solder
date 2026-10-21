@@ -8,7 +8,6 @@
 #ifndef BSP_DEFINES_H_
 #define BSP_DEFINES_H_
 #include "FreeRTOSConfig.h"
-enum Orientation { ORIENTATION_LEFT_HAND = 0, ORIENTATION_RIGHT_HAND = 1, ORIENTATION_FLAT = 3 };
 
 #define TICKS_SECOND configTICK_RATE_HZ
 #define TICKS_MIN    (60 * TICKS_SECOND)

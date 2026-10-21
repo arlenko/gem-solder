@@ -25,25 +25,6 @@ bool checkExitSoldering(void) {
   }
 #endif
 
-#ifdef ACCEL_EXITS_ON_MOVEMENT
-  // If the accel works in reverse where movement will cause exiting the soldering mode
-  if (getSettingValue(Sensitivity)) {
-    if (lastMovementTime) {
-      if (lastMovementTime > TICKS_SECOND * 10) {
-        // If we have moved recently; in the last second
-        // Then exit soldering mode
-
-        // Movement occurred in last update
-        if (((TickType_t)(xTaskGetTickCount() - lastMovementTime)) < (TickType_t)(TICKS_SECOND / 5)) {
-          currentTempTargetDegC = 0;
-          lastMovementTime      = 0;
-          return true;
-        }
-      }
-    }
-  }
-#endif
-
   // If we have tripped thermal runaway, turn off heater and show warning
 
   return false;

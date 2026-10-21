@@ -179,7 +179,7 @@ def run_editing_settings_file_cli():
         print("Running in non-interactive mode, using loaded/default values")
 
 
-    versionMarker = 0x55AA
+    versionMarker = 0x55AC
     if args.model == "Pinecilv2":
         versionMarker = 0x55AB  # Special version marker for Pinecil v2
 
