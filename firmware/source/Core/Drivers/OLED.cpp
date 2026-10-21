@@ -773,7 +773,11 @@ void OLED::drawHeatSymbol(uint32_t x10Watts) {
   if (x10Watts > 0) {
     const int32_t limit = getX10WattageLimits();
     if (limit > 0) {
-      state = (x10Watts >= (uint32_t)limit) ? 8 : (x10Watts * 8) / (uint32_t)limit; // 0-> 8 range
+      // Measurements rarely reach 100% of the limit, so treat 90% as full scale.
+      const uint32_t fullScaleWatts = ((uint32_t)limit * 9) / 10;
+      if (fullScaleWatts > 0) {
+        state = (x10Watts >= fullScaleWatts) ? 8 : (x10Watts * 8) / fullScaleWatts; // 0-> 8 range
+      }
     }
   }
   // Then we want to draw down (16-(5+state)
@@ -789,7 +793,7 @@ void OLED::drawHeatSymbol(uint32_t x10Watts) {
 
       <- 14 px ->
       What we are doing is aiming to clear a section of the screen, down to the base depending on how close we are to
-      the wattage limit. Larger numbers mean more heat, so we clear less of the screen.
+      90% of the wattage limit. Larger numbers mean more heat, so we clear less of the screen.
   */
   drawFilledRect(cursor_x_temp, 0, cursor_x_temp + 12, 2 + (8 - state), true);
 }
