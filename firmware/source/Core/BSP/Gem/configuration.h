@@ -94,9 +94,6 @@
 #define DETAILED_SOLDERING 0 // 0: Disable 1: Enable - Default 0
 #define DETAILED_IDLE      0 // 0: Disable 1: Enable - Default 0
 
-#define THERMAL_RUNAWAY_TIME_SEC 20
-#define THERMAL_RUNAWAY_TEMP_C   3
-
 #define CUT_OUT_SETTING          0  // default to no cut-off voltage
 #define RECOM_VOL_CELL           33 // Minimum voltage per cell (Recommended 3.3V (33))
 #define TEMPERATURE_INF          0  // default to 0
@@ -106,6 +103,14 @@
 
 #define ADC_MAX_READING (4096 * 8) // Maximum reading of the adc
 #define ADC_VDD_MV      3300       // ADC max reading millivolts
+
+// Thermal runaway protection
+#define THERMAL_RUNAWAY_TIME_SEC   10                     // Sustained heating window for the "no response" test
+#define THERMAL_RUNAWAY_TEMP_C     3                      // Minimum expected rise inside that window
+#define THERMAL_RUNAWAY_PEGGED_RAW (ADC_MAX_READING - 64) // Reading pinned at the top of the ADC range
+#define THERMAL_RUNAWAY_PEGGED_SEC 3                      // How long the reading must stay pinned
+#define THERMAL_RUNAWAY_SETTLE_SEC 3                      // Ignore thermal lag right after the heater turns off
+#define THERMAL_RUNAWAY_RISE_C     15                     // Self-heating with the heater commanded off
 
 // Deriving the Voltage div:
 // Vin_max = (3.3*(r1+r2))/(r2)

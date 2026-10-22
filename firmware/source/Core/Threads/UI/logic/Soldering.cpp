@@ -166,10 +166,9 @@ OperatingMode gui_solderingMode(const ButtonState buttons, guiContext *cxt) {
     return OperatingMode::Sleeping;
   }
 
-  if (heaterThermalRunawayCounter > 8) {
-    currentTempTargetDegC       = 0; // heater control off
-    heaterThermalRunawayCounter = 0;
-    cxt->transitionMode         = TransitionAnimation::Right;
+  if (thermalRunawayTripped()) {
+    currentTempTargetDegC = 0; // heater control off
+    cxt->transitionMode   = TransitionAnimation::Right;
     return OperatingMode::ThermalRunaway;
   }
 

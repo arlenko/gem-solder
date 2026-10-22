@@ -10,8 +10,6 @@
 #include "history.hpp"
 #include "ui_drawing.hpp"
 
-extern uint8_t heaterThermalRunawayCounter;
-
 bool checkExitSoldering(void) {
   if (isTipDisconnected()) {
     return true; // How are we going to solder without the tip?
@@ -24,8 +22,6 @@ bool checkExitSoldering(void) {
     return true;
   }
 #endif
-
-  // If we have tripped thermal runaway, turn off heater and show warning
 
   return false;
 }

@@ -23,4 +23,6 @@ extern int32_t      powerSupplyWattageLimit;
 }
 #endif
 
+bool thermalRunawayTripped(void);
+
 #endif /* __MAIN_H */

@@ -83,5 +83,4 @@ OperatingMode showWarnings(const ButtonState buttons, guiContext *cxt);         
 // Common helpers
 int8_t getPowerSourceNumber(void); // Returns number ID of power source
 
-extern uint8_t heaterThermalRunawayCounter;
 #endif

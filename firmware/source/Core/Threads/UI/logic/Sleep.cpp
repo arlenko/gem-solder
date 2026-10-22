@@ -31,6 +31,11 @@ OperatingMode gui_SolderingSleepingMode(const ButtonState buttons, guiContext *c
   uint16_t tipTemp =
       getSettingValue(SettingsOptions::TemperatureInF) ? TipThermoModel::getTipInF() : TipThermoModel::getTipInC();
 
+  if (thermalRunawayTripped()) {
+    currentTempTargetDegC = 0; // heater control off
+    return OperatingMode::ThermalRunaway;
+  }
+
   if (getSettingValue(SettingsOptions::DetailedSoldering)) {
     ui_draw_soldering_detailed_sleep(tipTemp);
   } else {

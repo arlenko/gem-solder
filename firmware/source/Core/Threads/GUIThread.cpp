@@ -142,8 +142,8 @@ OperatingMode guiHandleDraw(void) {
     }
     break;
   case OperatingMode::ThermalRunaway:
-    /*TODO*/
-    newMode = OperatingMode::HomeScreen;
+    // Latched hardware fault: buttons are deliberately ignored, only a power cycle clears it
+    warnUser(translatedString(Tr->WarningThermalRunaway), buttons);
     break;
   };
   return newMode;
