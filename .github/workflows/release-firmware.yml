@@ -1,0 +1,127 @@
+name: Release Firmware
+
+# Manual firmware release: builds every language plus the Gem bootloader and
+# creates a draft release tagged fw-<BUILD_VERSION>. Bump BUILD_VERSION in
+# firmware/source/version.h, commit to main, then dispatch this workflow.
+# Hardware releases are packaged manually - see AGENTS.md.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-firmware
+  cancel-in-progress: false
+
+env:
+  HOST_PYTHON: python3
+
+jobs:
+  release:
+    name: Build and draft release
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Require main
+        run: |
+          if [ "$GITHUB_REF" != "refs/heads/main" ]; then
+            echo "::error::Firmware releases must be dispatched from main (got $GITHUB_REF)"
+            exit 1
+          fi
+
+      - name: Read firmware version
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          version=$(sed -n 's/^#define BUILD_VERSION "\(.*\)"$/\1/p' firmware/source/version.h)
+          if [ -z "$version" ]; then
+            echo "::error::Could not read BUILD_VERSION from firmware/source/version.h"
+            exit 1
+          fi
+          tag="fw-$version"
+          if git rev-parse -q --verify "refs/tags/$tag" >/dev/null || gh release view "$tag" >/dev/null 2>&1; then
+            echo "::error::Tag or release $tag already exists - bump BUILD_VERSION in firmware/source/version.h first"
+            exit 1
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          previous=$(git tag --list 'fw-v*' --sort=-v:refname | head -n1)
+          if [ -n "$previous" ]; then
+            echo "previous_tag=$previous" >> "$GITHUB_OUTPUT"
+          fi
+          echo "Building firmware release $tag from $GITHUB_SHA"
+
+      - name: Install ARM toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            gcc-arm-none-eabi \
+            binutils-arm-none-eabi \
+            libnewlib-arm-none-eabi \
+            libstdc++-arm-none-eabi-newlib \
+            zip
+
+      - name: Install host Python dependencies
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r firmware/Translations/requirements.txt intelhex
+
+      - name: Build all firmware languages
+        working-directory: firmware/source
+        run: |
+          make -j"$(nproc)" model=Gem $(for f in ../Translations/translation_*.json; do printf 'firmware-%s ' "$(basename "$f" .json | sed 's/^translation_//')"; done)
+
+      - name: Build bootloader
+        run: |
+          git clone --depth 1 --branch Gem https://github.com/arlenko/IronOS-dfu "$RUNNER_TEMP/ironos-dfu"
+          make -C "$RUNNER_TEMP/ironos-dfu" -j"$(nproc)" all build_type=bootloader model=GEM
+          mkdir -p "$RUNNER_TEMP/release/Bootloader"
+          cp "$RUNNER_TEMP"/ironos-dfu/build/bootloader.{hex,bin,dfu} "$RUNNER_TEMP/release/Bootloader/"
+
+      - name: Assemble release bundle
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/release/Firmware"
+          cp firmware/source/Hexfile/Gem_*.{hex,bin,dfu} "$RUNNER_TEMP/release/Firmware/"
+          cd "$RUNNER_TEMP/release"
+          zip -r "$RUNNER_TEMP/Gem-Solder-firmware-$VERSION.zip" Firmware Bootloader
+          {
+            echo "### Firmware $VERSION"
+            echo
+            echo "- Languages: $(ls Firmware/*.hex | wc -l)"
+            echo "- Bootloader: yes"
+            echo "- Bundle: \`Gem-Solder-firmware-$VERSION.zip\` ($(du -h "$RUNNER_TEMP/Gem-Solder-firmware-$VERSION.zip" | cut -f1))"
+            echo
+            echo "| Language | Firmware size (bytes) |"
+            echo "| --- | ---: |"
+            for f in Firmware/Gem_*.bin; do
+              echo "| \`$(basename "$f" .bin | sed 's/^Gem_//')\` | $(stat -c%s "$f") |"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create draft release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+          VERSION: ${{ steps.version.outputs.version }}
+          PREVIOUS_TAG: ${{ steps.version.outputs.previous_tag }}
+        run: |
+          notes=(--generate-notes)
+          if [ -n "$PREVIOUS_TAG" ]; then
+            notes+=(--notes-start-tag "$PREVIOUS_TAG")
+          fi
+          gh release create "$TAG" "$RUNNER_TEMP/Gem-Solder-firmware-$VERSION.zip" \
+            --target "$GITHUB_SHA" \
+            --title "Gem Solder Firmware $VERSION" \
+            --draft \
+            --latest \
+            "${notes[@]}"

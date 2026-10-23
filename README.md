@@ -1,6 +1,8 @@
 # 💎 Gem Solder
 
 [![Firmware build status](https://github.com/arlenko/gem-solder/actions/workflows/firmware.yml/badge.svg)](https://github.com/arlenko/gem-solder/actions/workflows/firmware.yml)
+[![Firmware release](https://img.shields.io/github/v/release/arlenko/gem-solder?filter=fw-*&label=firmware&color=blue)](https://github.com/arlenko/gem-solder/releases?q=fw-)
+[![Hardware revision](https://img.shields.io/github/v/release/arlenko/gem-solder?filter=hw-*&label=hardware&color=orange)](https://github.com/arlenko/gem-solder/releases?q=hw-)
 
 ## Overview
 
@@ -22,11 +24,12 @@ special-purpose handle connector having to be sourced.
 
 **Check out the [releases page](https://github.com/arlenko/gem-solder/releases)!**
 
-The ZIP file shipped with a release contains everything needed to build, including a
-[bill of materials](BOM/Gem%20Solder%20BOM.xlsx) for sourcing components and cost estimation,
-an [interactive BOM](BOM/ibom.html) for convenient PCB assembly by hand, compiled
-[bootloader](https://github.com/arlenko/IronOS-dfu) and firmware binaries, and STL files for
-3D printing the enclosure.
+Firmware and hardware are released separately, with tags prefixed `fw-` and `hw-`.
+A firmware release ships every compiled firmware language plus the
+[bootloader](https://github.com/arlenko/IronOS-dfu). A hardware release ships the PCB fabrication
+files, the [bill of materials](BOM/Gem%20Solder%20BOM.xlsx) for sourcing components and cost
+estimation, the [interactive BOM](BOM/ibom.html) for convenient PCB assembly by hand, and the STL
+files for 3D printing the enclosure.
 
 **Get help and share your ideas on the [discussions](https://github.com/arlenko/gem-solder/discussions) page!**
 
