@@ -1,0 +1,87 @@
+name: Firmware
+
+on:
+  push:
+    branches: [main, dev]
+    paths:
+      - "firmware/**"
+      - ".github/workflows/firmware.yml"
+  pull_request:
+    paths:
+      - "firmware/**"
+      - ".github/workflows/firmware.yml"
+  workflow_dispatch:
+    inputs:
+      all_languages:
+        description: "Build all translations instead of English only"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: firmware-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  HOST_PYTHON: python3
+
+jobs:
+  build:
+    name: Build Gem firmware
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: firmware/source
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install ARM toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            gcc-arm-none-eabi \
+            binutils-arm-none-eabi \
+            libnewlib-arm-none-eabi \
+            libstdc++-arm-none-eabi-newlib
+          arm-none-eabi-gcc --version
+
+      - name: Install host Python dependencies
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r ../Translations/requirements.txt
+
+      - name: Build firmware (EN)
+        if: ${{ !inputs.all_languages }}
+        run: make -j"$(nproc)" model=Gem
+
+      - name: Build firmware (all languages)
+        if: ${{ inputs.all_languages }}
+        run: make -j"$(nproc)" model=Gem $(for f in ../Translations/translation_*.json; do printf 'firmware-%s ' "$(basename "$f" .json | sed 's/^translation_//')"; done)
+
+      - name: Report flash and RAM usage
+        run: |
+          {
+            echo "### Gem firmware size"
+            echo
+            echo "| File | Size (bytes) |"
+            echo "| --- | ---: |"
+            for f in Hexfile/Gem_*.bin; do
+              echo "| \`$(basename "$f")\` | $(stat -c%s "$f") |"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+          ls -l Hexfile
+
+      - name: Upload firmware artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gem-firmware
+          path: |
+            firmware/source/Hexfile/*.hex
+            firmware/source/Hexfile/*.bin
+            firmware/source/Hexfile/*.dfu
+          if-no-files-found: error
+          retention-days: 5
