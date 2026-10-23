@@ -27,12 +27,6 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 HERE = Path(__file__).resolve().parent
 
 
-@functools.lru_cache(maxsize=None)
-def cjk_font() -> Font:
-    with open(os.path.join(HERE, "wqy-bitmapsong/wenquanyi_9pt.bdf"), "rb") as f:
-        return bdfreader.read_bdf(f)
-
-
 # Loading a single JSON file
 def load_json(filename: str) -> dict:
     with open(filename) as f:
@@ -111,7 +105,7 @@ def write_start(f: TextIO):
     )
     f.write("\n")
     f.write('#include "Translation.h"\n')
-    # configuration.h defines OLED_128x32, which selects the larger font tables
+    # The Gem panel uses the larger Terminus font tables.
     f.write('#include "configuration.h"\n')
 
 
@@ -159,36 +153,18 @@ def get_debug_menu() -> List[str]:
             time.gmtime(int(os.environ.get("SOURCE_DATE_EPOCH", time.time()))),
         ),
         "ID ",
-        "ACC   ",
         "PWR   ",
         "Vin        ",
         "Tip C  ",
         "Han C  ",
         "Max C  ",
         "UpTime ",
-        "Move   ",
         "Tip Res",
         "Tip R  ",
         "Tip O  ",
         "HW G   ",
-        "HW M   ",
         "HW P   ",
         "PSWL   ",
-        "Hall   ",
-    ]
-
-
-def get_accel_names_list() -> List[str]:
-    return [
-        "Scanning",
-        "None",
-        "MMA8652FC",
-        "LIS2DH12",
-        "BMA223",
-        "MSA301",
-        "SC7A20",
-        "GPIO",
-        "LIS2 CLONE",
     ]
 
 
@@ -201,10 +177,10 @@ def get_power_source_list() -> List[str]:
     ]
 
 
-# On 128x32 panels the scrolling menu descriptions are drawn with the small
-# (Terminus 8x16) font instead of the large one, so they must be ranked and
-# encoded against the small font. Set from the build macros in main().
-DESCRIPTIONS_USE_SMALL_FONT = False
+# The scrolling menu descriptions are drawn with the small (Terminus 8x16)
+# font instead of the large one, so they must be ranked and encoded against
+# the small font.
+DESCRIPTIONS_USE_SMALL_FONT = True
 
 
 def test_is_small_font(msg: str) -> bool:
@@ -213,10 +189,10 @@ def test_is_small_font(msg: str) -> bool:
 
 @functools.lru_cache(maxsize=None)
 def small_font_chars() -> frozenset:
-    """The set of characters that have a glyph in the small (6x8) font.
+    """The set of characters that have a glyph in the small (8x16) font.
 
     The small font only covers ASCII/Latin-Extended/Cyrillic/Greek; CJK glyphs
-    are rendered into the large (12x16) font exclusively. Used to decide whether
+    are rendered into the large (12x24) font exclusively. Used to decide whether
     a message can be drawn in the small font at all.
     """
     chars: set = set()
@@ -229,11 +205,11 @@ def small_font_chars() -> frozenset:
 def description_uses_small_font(msg: str) -> bool:
     """Whether a menu description should be encoded/ranked in the small font.
 
-    Only when the small-font descriptions feature is enabled (128x32 panels)
-    AND every glyph in the message exists in the small font. CJK languages have
-    descriptions whose glyphs only exist in the large (12x16) font, so those
-    must stay in the large font or font generation fails. Both the symbol-set
-    ranking and the string encoding must use this same decision per message.
+    Only when every glyph in the message exists in the small font. CJK languages
+    have descriptions whose glyphs only exist in the large (12x24) font, so
+    those must stay in the large font or font generation fails. Both the
+    symbol-set ranking and the string encoding must use this same decision per
+    message.
     """
     if not DESCRIPTIONS_USE_SMALL_FONT:
         return False
@@ -330,16 +306,12 @@ def get_letter_counts(defs: dict, lang: dict, build_version: str) -> Dict:
         else:
             big_font_messages.append(x[1])
 
-    # The degree symbol is only emitted on 128x32 panels (resolved by the
-    # real per-model configuration.h at firmware compile time, see
-    # get_translation_common_text), but every generated translation file is
-    # reused across model builds, so its glyph must always be ranked into
-    # both font tables regardless of which macros this generation run saw.
+    # The degree symbol is shown in front of the temperature unit, so its glyph
+    # must be ranked into both font tables.
     small_font_messages.append("°")
     big_font_messages.append("°")
 
     small_font_messages.extend(get_debug_menu())
-    small_font_messages.extend(get_accel_names_list())
     small_font_messages.extend(get_power_source_list())
 
     # collapse all strings down into the composite letters and store totals for these
@@ -417,53 +389,7 @@ def merge_letter_count_info(a: Dict, b: Dict) -> Dict:
     }
 
 
-def get_cjk_glyph(sym: str) -> Optional[bytes]:
-    try:
-        glyph: Glyph = cjk_font()[ord(sym)]
-    except KeyError:
-        return None
-    data = glyph.data
-    src_left, src_bottom, src_w, src_h = glyph.get_bounding_box()
-    dst_w = 12
-    dst_h = 16
-
-    # The source data is a per-row list of ints. The first item is the bottom-
-    # most row. For each row, the LSB is the right-most pixel.
-    # Here, (x, y) is the coordinates with origin at the top-left.
-    def get_cell(x: int, y: int) -> bool:
-        # Adjust x coordinates by actual bounding box.
-        adj_x = x - src_left
-        if adj_x < 0 or adj_x >= src_w:
-            return False
-        # Adjust y coordinates by actual bounding box, then place the glyph
-        # baseline 3px above the bottom edge to make it centre-ish.
-        # This metric is optimized for WenQuanYi Bitmap Song 9pt and assumes
-        # each glyph is to be placed in a 12x12px box.
-        adj_y = y - (dst_h - src_h - src_bottom - 3)
-        if adj_y < 0 or adj_y >= src_h:
-            return False
-        if data[src_h - adj_y - 1] & (1 << (src_w - adj_x - 1)):
-            return True
-        else:
-            return False
-
-    # A glyph in the font table is divided into upper and lower parts, each by
-    # 8px high. Each byte represents half if a column, with the LSB being the
-    # top-most pixel. The data goes from the left-most to the right-most column
-    # of the top half, then from the left-most to the right-most column of the
-    # bottom half.
-    bs = bytearray()
-    for block in range(2):
-        for c in range(dst_w):
-            b = 0
-            for r in range(8):
-                if get_cell(c, r + 8 * block):
-                    b |= 0x01 << r
-            bs.append(b)
-    return bytes(bs)
-
-
-# --- Terminus fonts: become SMALL (8x16) and LARGE (12x24) on 128x32 panels ---
+# --- Terminus fonts: SMALL (8x16) and LARGE (12x24) ---
 # (path, cell width, cell height, font ascent)
 TERMINUS_FONTS = {
     "8x16": (
@@ -600,99 +526,6 @@ def bytes_to_c_hex(b: bytes) -> str:
     return ", ".join((f"0x{i:02X}" for i in b)) + ","
 
 
-@dataclass
-class FontMapsPerFont:
-    font12_symbols_ordered: List[str]
-    font12_maps: Dict[str, Dict[str, bytes]]
-    font06_symbols_ordered: List[str]
-    font06_maps: Dict[str, Dict[str, bytes]]
-
-
-def get_font_map_per_font(
-    text_list_small_font: List[str], text_list_large_font: List[str]
-) -> FontMapsPerFont:
-    pending_small_symbols = set(text_list_small_font)
-    pending_large_symbols = set(text_list_large_font)
-
-    if len(pending_small_symbols) != len(text_list_small_font):
-        raise ValueError("`text_list_small_font` contains duplicated symbols")
-    if len(pending_large_symbols) != len(text_list_large_font):
-        raise ValueError("`text_list_large_font` contains duplicated symbols")
-
-    total_symbol_count_small = len(pending_small_symbols)
-    # \x00 is for NULL termination and \x01 is for newline, so the maximum
-    # number of symbols allowed is as follow (see also the comments in
-    # `get_bytes_from_font_index`):
-    if total_symbol_count_small > (0x10 * 0xFF - 15) - 2:  # 4063
-        raise ValueError(
-            f"Error, too many used symbols for this version (total {total_symbol_count_small})"
-        )
-    logging.info(f"Generating fonts for {total_symbol_count_small} symbols")
-
-    total_symbol_count_large = len(pending_large_symbols)
-    # \x00 is for NULL termination and \x01 is for newline, so the maximum
-    # number of symbols allowed is as follow (see also the comments in
-    # `get_bytes_from_font_index`):
-    if total_symbol_count_large > (0x10 * 0xFF - 15) - 2:  # 4063
-        raise ValueError(
-            f"Error, too many used symbols for this version (total {total_symbol_count_large})"
-        )
-    logging.info(f"Generating fonts for {total_symbol_count_large} symbols")
-
-    # Build the full font maps
-
-    font12_map: Dict[str, bytes] = {}
-    font06_map: Dict[str, bytes] = {}
-
-    # First we go through and do all of the CJK characters that are in the large font to have them removed
-    for sym in text_list_large_font:
-        font12_line = get_cjk_glyph(sym)
-        if font12_line is None:
-            continue
-        font12_map[sym] = font12_line
-        pending_large_symbols.remove(sym)
-    # Now that all CJK characters are done, we next have to fill out all of the small and large fonts from the remainders
-
-    # This creates our superset of characters to reference off that are pre-rendered ones (non CJK)
-    # Collect font bitmaps by the defined font order:
-    for font in font_tables.ALL_PRE_RENDERED_FONTS:
-        font12, font06 = font_tables.get_font_maps_for_name(font)
-        font12_map.update(font12)
-        font06_map.update(font06)
-
-    # LARGE FONT
-    for sym in text_list_large_font:
-        if sym in pending_large_symbols:
-            font_data = font12_map.get(sym, None)
-            if font_data is None:
-                raise KeyError(f"Symbol |{sym}| is missing in large font set")
-            font12_map[sym] = font_data
-            pending_large_symbols.remove(sym)
-
-    if len(pending_large_symbols) > 0:
-        raise KeyError(
-            f"Missing large font symbols for {len(pending_large_symbols)} characters: {pending_large_symbols}"
-        )
-
-    # SMALL FONT
-    for sym in text_list_small_font:
-        if sym in pending_small_symbols:
-            font_data = font06_map.get(sym, None)
-            if font_data is None:
-                raise KeyError(f"Symbol |{sym}| is missing in small font set")
-            font06_map[sym] = font_data
-            pending_small_symbols.remove(sym)
-
-    if len(pending_small_symbols) > 0:
-        raise KeyError(
-            f"Missing small font symbols for {len(pending_small_symbols)} characters: {pending_small_symbols}"
-        )
-
-    return FontMapsPerFont(
-        text_list_large_font, font12_map, text_list_small_font, font06_map
-    )
-
-
 def get_forced_first_symbols() -> List[str]:
     """Get the list of symbols that must always occur at start of small and large fonts
     Used by firmware for displaying numbers and hex strings
@@ -742,48 +575,6 @@ def build_symbol_conversion_map(sym_list: List[str]) -> Dict[str, bytes]:
     return symbol_map
 
 
-def make_font_table_cpp(
-    small_font_sym_list: List[str],
-    large_font_sym_list: List[str],
-    font_map: FontMapsPerFont,
-    small_symbol_map: Dict[str, bytes],
-    large_symbol_map: Dict[str, bytes],
-) -> str:
-    output_table = make_font_table_named_cpp(
-        "USER_FONT_12", large_font_sym_list, font_map.font12_maps
-    )
-    output_table += make_font_table_06_cpp(small_font_sym_list, font_map)
-    return output_table
-
-
-def make_font_table_named_cpp(
-    name: Optional[str],
-    sym_list: List[str],
-    font_map: Dict[str, bytes],
-) -> str:
-    output_table = ""
-    if name:
-        output_table = f"const uint8_t {name}[] = {{\n"
-    for i, sym in enumerate(sym_list):
-        output_table += f"{bytes_to_c_hex(font_map[sym])}//0x{i + 2:X} -> {sym}\n"
-    if name:
-        output_table += f"}}; // {name}\n"
-    return output_table
-
-
-def make_font_table_06_cpp(sym_list: List[str], font_map: FontMapsPerFont) -> str:
-    output_table = "const uint8_t USER_FONT_6x8[] = {\n"
-    for i, sym in enumerate(sym_list):
-        font_bytes = font_map.font06_maps[sym]
-        if font_bytes:
-            font_line = bytes_to_c_hex(font_bytes)
-        else:
-            font_line = "//                                 "  # placeholder
-        output_table += f"{font_line}//0x{i + 2:X} -> {sym}\n"
-    output_table += "};\n"
-    return output_table
-
-
 def convert_string_bytes(symbol_conversion_table: Dict[str, bytes], text: str) -> bytes:
     # convert all of the symbols from the string into bytes for their content
     output_string = b""
@@ -824,7 +615,6 @@ class LanguageData:
     build_version: str
     small_text_symbols: List[str]
     large_text_symbols: List[str]
-    font_map: FontMapsPerFont
 
 
 def prepare_language(lang: dict, defs: dict, build_version: str) -> LanguageData:
@@ -839,17 +629,12 @@ def prepare_language(lang: dict, defs: dict, build_version: str) -> LanguageData
         letter_count_data["bigFontCounts"]
     )
 
-    # From the letter counts, need to make a symbol index and matching font index
-
-    font_data = get_font_map_per_font(small_font_symbols, large_font_symbols)
-
     return LanguageData(
         [lang],
         defs,
         build_version,
         small_font_symbols,
         large_font_symbols,
-        font_data,
     )
 
 
@@ -873,7 +658,6 @@ def prepare_languages(
     large_font_symbols = convert_letter_counts_to_ranked_symbols_with_forced(
         total_symbol_counts["bigFontCounts"]
     )
-    font_data = get_font_map_per_font(small_font_symbols, large_font_symbols)
 
     return LanguageData(
         langs,
@@ -881,13 +665,10 @@ def prepare_languages(
         build_version,
         small_font_symbols,
         large_font_symbols,
-        font_data,
     )
 
 
 def render_font_block(data: LanguageData, f: TextIO, compress_font: bool = False):
-    font_map = data.font_map
-
     small_font_symbol_conversion_table = build_symbol_conversion_map(
         data.small_text_symbols
     )
@@ -896,27 +677,13 @@ def render_font_block(data: LanguageData, f: TextIO, compress_font: bool = False
     )
 
     if not compress_font:
-        # On 128x32 panels the SMALL/LARGE fonts are the larger Terminus
-        # 8x16/12x24; on every other model they are the original hand-drawn
-        # 6x8/12x16. Same array names so FontSectionInfo is unchanged.
-        f.write("#ifdef OLED_128x32\n")
+        # The SMALL/LARGE fonts are Terminus 8x16/12x24.
         f.write(
             make_terminus_table_cpp("USER_FONT_12", "12x24", data.large_text_symbols)
         )
         f.write(
             make_terminus_table_cpp("USER_FONT_6x8", "8x16", data.small_text_symbols)
         )
-        f.write("#else\n")
-        f.write(
-            make_font_table_cpp(
-                data.small_text_symbols,
-                data.large_text_symbols,
-                font_map,
-                small_font_symbol_conversion_table,
-                large_font_symbol_conversion_table,
-            )
-        )
-        f.write("#endif /* OLED_128x32 */\n")
         f.write(
             "const FontSection FontSectionInfo = {\n"
             "    .font12_start_ptr = USER_FONT_12,\n"
@@ -932,28 +699,14 @@ def render_font_block(data: LanguageData, f: TextIO, compress_font: bool = False
         def emit_compressed(name: str, data_bytes: bytes) -> None:
             write_bytes_as_c_array(f, name, brieflz.compress(data_bytes))
 
-        # 128x32 panels use Terminus 8x16/12x24; every other model uses the
-        # hand-drawn fonts. Same array/buffer names so FontSectionInfo is
-        # unchanged (sizes via sizeof).
-        f.write("#ifdef OLED_128x32\n")
+        # The SMALL/LARGE fonts are Terminus 8x16/12x24. Same array/buffer
+        # names so FontSectionInfo is unchanged (sizes via sizeof).
         t12 = terminus_block_bytes("12x24", data.large_text_symbols)
         t06 = terminus_block_bytes("8x16", data.small_text_symbols)
         emit_compressed("font_12x16_brieflz", t12)
         emit_compressed("font_06x08_brieflz", t06)
         f.write(f"static uint8_t font12_out_buffer[{len(t12)}];\n")
         f.write(f"static uint8_t font06_out_buffer[{len(t06)}];\n")
-        f.write("#else\n")
-        h12 = bytearray()
-        for sym in data.large_text_symbols:
-            h12.extend(font_map.font12_maps[sym])
-        h06 = bytearray()
-        for sym in data.small_text_symbols:
-            h06.extend(font_map.font06_maps[sym])
-        emit_compressed("font_12x16_brieflz", bytes(h12))
-        emit_compressed("font_06x08_brieflz", bytes(h06))
-        f.write(f"static uint8_t font12_out_buffer[{len(h12)}];\n")
-        f.write(f"static uint8_t font06_out_buffer[{len(h06)}];\n")
-        f.write("#endif /* OLED_128x32 */\n")
 
         f.write(
             "const FontSection FontSectionInfo = {\n"
@@ -1075,7 +828,7 @@ def write_languages(
     ]
 
     f.write('#include "Translation_multi.h"\n')
-    # configuration.h defines OLED_128x32, which selects the larger font tables
+    # The Gem panel uses the larger Terminus font tables.
     f.write('#include "configuration.h"')
 
     f.write(f"\n// ---- {lang_names} ----\n\n")
@@ -1160,12 +913,7 @@ def write_languages(
     f.write(sanity_checks_text)
 
 
-# 128x32 panels have room to show the degree symbol in front of the
-# temperature unit; other panels keep the bare unit letter. Resolved by
-# #ifdef OLED_128x32 against the real per-model configuration.h at firmware
-# compile time (like the Terminus font tables), NOT at translation-generation
-# time: a single generated translation file is reused across model rebuilds,
-# so baking the choice in from this run's build macros would go stale.
+# The degree symbol is shown in front of the temperature unit.
 DEGREE_PREFIXED_CONSTANTS = frozenset(
     {"LargeSymbolDegC", "SmallSymbolDegC", "LargeSymbolDegF", "SmallSymbolDegF"}
 )
@@ -1188,13 +936,7 @@ def get_translation_common_text(
             raise ValueError(f"Constant {x} is not size encoded")
 
         if x[0] in DEGREE_PREFIXED_CONSTANTS:
-            translation_common_text += "#ifdef OLED_128x32\n"
             translation_common_text += f'const char* {x[0]} = "{convert_string(table, "°" + x[1])}";//°{x[1]} \n'
-            translation_common_text += "#else\n"
-            translation_common_text += (
-                f'const char* {x[0]} = "{convert_string(table, x[1])}";//{x[1]} \n'
-            )
-            translation_common_text += "#endif /* OLED_128x32 */\n"
         else:
             translation_common_text += (
                 f'const char* {x[0]} = "{convert_string(table, x[1])}";//{x[1]} \n'
@@ -1207,15 +949,6 @@ def get_translation_common_text(
     for c in get_debug_menu():
         translation_common_text += (
             f'\t "{convert_string(small_symbol_conversion_table, c)}",//"{c}" \n'
-        )
-    translation_common_text += "};\n\n"
-
-    # accel names
-    translation_common_text += "const char* AccelTypeNames[] = {\n"
-
-    for c in get_accel_names_list():
-        translation_common_text += (
-            f'\t "{convert_string(small_symbol_conversion_table, c)}",//{c} \n'
         )
     translation_common_text += "};\n\n"
 
@@ -1619,14 +1352,8 @@ def main() -> None:
         else frozenset()
     )
 
-    global DESCRIPTIONS_USE_SMALL_FONT
-    # The Terminus fonts and the small-font menu descriptions that go with them
-    # are enabled on every 128x32 panel; non-128x32 models keep the compact
-    # hand-drawn fonts and large descriptions. CJK descriptions always fall back
-    # to the large font (see description_uses_small_font), since the small font
-    # has no CJK glyphs.
-    DESCRIPTIONS_USE_SMALL_FONT = "OLED_128x32" in macros
-
+    # CJK descriptions always fall back to the large font (see
+    # description_uses_small_font), since the small font has no CJK glyphs.
     language_data: LanguageData
     if args.input_pickled:
         logging.info(f"Reading pickled language data from {args.input_pickled.name}...")

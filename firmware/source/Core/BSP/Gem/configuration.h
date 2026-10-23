@@ -25,10 +25,8 @@
 #define COOLING_TEMP_BLINK 0 // 0: Disable 1: Enable
 
 /**
- * How many seconds/minutes we wait until going to sleep/shutdown.
- * Values -> SLEEP_TIME * 10; i.e. 5*10 = 50 Seconds!
+ * How many minutes we wait until shutdown when the iron is left idle.
  */
-#define SLEEP_TIME    5  // x10 Seconds
 #define SHUTDOWN_TIME 10 // Minutes
 
 /**
@@ -55,8 +53,8 @@
  * OLED Orientation
  *
  */
-#define ORIENTATION_MODE     0 // 0: Right 1:Left 2:Automatic - Default Automatic
-#define MAX_ORIENTATION_MODE 1 // Up to auto
+#define ORIENTATION_MODE     0 // 0: Right 1: Left
+#define MAX_ORIENTATION_MODE 1 // Up to Left
 // 0:Default 1:Reverse - Reverse the plus and minus button assigment for temperature change
 #define REVERSE_BUTTON_TEMP_CHANGE 0
 
@@ -90,20 +88,11 @@
 #define POWER_PULSE_DURATION_DEFAULT 1 // Default duration of the power pulse: 1*250 = 250 ms
 
 /**
- * OLED Orientation Sensitivity on Automatic mode!
- * Motion Sensitivity <0=Off 1=Least Sensitive 9=Most Sensitive>
- */
-#define SENSITIVITY 0 // Default 7
-
-/**
  * Detailed soldering screen
  * Detailed idle screen (off for first time users)
  */
 #define DETAILED_SOLDERING 0 // 0: Disable 1: Enable - Default 0
 #define DETAILED_IDLE      0 // 0: Disable 1: Enable - Default 0
-
-#define THERMAL_RUNAWAY_TIME_SEC 20
-#define THERMAL_RUNAWAY_TEMP_C   3
 
 #define CUT_OUT_SETTING          0  // default to no cut-off voltage
 #define RECOM_VOL_CELL           33 // Minimum voltage per cell (Recommended 3.3V (33))
@@ -114,6 +103,14 @@
 
 #define ADC_MAX_READING (4096 * 8) // Maximum reading of the adc
 #define ADC_VDD_MV      3300       // ADC max reading millivolts
+
+// Thermal runaway protection
+#define THERMAL_RUNAWAY_TIME_SEC   10                     // Sustained heating window for the "no response" test
+#define THERMAL_RUNAWAY_TEMP_C     3                      // Minimum expected rise inside that window
+#define THERMAL_RUNAWAY_PEGGED_RAW (ADC_MAX_READING - 64) // Reading pinned at the top of the ADC range
+#define THERMAL_RUNAWAY_PEGGED_SEC 3                      // How long the reading must stay pinned
+#define THERMAL_RUNAWAY_SETTLE_SEC 3                      // Ignore thermal lag right after the heater turns off
+#define THERMAL_RUNAWAY_RISE_C     15                     // Self-heating with the heater commanded off
 
 // Deriving the Voltage div:
 // Vin_max = (3.3*(r1+r2))/(r2)
@@ -146,16 +143,17 @@
 #define I2C_SOFT_BUS_2 1
 
 #ifdef MODEL_Gem
-#define NO_ACCEL    1
 #define STAND_SENSE 1
 
 #define OP_AMP_CURRENT_SENSE_Rf         240 * 1000
 #define OP_AMP_CURRENT_SENSE_Rin        5.1 * 1000
 #define OP_AMP_CURRENT_SENSE_GAIN_STAGE ((OP_AMP_CURRENT_SENSE_Rf) / (OP_AMP_CURRENT_SENSE_Rin))
-// Effective shunt resistance is 5mOhm plus ~1mOhm parasitic resistance of traces and solder joints
+// Effective shunt resistance is 5 mOhm plus 1 mOhm parasitic resistance of traces and solder joints
 #define CURRENT_SENSE_SHUNT_RESISTANCE_mOhms (5 + 1)
-#define TIP_DISCONNECT_CURRENT_MA            10    // threshold below which tip is considered disconnected
-#define TIP_SHORT_CURRENT_MA                 12000 // threshold above which tip is considered shorted
+// Threshold below which tip is considered disconnected
+#define TIP_DISCONNECT_CURRENT_MA 10
+// Threshold above which tip is considered shorted. 11.6A is maximum what can be measured with actual gain
+#define TIP_SHORT_CURRENT_MA 11200
 
 #define TIP_PWM_PSC          1                  // PWM timer prescaler
 #define TIP_PWM_ARR          199                // PWM timer period. 199 at prescaler 1 gives 20 khz
@@ -175,10 +173,9 @@
 #define HARDWARE_MAX_WATTAGE_X10  1400
 #define FILTER_DISPLAYED_TIP_TEMP 8 // Filtering for GUI display
 
-#define TIP_CONTROL_PID // We use PID rather than integrator
-#define TIP_PID_KP      45
-#define TIP_PID_KI      700
-#define TIP_PID_KD      8000
+#define TIP_PID_KP 45
+#define TIP_PID_KI 700
+#define TIP_PID_KD 8000
 // PID_DEBUG displays PID results on the detailed soldering screen
 // #define PID_DEBUG
 

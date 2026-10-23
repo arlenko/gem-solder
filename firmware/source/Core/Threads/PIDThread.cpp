@@ -27,17 +27,19 @@
 #include "STUSB4500.hpp"
 #endif
 
-static TickType_t          powerPulseWaitUnit          = 25 * TICKS_100MS;      // 2.5 s
-static TickType_t          powerPulseDurationUnit      = (5 * TICKS_100MS) / 2; // 250 ms
-TaskHandle_t               pidTaskNotification         = NULL;
-volatile TemperatureType_t currentTempTargetDegC       = 0; // Current temperature target in C
-int32_t                    powerSupplyWattageLimit     = 0;
-uint8_t                    heaterThermalRunawayCounter = 0;
+static TickType_t          powerPulseWaitUnit      = 25 * TICKS_100MS;      // 2.5 s
+static TickType_t          powerPulseDurationUnit  = (5 * TICKS_100MS) / 2; // 250 ms
+TaskHandle_t               pidTaskNotification     = NULL;
+volatile TemperatureType_t currentTempTargetDegC   = 0; // Current temperature target in C
+int32_t                    powerSupplyWattageLimit = 0;
+
+static volatile bool thermalRunawayLatched = false;
 
 static int32_t getPIDResultX10Watts(TemperatureType_t set_point, TemperatureType_t current_value);
-static void    detectThermalRunaway(const TemperatureType_t currentTipTempInC, const uint32_t x10WattsOut);
-static void    setOutputx10WattsViaFilters(int32_t x10Watts);
-static int32_t getX10WattageLimits();
+static void    detectThermalRunaway(const TemperatureType_t currentTipTempInC, const int32_t x10WattsApplied);
+static int32_t setOutputx10WattsViaFilters(int32_t x10Watts);
+
+bool thermalRunawayTripped(void) { return thermalRunawayLatched; }
 
 #ifdef PID_DEBUG
 volatile int32_t PIDDebugResults[3] = {0, 0, 0};
@@ -86,8 +88,7 @@ void startPIDTask(void const *argument __unused) {
   }
 #endif
 
-  int32_t    x10WattsOut             = 0;
-  TickType_t lastThermalRunawayDecay = xTaskGetTickCount();
+  int32_t x10WattsOut = 0;
 
   for (;;) {
     x10WattsOut = 0;
@@ -109,11 +110,10 @@ void startPIDTask(void const *argument __unused) {
         }
 
         x10WattsOut = getPIDResultX10Watts(PIDTempTarget, currentTipTempInC);
-        detectThermalRunaway(currentTipTempInC, x10WattsOut);
-      } else {
-        detectThermalRunaway(currentTipTempInC, 0);
       }
-      setOutputx10WattsViaFilters(x10WattsOut);
+      // Apply the output, then feed the detector the power that was actually applied
+      const int32_t x10WattsApplied = setOutputx10WattsViaFilters(x10WattsOut);
+      detectThermalRunaway(currentTipTempInC, x10WattsApplied);
     } else {
       // ADC interrupt timeout
       setTipPWM(0, false);
@@ -121,16 +121,9 @@ void startPIDTask(void const *argument __unused) {
 #ifdef DEBUG_UART_OUTPUT
     log_system_state(x10WattsOut);
 #endif
-    if (xTaskGetTickCount() - lastThermalRunawayDecay > TICKS_SECOND) {
-      lastThermalRunawayDecay = xTaskGetTickCount();
-      if (heaterThermalRunawayCounter > 0) {
-        heaterThermalRunawayCounter--;
-      }
-    }
   }
 }
 
-#ifdef TIP_CONTROL_PID
 template <class T, T Kp, T Ki, T Kd> struct PID {
   T previous_error_term;
   T integration_running_sum;
@@ -186,161 +179,116 @@ template <class T, T Kp, T Ki, T Kd> struct PID {
     return output;
   }
 };
-#else
-template <class T = TemperatureType_t> struct Integrator {
-  T sum;
 
-  T update(const T val, const int32_t inertia, const int32_t gain, const int32_t rate, const int32_t limit) {
-    // Decay the old value. This is a simplified formula that still works with decent results
-    // Ideally we would have used an exponential decay but the computational effort required
-    // by exp function is just not justified here in respect to the outcome
-    sum = (sum * (100 - (inertia / rate))) / 100;
-    // Add the new value x integration interval ( 1 / rate)
-    sum += (gain * val) / rate;
-
-    // constrain the output between +- our max power output, this limits windup when doing the inital heatup or when
-    // solding something large
-    if (sum > limit) {
-      sum = limit;
-    } else if (sum < -limit) {
-      sum = -limit;
-    }
-
-    return sum;
-  }
-
-  void set(T const val) { sum = val; }
-
-  T get(bool positiveOnly = true) const { return (positiveOnly) ? ((sum > 0) ? sum : 0) : sum; }
-};
-#endif
 int32_t getPIDResultX10Watts(TemperatureType_t set_point, TemperatureType_t current_reading) {
-  static TickType_t lastCall = 0;
+  static TickType_t                                                 lastCall = 0;
+  static PID<TemperatureType_t, TIP_PID_KP, TIP_PID_KI, TIP_PID_KD> pid      = {0, 0};
+  const TickType_t                                                  interval = (xTaskGetTickCount() - lastCall);
 
-#ifdef TIP_CONTROL_PID
-  static PID<TemperatureType_t, TIP_PID_KP, TIP_PID_KI, TIP_PID_KD> pid = {0, 0};
-
-  const TickType_t interval = (xTaskGetTickCount() - lastCall);
-
-#else
-  static Integrator<TemperatureType_t> powerStore = {0};
-  const TickType_t                     rate       = TICKS_SECOND / (xTaskGetTickCount() - lastCall);
-#endif
   lastCall = xTaskGetTickCount();
-  // Sandman note:
-  // PID Challenge - we have a small thermal mass that we to want heat up as fast as possible but we don't
-  // want to overshot excessively (if at all) the set point temperature. In the same time we have 'imprecise'
-  // instant temperature measurements. The nature of temperature reading imprecision is not necessarily
-  // related to the sensor (thermocouple) or DAQ system, that otherwise are fairly decent. The real issue	is
-  // the thermal inertia. We basically read the temperature in the window between two heating sessions when
-  // the output is off. However, the heater temperature does not dissipate instantly into the tip mass so
-  // at any moment right after heating, the thermocouple would sense a temperature significantly higher than
-  // moments later. We could use longer delays but that would slow the PID loop and that would lead to other
-  // negative side effects. As a result, we can only rely on the I term but with a twist. Instead of a simple
-  // integrator we are going to use a self decaying integrator that acts more like a dual I term / P term
-  // rather than a plain I term. Depending on the circumstances, like when the delta temperature is large,
-  // it acts more like a P term whereas on closing to set point it acts increasingly closer to a plain I term.
-  // So in a sense, we have a bit of both.
-  //																		 So
-  // there we go...
 
-  // P = (Thermal Mass) x (Delta Temperature ) / 1sec, where thermal mass is in X10 J / °C and
-  // delta temperature is in °C. The result is the power in X10 W needed to raise (or decrease!) the
-  // tip temperature with (Delta Temperature ) °C in 1 second.
-  // Note on powerStore. On update, if the value is provided in X10 (W) units then inertia shall be provided
-  // in X10 (J / °C) units as well.
-
-#ifdef TIP_CONTROL_PID
   return pid.update(set_point, current_reading, interval, getX10WattageLimits());
-#else
-  return powerStore.update(((TemperatureType_t)getTipThermalMass()) *
-                               (set_point - current_reading), // the required power
-                           getTipInertia(), // Inertia, smaller numbers increase dominance of the previous value
-                           2,               // gain
-                           rate,            // PID cycle frequency
-                           getX10WattageLimits());
-#endif
 }
 
 /*
  * Detection of thermal runaway
- * The goal of this is to handle cases where something has gone wrong
+ * The goal of this is to handle cases where something has gone wrong:
  * 1. The tip MOSFET is broken, so power is being constantly applied to the tip
- * a. This can show as temp being stuck at max
- * b. Or temp rising when the heater is off
+ * a. This shows as the temperature rising while the heater is commanded off
+ * b. And eventually as the reading being pinned at the top of the ADC range
  * 2. Broken temperature sense
- * a. Temp is stuck at a value
- * These boil down to either a constantly rising temperature or a temperature that is stuck at a value
- * These are both covered; but looking at the eye/delta between min and max temp seen
+ * a. Temp is stuck at a value, so it does not respond while heating
+ * b. Or it reads pinned at the top of its range
+ * Any of these latches a fault; the output is gated off in setOutputx10WattsViaFilters and
+ * the UI stays in the ThermalRunaway warning.
  */
-void detectThermalRunaway(const TemperatureType_t currentTipTempInC, const uint32_t x10WattsOut) {
+void detectThermalRunaway(const TemperatureType_t currentTipTempInC, const int32_t x10WattsApplied) {
+  static struct {
+    TickType_t        heatStart;       // 0 => not currently hard-heating
+    TemperatureType_t minTempInWindow; // Coldest reading in the current hard-heating window
+    TemperatureType_t maxTempInWindow; // Hottest reading in the current hard-heating window
+    TickType_t        offStart;        // 0 => heater currently on
+    TemperatureType_t offTemp;         // Reading when the heater was last commanded off
+    TemperatureType_t offFloor;        // Low-water mark once the tip has settled after heating
+    bool              offSettled;
+    TickType_t        peggedStart;     // 0 => reading not pinned
+  } runaway = {};
 
-  static TemperatureType_t tiptempMin         = 0xFFFF; // Min tip temp seen
-  static TemperatureType_t tipTempMax         = 0;      // Max tip temp seen while heater is on
-  bool                     thisCycleIsHeating = x10WattsOut > 0;
-  static TickType_t        heatCycleStart     = 0;
-
-  static bool haveSeenDelta = false;
-
-  // Check for readings being pegged at the top of the ADC while the heater is off
-  if (!thisCycleIsHeating && (getTipRawTemp(0) > (ADC_MAX_READING - 8)) && heaterThermalRunawayCounter < 255) {
-    heaterThermalRunawayCounter++;
+  if (thermalRunawayLatched) {
+    return; // Decision made; the output gate keeps the heater off from here on
   }
 
-  if (haveSeenDelta) {
-    return;
-  }
+  const TickType_t now     = xTaskGetTickCount();
+  const bool       heating = x10WattsApplied > 0;
 
-  if (currentTipTempInC < tiptempMin) {
-    tiptempMin = currentTipTempInC;
-  }
-  if (thisCycleIsHeating && currentTipTempInC > tipTempMax) {
-    tipTempMax = currentTipTempInC;
-  }
-  if (thisCycleIsHeating) {
-    if (heatCycleStart == 0) {
-      heatCycleStart = xTaskGetTickCount();
+  // 1b/2b: reading pinned at the top of the ADC range
+  if (getTipRawTemp(0) >= THERMAL_RUNAWAY_PEGGED_RAW) {
+    if (runaway.peggedStart == 0) {
+      runaway.peggedStart = now;
+    } else if ((now - runaway.peggedStart) >= (THERMAL_RUNAWAY_PEGGED_SEC * TICKS_SECOND)) {
+      thermalRunawayLatched = true;
+      return;
     }
   } else {
-    heatCycleStart = 0;
+    runaway.peggedStart = 0;
   }
 
-  if ((xTaskGetTickCount() - heatCycleStart) > (THERMAL_RUNAWAY_TIME_SEC * TICKS_SECOND)) {
-    if (tipTempMax > tiptempMin) {
-      // Have been heating for min seconds, check if the delta is large enough
-      TemperatureType_t delta = tipTempMax - tiptempMin;
-      haveSeenDelta           = true;
-
-      if (delta < THERMAL_RUNAWAY_TEMP_C && heaterThermalRunawayCounter < 255) {
-        heaterThermalRunawayCounter++;
+  // 2a: sustained heating with no temperature response. Only meaningful while the PID is asking
+  // for close to everything the supply can give: at steady state the tip legitimately holds within
+  // a few degrees of the set point. Re-arms after a healthy window so this keeps testing for the
+  // whole session instead of latching once at boot.
+  const bool hardHeating = heating && (x10WattsApplied >= (getX10WattageLimits() * 3) / 4);
+  if (hardHeating) {
+    if (runaway.heatStart == 0) { // Rising edge into a hard heating burst
+      runaway.heatStart       = now;
+      runaway.minTempInWindow = currentTipTempInC;
+      runaway.maxTempInWindow = currentTipTempInC;
+    }
+    if (currentTipTempInC < runaway.minTempInWindow) {
+      runaway.minTempInWindow = currentTipTempInC;
+    }
+    if (currentTipTempInC > runaway.maxTempInWindow) {
+      runaway.maxTempInWindow = currentTipTempInC;
+    }
+    if ((now - runaway.heatStart) >= (THERMAL_RUNAWAY_TIME_SEC * TICKS_SECOND)) {
+      if ((runaway.maxTempInWindow - runaway.minTempInWindow) < THERMAL_RUNAWAY_TEMP_C) {
+        thermalRunawayLatched = true;
+        return;
       }
+      runaway.heatStart       = now;
+      runaway.minTempInWindow = currentTipTempInC;
+      runaway.maxTempInWindow = currentTipTempInC;
+    }
+  } else {
+    runaway.heatStart = 0;
+  }
+
+  // 1a: temperature climbing while the heater is commanded off
+  if (heating) {
+    runaway.offStart   = 0;
+    runaway.offSettled = false;
+  } else if (runaway.offStart == 0) { // Falling edge out of a heating burst
+    runaway.offStart = now;
+    runaway.offTemp  = currentTipTempInC;
+  } else if (!runaway.offSettled && (now - runaway.offStart) >= (THERMAL_RUNAWAY_SETTLE_SEC * TICKS_SECOND)) {
+    // Thermal lag has finished; from here the tip can only get cooler
+    runaway.offSettled = true;
+    runaway.offFloor   = currentTipTempInC;
+    // A rise this large cannot be thermal lag: the heater is stuck on. This also catches the case
+    // where the reading hit its ceiling during the settle window before a floor could be taken.
+    if (currentTipTempInC > (runaway.offTemp + (THERMAL_RUNAWAY_RISE_C * 2))) {
+      thermalRunawayLatched = true;
+    }
+  } else if (runaway.offSettled) {
+    if (currentTipTempInC < runaway.offFloor) {
+      runaway.offFloor = currentTipTempInC;
+    } else if (currentTipTempInC > (runaway.offFloor + THERMAL_RUNAWAY_RISE_C)) {
+      thermalRunawayLatched = true;
     }
   }
 }
 
-int32_t getX10WattageLimits() {
-  int32_t limit = availableW10(0);
-  // Power limit defined in user settings
-  if (getSettingValue(SettingsOptions::PowerLimit) && limit > (getSettingValue(SettingsOptions::PowerLimit) * 10)) {
-    limit = getSettingValue(SettingsOptions::PowerLimit) * 10;
-  }
-  // Power supply capability
-  if (powerSupplyWattageLimit && limit > powerSupplyWattageLimit * 10) {
-    limit = powerSupplyWattageLimit * 10;
-  }
-  // Tip profile power rating
-  if (getTipPowerRating() && limit > (int32_t)getTipPowerRating() * 10) {
-    limit = getTipPowerRating() * 10;
-  }
-#ifdef HARDWARE_MAX_WATTAGE_X10
-  if (limit > HARDWARE_MAX_WATTAGE_X10) {
-    limit = HARDWARE_MAX_WATTAGE_X10;
-  }
-#endif
-  return limit;
-}
-
-void setOutputx10WattsViaFilters(int32_t x10WattsOut) {
+int32_t setOutputx10WattsViaFilters(int32_t x10WattsOut) {
   static TickType_t lastPowerPulseStart = 0;
   static TickType_t lastPowerPulseEnd   = 0;
 #ifdef SLEW_LIMIT
@@ -367,7 +315,7 @@ void setOutputx10WattsViaFilters(int32_t x10WattsOut) {
   if (getTipRawTemp(0) > (0x7FFF - 32)) {
     x10WattsOut = 0;
   }
-  if (heaterThermalRunawayCounter > 8) {
+  if (thermalRunawayLatched) {
     x10WattsOut = 0;
   }
 #ifdef SLEW_LIMIT
@@ -381,4 +329,5 @@ void setOutputx10WattsViaFilters(int32_t x10WattsOut) {
 #endif
   setTipX10Watts(x10WattsOut);
   resetWatchdog();
+  return x10WattsOut;
 }

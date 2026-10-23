@@ -52,32 +52,37 @@
 #define STUSB_PE_HARD_RESET_RECOVERY       0x3B
 #define STUSB_PE_ERRORRECOVERY             0x40
 
+// NOTE: every bitfield in the following unions MUST be uint32_t.
+// Mixing uint32_t and uint8_t bitfields makes the compiler place the narrow
+// ones in a separate storage unit (sizeof(fix) becomes 8), which pushes fields
+// such as FixedSupply outside of d32. The d32 read/write overlays then leave
+// them stuck at zero. The static_asserts below guard against regression.
 typedef union {
   uint32_t d32;
   struct {
     uint32_t Operationnal_Current       : 10;
     uint32_t Voltage                    : 10;
-    uint8_t  Reserved_22_20             : 3;
-    uint8_t  Fast_Role_Req_cur          : 2; /* must be set to 0 in 2.0*/
-    uint8_t  Dual_Role_Data             : 1;
-    uint8_t  USB_Communications_Capable : 1;
-    uint8_t  Unconstrained_Power        : 1;
-    uint8_t  Higher_Capability          : 1;
-    uint8_t  Dual_Role_Power            : 1;
-    uint8_t  Fixed_Supply               : 2;
+    uint32_t Reserved_22_20             : 3;
+    uint32_t Fast_Role_Req_cur          : 2; /* must be set to 0 in 2.0*/
+    uint32_t Dual_Role_Data             : 1;
+    uint32_t USB_Communications_Capable : 1;
+    uint32_t Unconstrained_Power        : 1;
+    uint32_t Higher_Capability          : 1;
+    uint32_t Dual_Role_Power            : 1;
+    uint32_t Fixed_Supply               : 2;
 
   } fix;
   struct {
     uint32_t Operating_Current : 10;
     uint32_t Min_Voltage       : 10;
     uint32_t Max_Voltage       : 10;
-    uint8_t  VariableSupply    : 2;
+    uint32_t VariableSupply    : 2;
   } var;
   struct {
     uint32_t Operating_Power : 10;
     uint32_t Min_Voltage     : 10;
     uint32_t Max_Voltage     : 10;
-    uint8_t  Battery         : 2;
+    uint32_t Battery         : 2;
   } bat;
 
 } STUSB_PD_SNK_PDO_TypeDef;
@@ -88,14 +93,14 @@ typedef union {
     // Table 6-9 Fixed Supply PDO - Source
     uint32_t Max_Operating_Current : 10; // Bits 9..0
     uint32_t Voltage               : 10; // Bits 19..10
-    uint8_t  PeakCurrent           : 2;  // Bits 21..20
-    uint8_t  Reserved              : 3;
-    uint8_t  DataRoleSwap          : 1; // Bits 25
-    uint8_t  Communication         : 1; // Bits 26
-    uint8_t  ExternalyPowered      : 1; // Bits 27
-    uint8_t  SuspendSuported       : 1; // Bits 28
-    uint8_t  DualRolePower         : 1; // Bits 29
-    uint8_t  FixedSupply           : 2; // Bits 31..30
+    uint32_t PeakCurrent           : 2;  // Bits 21..20
+    uint32_t Reserved              : 3;  // Bits 24..22
+    uint32_t DataRoleSwap          : 1;  // Bits 25
+    uint32_t Communication         : 1;  // Bits 26
+    uint32_t ExternalyPowered      : 1;  // Bits 27
+    uint32_t SuspendSuported       : 1;  // Bits 28
+    uint32_t DualRolePower         : 1;  // Bits 29
+    uint32_t FixedSupply           : 2;  // Bits 31..30
   } fix;
 
   struct {
@@ -103,7 +108,7 @@ typedef union {
     uint32_t Operating_Current : 10;
     uint32_t Min_Voltage       : 10;
     uint32_t Max_Voltage       : 10;
-    uint8_t  VariableSupply    : 2;
+    uint32_t VariableSupply    : 2;
   } var;
 
   struct {
@@ -111,10 +116,13 @@ typedef union {
     uint32_t Operating_Power : 10;
     uint32_t Min_Voltage     : 10;
     uint32_t Max_Voltage     : 10;
-    uint8_t  Battery         : 2;
+    uint32_t Battery         : 2;
   } bat;
 
 } STUSB_PD_SRC_PDO_TypeDef;
+
+static_assert(sizeof(STUSB_PD_SNK_PDO_TypeDef) == 4, "STUSB_PD_SNK_PDO_TypeDef must overlay d32");
+static_assert(sizeof(STUSB_PD_SRC_PDO_TypeDef) == 4, "STUSB_PD_SRC_PDO_TypeDef must overlay d32");
 
 typedef union {
   uint8_t d8;

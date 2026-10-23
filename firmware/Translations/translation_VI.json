@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Mot so cài đat\nđã thay đoi"
     },
-    "NoAccelerometerMessage": {
-      "message": "Không phát hien\ngia toc ke!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "Không phát hien\nUSB-PD IC!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "R",
     "SettingLeftChar": "L",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "S",
     "SettingMediumChar": "M",
     "SettingFastChar": "F",
@@ -233,29 +229,13 @@
       "displayText": "Cooldown\nSpeed",
       "description": "Cooldown at this rate at the end of profile mode (degrees per second)"
     },
-    "MotionSensitivity": {
-      "displayText": "Cam bien\ncu đong",
-      "description": "1=đo nhay thap nhat| ... | 9=đo nhay cao nhat"
-    },
     "SleepTemperature": {
       "displayText": "Nhiet đo\nkhi ngu",
       "description": "Giam nhiet đo khi o \"Che đo ngu\""
     },
-    "SleepTimeout": {
-      "displayText": "Ngu\nsau",
-      "description": "thoi gian truoc khi \"Che đo ngu\" bat đau (s=giây | m=phút)"
-    },
     "ShutdownTimeout": {
       "displayText": "Tat\nsau",
       "description": "khoang thoi gian truoc khi tay hàn tat (m=phút)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Hall\nđo nhay",
-      "description": "Đo nhay cam bien Hall đe phát hien che đo ngu (1=ít nhay nhat |...| 9=nhay nhat)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Interval before \"sleep mode\" starts when hall effect is above threshold"
     },
     "TemperatureUnit": {
       "displayText": "Đon vi\nnhiet đo",

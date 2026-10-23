@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Налады\nскінуты!"
     },
-    "NoAccelerometerMessage": {
-      "message": "Акселерометр\nне выяўлены!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "USB-PD\nне выяўлены!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "П",
     "SettingLeftChar": "Л",
-    "SettingAutoChar": "А",
     "SettingSlowChar": "М",
     "SettingMediumChar": "С",
     "SettingFastChar": "Х",
@@ -233,29 +229,13 @@
       "displayText": "Хуткасць\nастывання",
       "description": "Астуджаць з гэтай хуткасцю ў канцы профільнага рэжыму (градусы на секунду)"
     },
-    "MotionSensitivity": {
-      "displayText": "Адчувальн.\nакселерометра",
-      "description": "Адчувальнасць акселерометра (1=Мін. | ... | 9=Макс.)"
-    },
     "SleepTemperature": {
       "displayText": "T°\nчакання",
       "description": "Тэмпература рэжыму чакання"
     },
-    "SleepTimeout": {
-      "displayText": "Таймаўт\nчакання",
-      "description": "Час да пераходу ў рэжым чакання (у секундах або хвілінах)"
-    },
     "ShutdownTimeout": {
       "displayText": "Таймаут\nадкл.",
       "description": "Час да адключэння паяльніка (у хвілінах)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Датчык Хола\nадчувальнасць",
-      "description": "Адчувальнасць датчыка Хола да магнітаў (1=Мін. | ... | 9=Макс.)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "Датчык Хола\nчас чакання",
-      "description": "Час перад рэжымам чакання, калі эфект Хола перавышае парог"
     },
     "TemperatureUnit": {
       "displayText": "Адзінкі\nтэмпературы",

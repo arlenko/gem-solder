@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Visse indstillinger\nEr blevet ændret!"
     },
-    "NoAccelerometerMessage": {
-      "message": "ingen accelerometer\nfundet!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "ingen USB-PD IC\nFundet!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "H",
     "SettingLeftChar": "V",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "S",
     "SettingMediumChar": "M",
     "SettingFastChar": "F",
@@ -233,29 +229,13 @@
       "displayText": "Nedkølings\nHastighed",
       "description": "Nedkøl med denne hastighed i slutningen af profiltilstand (grader pr. sekund)"
     },
-    "MotionSensitivity": {
-      "displayText": "Bevægelses\nfølsomhed",
-      "description": "Bevægelsesfølsomhed (1=Mindst følsom | ... | 9=Mest følsom)"
-    },
     "SleepTemperature": {
       "displayText": "Dvale\ntemp",
       "description": "Dvale Temperatur (C)"
     },
-    "SleepTimeout": {
-      "displayText": "Dvale\ntimeout",
-      "description": "Dvale Timeout (Minutter | Sekunder)"
-    },
     "ShutdownTimeout": {
       "displayText": "Sluknings\ntimeout",
       "description": "sluknings Timeout (Minutter)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Hall føler\nfølsomhed",
-      "description": "følsomhed overfor magneten (1=Mindst følsom | ... | 9=Mest følsom)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "Hall føler\nSovetid",
-      "description": "Intervallet før starten af \"dvaletilstand\", når Hall føleren overskrider tærsklen"
     },
     "TemperatureUnit": {
       "displayText": "Temperatur\nEnhed",

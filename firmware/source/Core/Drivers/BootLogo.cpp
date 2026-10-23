@@ -28,14 +28,9 @@ void BootLogo::handleShowingLogo(const uint8_t *ptrLogoArea) {
 }
 
 void BootLogo::showOldFormat(const uint8_t *ptrLogoArea) {
-#ifdef OLED_128x32
   // Draw in middle
   OLED::drawAreaSwapped(16, 8, 96, 16, (uint8_t *)(ptrLogoArea + 4));
 
-#else
-  OLED::drawAreaSwapped(0, 0, 96, 16, (uint8_t *)(ptrLogoArea + 4));
-
-#endif
   OLED::refresh();
   // Delay here with static logo until a button is pressed or its been the amount of seconds set by the user
   delay();
@@ -94,11 +89,7 @@ int BootLogo::showNewFrame(const uint8_t *ptrLogoArea) {
     break;
   case 0xFF:
 // Full frame update
-#ifdef OLED_128x32
     OLED::drawArea(16, 8, 96, 16, ptrLogoArea + 1);
-#else
-    OLED::drawArea(0, 0, 96, 16, ptrLogoArea + 1);
-#endif
     length = 96;
     break;
   default:
@@ -107,11 +98,7 @@ int BootLogo::showNewFrame(const uint8_t *ptrLogoArea) {
     for (int p = 0; p < length; p++) {
       uint8_t index = ptrLogoArea[1 + (p * 2)];
       uint8_t value = ptrLogoArea[2 + (p * 2)];
-#ifdef OLED_128x32
       OLED::drawArea(16 + (index % 96), index >= 96 ? 16 : 8, 1, 8, &value);
-#else
-      OLED::drawArea(index % 96, index >= 96 ? 8 : 0, 1, 8, &value);
-#endif
     }
   }
 

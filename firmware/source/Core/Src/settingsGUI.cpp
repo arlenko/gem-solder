@@ -31,15 +31,12 @@ static void displayPDNegTimeout(void);
 static void displayUSBPDMode(void);
 #endif /* POW_PD */
 
-static void displaySensitivity(void);
 static void displayShutdownTime(void);
-static bool showSleepOptions(void);
 static void displayTapSleep(void) { OLED::drawCheckbox(getSettingValue(SettingsOptions::TapToSleep)); }
 
 #ifndef NO_SLEEP_MODE
 static void setSleepTemp(void);
 static void displaySleepTemp(void);
-static void displaySleepTime(void);
 #endif /* *not* NO_SLEEP_MODE */
 
 static void setTempF(void);
@@ -114,12 +111,6 @@ static void displayLogoTime(void);
 static void displayStatusLEDBrightness(void);
 #endif /* WS2812_ENABLE */
 
-#ifdef HALL_SENSOR
-static void displayHallEffect(void);
-static void displayHallEffectSleepTime(void);
-static bool showHallEffect(void);
-#endif /* HALL_SENSOR */
-
 // Tip type selection
 #ifdef TIP_TYPE_SUPPORT
 static void displaySolderingTipType(void);
@@ -170,12 +161,9 @@ static void displayAdvancedMenu(void);
  *  Profile Cooldown Max Temperature Change Per Second
  *
  * Power Saving
- *  Motion Sensitivity
  *  -Sleep Temp
- *  -Sleep Time
  *  -Shutdown Time
- *  Hall Sensor Sensitivity
- *  Hall Sensor Sleep Time
+ *  Tap to sleep
  *
  * UI
  *  Temperature Unit
@@ -347,33 +335,16 @@ const menuitem solderingMenu[] = {
 
 const menuitem PowerSavingMenu[] = {
   /*
-   *  Motion Sensitivity
    *  -Sleep Temp
-   *  -Sleep Time
    *  -Shutdown Time
-   *  Hall Sensor Sensitivity
    *  Tap to sleep
    */
-#ifndef NO_ACCEL
-  /* Motion Sensitivity */
-  {SETTINGS_DESC(SettingsItemIndex::MotionSensitivity), nullptr, displaySensitivity, nullptr, SettingsOptions::Sensitivity, SettingsItemIndex::MotionSensitivity, 7},
-#endif
-  #ifndef NO_SLEEP_MODE
+#ifndef NO_SLEEP_MODE
   /* Sleep Temp */
-  {SETTINGS_DESC(SettingsItemIndex::SleepTemperature), setSleepTemp, displaySleepTemp, showSleepOptions, SettingsOptions::SleepTemp, SettingsItemIndex::SleepTemperature, 5},
-#ifndef NO_ACCEL
-  /* Sleep Time */
-  {SETTINGS_DESC(SettingsItemIndex::SleepTimeout), nullptr, displaySleepTime, showSleepOptions, SettingsOptions::SleepTime, SettingsItemIndex::SleepTimeout, 5},
-#endif /* NO_ACCEL */
+  {SETTINGS_DESC(SettingsItemIndex::SleepTemperature), setSleepTemp, displaySleepTemp, nullptr, SettingsOptions::SleepTemp, SettingsItemIndex::SleepTemperature, 5},
 #endif /* *not* NO_SLEEP_MODE */
   /* Shutdown Time */
-  {SETTINGS_DESC(SettingsItemIndex::ShutdownTimeout), nullptr, displayShutdownTime, showSleepOptions, SettingsOptions::ShutdownTime, SettingsItemIndex::ShutdownTimeout, 5},
-#ifdef HALL_SENSOR
-  /* Hall Effect Sensitivity */
-  {SETTINGS_DESC(SettingsItemIndex::HallEffSensitivity), nullptr, displayHallEffect, showHallEffect, SettingsOptions::HallEffectSensitivity, SettingsItemIndex::HallEffSensitivity, 7},
-  /* Hall Effect Sleep Time */
-  {SETTINGS_DESC(SettingsItemIndex::HallEffSleepTimeout), nullptr, displayHallEffectSleepTime, showHallEffect, SettingsOptions::HallEffectSleepTime, SettingsItemIndex::HallEffSleepTimeout, 5},
-#endif /* HALL_SENSOR */
+  {SETTINGS_DESC(SettingsItemIndex::ShutdownTimeout), nullptr, displayShutdownTime, nullptr, SettingsOptions::ShutdownTime, SettingsItemIndex::ShutdownTimeout, 5},
 #ifdef STAND_SENSE
   /* Tap to Sleep */
   {SETTINGS_DESC(SettingsItemIndex::TapToSleep), nullptr, displayTapSleep, nullptr, SettingsOptions::TapToSleep, SettingsItemIndex::TapToSleep, 7},
@@ -572,11 +543,9 @@ static void displayUSBPDMode(void) {
    * fixed PDO only
    */
 
-#ifdef OLED_128x32
   // Values wrap to two lines (e.g. "Default\nMode"); give them the right part of
   // the panel and let the newline fill both 16px rows instead of overflowing.
   OLED::setCursor(OLED_WIDTH - 64, 0);
-#endif
   switch (getSettingValue(SettingsOptions::USBPDMode)) {
   case usbpdMode_t::DEFAULT:
     OLED::print(translatedString(Tr->USBPDModeDefault), FontStyle::SMALL, 255, OLED::getCursorX());
@@ -749,21 +718,6 @@ static bool showProfilePhase5Options(void) { return getSettingValue(SettingsOpti
 
 #endif /* PROFILE_SUPPORT */
 
-static void displaySensitivity(void) {
-  if (getSettingValue(SettingsOptions::Sensitivity)) {
-    OLED::printNumber(getSettingValue(SettingsOptions::Sensitivity), 1, FontStyle::LARGE, false);
-  } else {
-    OLED::drawUnavailableIcon();
-  }
-}
-static bool showSleepOptions(void) {
-#ifdef STAND_SENSE
-  return true;
-#else
-  return getSettingValue(SettingsOptions::Sensitivity) > 0;
-#endif
-}
-
 #ifndef NO_SLEEP_MODE
 
 static void setSleepTemp(void) {
@@ -787,18 +741,6 @@ static void displaySleepTemp(void) {
   OLED::printNumber(getSettingValue(SettingsOptions::SleepTemp), 3, FontStyle::LARGE);
 }
 
-static void displaySleepTime(void) {
-  if (getSettingValue(SettingsOptions::SleepTime) == 0) {
-    OLED::drawUnavailableIcon();
-  } else if (getSettingValue(SettingsOptions::SleepTime) < 6) {
-    OLED::printNumber(getSettingValue(SettingsOptions::SleepTime) * 10, 2, FontStyle::LARGE);
-    OLED::print(LargeSymbolSeconds, FontStyle::LARGE);
-  } else {
-    OLED::printNumber(getSettingValue(SettingsOptions::SleepTime) - 5, 2, FontStyle::LARGE);
-    OLED::print(LargeSymbolMinutes, FontStyle::LARGE);
-  }
-}
-
 #endif /* *not* NO_SLEEP_MODE */
 
 static void displayShutdownTime(void) {
@@ -810,28 +752,7 @@ static void displayShutdownTime(void) {
   }
 }
 
-#ifdef HALL_SENSOR
-static void displayHallEffect(void) {
-  if (getSettingValue(SettingsOptions::HallEffectSensitivity)) {
-    OLED::printNumber(getSettingValue(SettingsOptions::HallEffectSensitivity), 1, FontStyle::LARGE, false);
-  } else {
-    OLED::drawUnavailableIcon();
-  }
-}
-static bool showHallEffect(void) { return getHallSensorFitted(); }
-static void displayHallEffectSleepTime(void) {
-  if (getSettingValue(SettingsOptions::HallEffectSleepTime)) {
-    OLED::printNumber(getSettingValue(SettingsOptions::HallEffectSleepTime) * 5, 2, FontStyle::LARGE, false);
-  } else {
-    // When sleep time is set to zero, we sleep for 1 second anyways. This is the default.
-    OLED::printNumber(1, 2, FontStyle::LARGE, false);
-  }
-  OLED::print(LargeSymbolSeconds, FontStyle::LARGE);
-}
-#endif /* HALL_SENSOR */
-
 #ifdef TIP_TYPE_SUPPORT
-#ifdef OLED_128x32
 // Width in pixels of the widest line of a (possibly two-line) tip name. Tip names
 // embed a newline (0x01), e.g. "Auto\nSense"; the small font is 8px per glyph.
 static uint16_t tipNameBlockWidth(const char *name) {
@@ -860,18 +781,12 @@ static uint16_t tipNameBlockWidth(const char *name) {
   }
   return widest * 8;
 }
-#endif
 static void displaySolderingTipType(void) {
-#ifdef OLED_128x32
   // Tip names embed a newline; drawChar only wraps at y==0, so anchor a
   // right-aligned, two-line block at the top of the panel.
   const char *name = lookupTipName();
   OLED::setCursor(OLED_WIDTH - tipNameBlockWidth(name) - 2, 0);
   OLED::print(name, FontStyle::SMALL, 255, OLED::getCursorX());
-#else
-  // TODO wrapping X value
-  OLED::print(lookupTipName(), FontStyle::SMALL, 255, OLED::getCursorX());
-#endif
 }
 // If there is no detection, and no options, max is 0
 static bool showSolderingTipType(void) { return tipType_t::TIP_TYPE_MAX != 0; }
@@ -912,10 +827,8 @@ static void setTempF(void) {
 }
 
 static void displayTempF(void) {
-#ifdef OLED_128x32
   // "°C"/"°F" is two 12px large glyphs; right-align it so it stays on screen, centred
   OLED::setCursor(OLED_WIDTH - (2 * 12) - 2, 4);
-#endif
   OLED::printSymbolDeg(FontStyle::LARGE);
 }
 
@@ -930,9 +843,6 @@ static void setDisplayRotation(void) {
   case orientationMode_t::LEFT:
     OLED::setRotation(true);
     break;
-  case orientationMode_t::AUTO:
-    // do nothing on auto
-    break;
   default:
     break;
   }
@@ -945,9 +855,6 @@ static void displayDisplayRotation(void) {
     break;
   case orientationMode_t::LEFT:
     OLED::print(translatedString(Tr->SettingLeftChar), FontStyle::LARGE);
-    break;
-  case orientationMode_t::AUTO:
-    OLED::print(translatedString(Tr->SettingAutoChar), FontStyle::LARGE);
     break;
   default:
     OLED::print(translatedString(Tr->SettingRightChar), FontStyle::LARGE);

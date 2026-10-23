@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Algumas configurações\nforam alteradas!"
     },
-    "NoAccelerometerMessage": {
-      "message": "Acelerómetro não\ndetetado!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "USB-PD IC não\ndetetado!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "D",
     "SettingLeftChar": "C",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "S",
     "SettingMediumChar": "M",
     "SettingFastChar": "F",
@@ -233,29 +229,13 @@
       "displayText": "Velocidade\nArrefecimento",
       "description": "Arrefecer a este ritmo após sair do perfil selecionado (graus por segundo)"
     },
-    "MotionSensitivity": {
-      "displayText": "Sensibilidade\nmovimento",
-      "description": "Sensibilidade ao movimento (1=Menor | ... | 9=Maior)"
-    },
     "SleepTemperature": {
       "displayText": "Temperatura\nrepouso",
       "description": "Temperatura de repouso (C)"
     },
-    "SleepTimeout": {
-      "displayText": "Tempo\nrepouso",
-      "description": "Tempo para repouso (Minutos | Segundos)"
-    },
     "ShutdownTimeout": {
       "displayText": "Tempo\ndesligar",
       "description": "Tempo para desligar (Minutos)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Sensibilidade de\nmagnetismo",
-      "description": "Sensibilidade de magnetismo (1=Menor | ... | 9=Maior)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Intervalo antes do início do \"modo de suspensão\" quando o efeito Hall está acima do limite"
     },
     "TemperatureUnit": {
       "displayText": "Unidade\ntemperatura",

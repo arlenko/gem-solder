@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Настройки\nсброшены!"
     },
-    "NoAccelerometerMessage": {
-      "message": "Акселерометр\nне обнаружен!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "Питание по USB-PD\nне обнаружено"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "П",
     "SettingLeftChar": "Л",
-    "SettingAutoChar": "А",
     "SettingSlowChar": "М",
     "SettingMediumChar": "С",
     "SettingFastChar": "Б",
@@ -233,29 +229,13 @@
       "displayText": "Скорость\nостывания",
       "description": "Скорость остывания в конце режима термопрофиля (в градусах в секунду)"
     },
-    "MotionSensitivity": {
-      "displayText": "Чувствительн.\nакселерометра",
-      "description": "Чувствительность акселерометра (1=мин. | ... | 9=макс.)"
-    },
     "SleepTemperature": {
       "displayText": "t° при\nсне",
       "description": "Температура жала в режиме сна"
     },
-    "SleepTimeout": {
-      "displayText": "Интервал\nсна",
-      "description": "Время до перехода в режим сна (секунды | минуты)"
-    },
     "ShutdownTimeout": {
       "displayText": "Интервал\nотключ-я",
       "description": "Время до выключения паяльника (в минутах)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Датчик\nХолла",
-      "description": "Чувствительность датчика Холла к магнитному полю (1=мин. | ... | 9=макс.)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "Интервал\nдатчика Холла",
-      "description": "Время между превышением датчиком Холла порогового значения и режимом сна"
     },
     "TemperatureUnit": {
       "displayText": "Единицы\nизмерения",

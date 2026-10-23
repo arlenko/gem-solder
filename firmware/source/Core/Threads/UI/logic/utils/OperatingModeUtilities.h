@@ -5,15 +5,11 @@
 #include "Settings.h"
 #include <stdbool.h>
 
-void     GUIDelay();                               //
-bool     checkForUnderVoltage(void);               //
-uint32_t getSleepTimeout(void);                    //
-uint32_t getHallEffectSleepTimeout(void);          //
-bool     shouldBeSleeping();                       //
-bool     shouldShutdown(void);                     //
-void     clearTapToSleep(void);                    //
-void     printVoltage(void);                       //
-bool     checkForUnderVoltage(void);               //
-uint16_t min(uint16_t a, uint16_t b);              //
-void     printCountdownUntilSleep(int sleepThres); //
+void     GUIDelay();                   //
+bool     checkForUnderVoltage(void);   //
+bool     shouldBeSleeping();           //
+bool     shouldShutdown(void);         //
+void     clearTapToSleep(void);        //
+void     printVoltage(void);           //
+uint16_t min(uint16_t a, uint16_t b);  //
 #endif

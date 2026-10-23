@@ -55,6 +55,11 @@ OperatingMode handleHomeButtons(const ButtonState buttons, guiContext *cxt) {
 OperatingMode drawHomeScreen(const ButtonState buttons, guiContext *cxt) {
 
   currentTempTargetDegC = 0; // ensure tip is off
+
+  if (thermalRunawayTripped()) {
+    return OperatingMode::ThermalRunaway;
+  }
+
   getInputVoltageX10(getSettingValue(SettingsOptions::VoltageDiv), 0);
   uint32_t tipTemp = TipThermoModel::getTipInC();
 

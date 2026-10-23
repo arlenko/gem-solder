@@ -3,7 +3,6 @@
 Drivers are the classes used to represent physical hardware on the board in a more abstract way, that are more complex than just an IO
 
 * OLED Display
-* Accelerometers
 * Button handling logic
 * Tip thermo response modelling
 

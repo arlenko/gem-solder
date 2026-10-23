@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Nastavenia\nresetované"
     },
-    "NoAccelerometerMessage": {
-      "message": "Bez pohybového\nsenzora!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "Chýba čip\nUSB-PD!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "P",
     "SettingLeftChar": "L",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "P",
     "SettingMediumChar": "S",
     "SettingFastChar": "R",
@@ -233,29 +229,13 @@
       "displayText": "Rýchlosť\nochladzovania",
       "description": "Rýchlosť ochladzovania na konci profilového režimu (stupne za sekundu)"
     },
-    "MotionSensitivity": {
-      "displayText": "Citlivosť\npohybu",
-      "description": "Citlivosť detekcie pohybu (1=Min | ... | 9=Max)"
-    },
     "SleepTemperature": {
       "displayText": "Pokojová\nteplota",
       "description": "Pokojová teplota (v nastavených jednotkách)"
     },
-    "SleepTimeout": {
-      "displayText": "Pokojový\nrežim po",
-      "description": "Pokojový režim po (s=sekundách | m=minútach)"
-    },
     "ShutdownTimeout": {
       "displayText": "Vypnutie\npo",
       "description": "Čas na vypnutie (minúty)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Citliv.\nHall",
-      "description": "Citlivosť Hallovho senzora pre detekciu spánku (1=Min | ... | 9=Max)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Interval pred spustením \"režimu spánku\" keď je hall efekt nad prahovou hodnotou"
     },
     "TemperatureUnit": {
       "displayText": "Jednotka\nteploty",

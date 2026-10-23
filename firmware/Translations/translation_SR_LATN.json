@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Certain settings\nwere changed!"
     },
-    "NoAccelerometerMessage": {
-      "message": "No accelerometer\ndetected!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "No USB-PD IC\ndetected!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "D",
     "SettingLeftChar": "L",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "S",
     "SettingMediumChar": "M",
     "SettingFastChar": "B",
@@ -233,29 +229,13 @@
       "displayText": "Cooldown\nSpeed",
       "description": "Cooldown at this rate at the end of profile mode (degrees per second)"
     },
-    "MotionSensitivity": {
-      "displayText": "Osetljivost\nna pokret",
-      "description": "Osetljivost senzora pokreta. (1=najmanje osetljivo | ... | 9=najosetljivije)"
-    },
     "SleepTemperature": {
       "displayText": "Temp.\nspavanja",
       "description": "Temperatura na koju se spušta lemilica nakon određenog vremena mirovanja. (C | F)"
     },
-    "SleepTimeout": {
-      "displayText": "Vreme do\nspavanja",
-      "description": "Vreme mirovanja nakon koga lemilica spušta temperaturu. (m=minuti | s=sekunde)"
-    },
     "ShutdownTimeout": {
       "displayText": "Vreme do\ngašenja",
       "description": "Vreme mirovanja nakon koga se lemilica gasi. (m=minuti)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Hall sensor\nsensitivity",
-      "description": "Sensitivity to magnets (1=najmanje osetljivo | ... | 9=najosetljivije)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Interval before \"sleep mode\" starts when hall effect is above threshold"
     },
     "TemperatureUnit": {
       "displayText": "Jedinica\ntemperature",

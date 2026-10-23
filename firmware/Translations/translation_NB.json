@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Noen innstillinger\nble endret!"
     },
-    "NoAccelerometerMessage": {
-      "message": "Ingen akselerometer\nfunnet!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "Ingen USB-PD IC\nfunnet!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "H",
     "SettingLeftChar": "V",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "S",
     "SettingMediumChar": "M",
     "SettingFastChar": "F",
@@ -233,29 +229,13 @@
       "displayText": "Cooldown\nSpeed",
       "description": "Cooldown at this rate at the end of profile mode (degrees per second)"
     },
-    "MotionSensitivity": {
-      "displayText": "BSensr\n",
-      "description": "Bevegelsesfølsomhet (1=Minst følsom | ... | 9=Mest følsom)"
-    },
     "SleepTemperature": {
       "displayText": "DTmp\n",
       "description": "Dvaletemperatur (C)"
     },
-    "SleepTimeout": {
-      "displayText": "DTid\n",
-      "description": "Tid før dvale (Minutter | Sekunder)"
-    },
     "ShutdownTimeout": {
       "displayText": "AvTid\n",
       "description": "Tid før automatisk nedstenging (Minutter)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Hall-sensor\nfølsomhet",
-      "description": "Sensitiviteten til Hall-effekt-sensoren for å detektere inaktivitet (1=Minst følsom | ... | 9=Mest følsom)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Intervall før \"dvalemodus\" starter når halleffekten er over terskelen"
     },
     "TemperatureUnit": {
       "displayText": "TmpEnh\n",

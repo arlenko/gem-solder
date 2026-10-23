@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Inställningar\nåterställda"
     },
-    "NoAccelerometerMessage": {
-      "message": "Ingen\naccelerometer"
-    },
     "NoPowerDeliveryMessage": {
       "message": "Ingen USB-PD IC\nhittades!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "H",
     "SettingLeftChar": "V",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "L",
     "SettingMediumChar": "M",
     "SettingFastChar": "S",
@@ -233,29 +229,13 @@
       "displayText": "Nedkylnings-\nhastighet",
       "description": "Kyl ned i denna hastighet i slutet av profilen (grader per sekund)"
     },
-    "MotionSensitivity": {
-      "displayText": "Rörelse-\nkänslighet",
-      "description": "Rörelsekänslighet (1=minst känslig | ... | 9=mest känslig)"
-    },
     "SleepTemperature": {
       "displayText": "Vilo-\ntemp",
       "description": "Vilotemperatur (C)"
     },
-    "SleepTimeout": {
-      "displayText": "Vilo-\ntimeout",
-      "description": "Vilo-timeout (m=Minuter | s=Sekunder)"
-    },
     "ShutdownTimeout": {
       "displayText": "Avstängn.\ntimeout",
       "description": "Avstängnings-timeout (Minuter)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Sensor-\nkänslght",
-      "description": "Känslighet för halleffekt-sensorn för viloläges-detektering (1=minst känslig | ... | 9=mest känslig)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Interval before \"sleep mode\" starts when hall effect is above threshold"
     },
     "TemperatureUnit": {
       "displayText": "Temperatur-\nenheter",

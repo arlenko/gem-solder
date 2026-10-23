@@ -61,11 +61,6 @@ void reboot();
 void showBootLogoIfavailable();
 // delay wrapper for delay using the hardware timer (used before RTOS)
 void delay_ms(uint16_t count);
-// Probe if the Hall sensor is fitted to the unit
-bool getHallSensorFitted();
-// If the iron has a hall effect sensor in the handle, return an signed count of the reading
-// If the sensor is single polarity (or polarity insensitive) just return 0..32768
-int16_t getRawHallEffect();
 
 // Returns true if power is from dumb "DC" input rather than "smart" QC or PD
 bool getIsPoweredByDCIN();

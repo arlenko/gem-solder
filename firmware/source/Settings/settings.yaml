@@ -9,11 +9,6 @@ settings:
     max: MAX_TEMP_F
     min: MIN_TEMP_C
     name: SleepTemp
-  - default: SLEEP_TIME
-    increment: 1
-    max: 15
-    min: 0
-    name: SleepTime
   - default: CUT_OUT_SETTING
     increment: 1
     max: 4
@@ -34,11 +29,6 @@ settings:
     max: MAX_ORIENTATION_MODE
     min: 0
     name: OrientationMode
-  - default: SENSITIVITY
-    increment: 1
-    max: 9
-    min: 0
-    name: Sensitivity
   - default: ANIMATION_LOOP
     increment: 1
     max: 1
@@ -139,16 +129,6 @@ settings:
     max: TEMP_CHANGE_SHORT_STEP_MAX
     min: 1
     name: TempChangeShortStep
-  - default: 7
-    increment: 1
-    max: 9
-    min: 0
-    name: HallEffectSensitivity
-  - default: 0
-    increment: 1
-    max: 9
-    min: 0
-    name: AccelMissingWarningCounter
   - default: 0
     increment: 1
     max: 9
@@ -264,11 +244,6 @@ settings:
     max: 10
     min: 1
     name: ProfileCooldownSpeed
-  - default: 0
-    increment: 1
-    max: 12
-    min: 0
-    name: HallEffectSleepTime
   - default: 0
     increment: 1
     max: "(tipType_t::TIP_TYPE_MAX - 1) > 0 ? (tipType_t::TIP_TYPE_MAX - 1) : 0"

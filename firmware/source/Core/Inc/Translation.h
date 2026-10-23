@@ -51,7 +51,6 @@ extern const char *SmallSymbolVBus;
 extern const char *LargeSymbolSleep;
 
 extern const char *DebugMenu[];
-extern const char *AccelTypeNames[];
 extern const char *PowerSourceNames[];
 
 enum class SettingsItemIndex : uint8_t {
@@ -79,12 +78,8 @@ enum class SettingsItemIndex : uint8_t {
   ProfilePhase5Temp,
   ProfilePhase5Duration,
   ProfileCooldownSpeed,
-  MotionSensitivity,
   SleepTemperature,
-  SleepTimeout,
   ShutdownTimeout,
-  HallEffSensitivity,
-  HallEffSleepTimeout,
   TemperatureUnit,
   DisplayRotation,
   CooldownBlink,
@@ -117,7 +112,6 @@ struct TranslationIndexTable {
   uint16_t CalibrationDone;
   uint16_t ResetOKMessage;
   uint16_t SettingsResetMessage;
-  uint16_t NoAccelerometerMessage;
   uint16_t NoPowerDeliveryMessage;
   uint16_t LockingKeysString;
   uint16_t UnlockingKeysString;
@@ -141,7 +135,6 @@ struct TranslationIndexTable {
 
   uint16_t SettingRightChar;
   uint16_t SettingLeftChar;
-  uint16_t SettingAutoChar;
   uint16_t SettingSlowChar;
   uint16_t SettingMediumChar;
   uint16_t SettingFastChar;

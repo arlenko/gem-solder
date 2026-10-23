@@ -23,4 +23,4 @@
  * Gem firmware inherits IronOS v2.23 (TS101 BSP) and starts versioning from 1.00
  */
 
-#define BUILD_VERSION "v1.00"
+#define BUILD_VERSION "v1.01"

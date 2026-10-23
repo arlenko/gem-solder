@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Certain settings\nchanged!"
     },
-    "NoAccelerometerMessage": {
-      "message": "No accelerometer\ndetected!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "No USB-PD IC\ndetected!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "R",
     "SettingLeftChar": "L",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "S",
     "SettingMediumChar": "M",
     "SettingFastChar": "F",
@@ -233,29 +229,13 @@
       "displayText": "Cooldown\nSpeed",
       "description": "Cooldown at this rate at the end of profile mode (degrees per second)"
     },
-    "MotionSensitivity": {
-      "displayText": "Motion\nsensitivity",
-      "description": "1=least sensitive | ... | 9=most sensitive"
-    },
     "SleepTemperature": {
       "displayText": "Sleep\ntemp",
       "description": "Tip temperature while in \"sleep mode\""
     },
-    "SleepTimeout": {
-      "displayText": "Sleep\ntimeout",
-      "description": "Interval before \"sleep mode\" starts (s=seconds | m=minutes)"
-    },
     "ShutdownTimeout": {
       "displayText": "Shutdown\ntimeout",
       "description": "Interval before the iron shuts down (m=minutes)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Hall sensor\nsensitivity",
-      "description": "Sensitivity to magnets (1=least sensitive | ... | 9=most sensitive)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Interval before \"sleep mode\" starts when hall effect is above threshold"
     },
     "TemperatureUnit": {
       "displayText": "Temperature\nunit",

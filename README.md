@@ -1,5 +1,7 @@
 # 💎 Gem Solder
 
+[![Firmware build status](https://github.com/arlenko/gem-solder/actions/workflows/firmware.yml/badge.svg)](https://github.com/arlenko/gem-solder/actions/workflows/firmware.yml)
+
 ## Overview
 
 Gem Solder is an STM32-powered soldering iron controller for general-purpose C245 tips.

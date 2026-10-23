@@ -37,8 +37,6 @@ extern "C" {
 
 #define DEVICEADDR_OLED (0x3c << 1)
 
-#ifdef OLED_128x32
-
 #define OLED_WIDTH           128
 #define OLED_HEIGHT          32
 #define OLED_GRAM_START      0x00 // Should be 0x00 when we have full width
@@ -50,20 +48,6 @@ extern "C" {
 // #define OLED_SEGMENT_MAP_REVERSED
 #define OLED_DIVIDER 0xD5
 
-#else
-
-#define OLED_WIDTH           96
-#define OLED_HEIGHT          16
-#define OLED_GRAM_START      0x20
-#define OLED_GRAM_END        0x7F
-#define OLED_GRAM_START_FLIP 0
-#define OLED_GRAM_END_FLIP   95
-
-#define OLED_VCOM_LAYOUT 0x02
-#define OLED_SEGMENT_MAP 0xA0
-#define OLED_DIVIDER     0xD5
-
-#endif /* OLED_128x32 */
 
 #define OLED_ON  0xAF
 #define OLED_OFF 0xAE
@@ -134,7 +118,6 @@ public:
   static void clearScreen() { memset(stripPointers[0], 0, OLED_WIDTH * (OLED_HEIGHT / 8)); }
   // Draws the battery level symbol
   static void drawBattery(uint8_t state) { drawSymbol(3 + (state > 10 ? 10 : state)); }
-  // Draws a checkbox, vertically centred for the panel (y=0 on 96x16, y=8 on 128x32)
   static void drawCheckbox(bool state) {
     setCursor(getCursorX(), (OLED_HEIGHT - 16) / 2);
     drawSymbol((state) ? 16 : 17);
@@ -147,7 +130,7 @@ public:
   static void drawAreaSwapped(int16_t x, int8_t y, uint8_t wide, uint8_t height, const uint8_t *ptr); // Draw an area, but y must be aligned on 0/8 offset
   static void fillArea(int16_t x, int8_t y, uint8_t wide, uint8_t height, const uint8_t value);       // Fill an area, but y must be aligned on 0/8 offset
   static void drawFilledRect(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool clear);
-  static void drawHeatSymbol(uint8_t state);
+  static void drawHeatSymbol(uint32_t x10Watts);
   static void drawScrollIndicator(uint8_t p, uint8_t h); // Draws a scrolling position indicator
   static void maskScrollIndicatorOnOLED();
   static void transitionSecondaryFramebuffer(const bool forwardNavigation, const TickType_t viewEnterTime);

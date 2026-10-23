@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Osad seadistused\non muutunud!"
     },
-    "NoAccelerometerMessage": {
-      "message": "Kiirendusandurit\nei tuvastatud!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "USB-PD IC\nei tuvastatud!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "P",
     "SettingLeftChar": "V",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "A",
     "SettingMediumChar": "K",
     "SettingFastChar": "T",
@@ -233,29 +229,13 @@
       "displayText": "Jahtumise\nkiirus",
       "description": "Jahtumine selle kiirusega profiilirežiimi lõpus (kraadi sekundis)"
     },
-    "MotionSensitivity": {
-      "displayText": "Liikumise\ntundlikkus",
-      "description": "1=vähetundlikuim | ... | 9=kõige tundlikum"
-    },
     "SleepTemperature": {
       "displayText": "Unerežiimi\ntemp",
       "description": "Kolviotsiku temperatuur \"unerežiimis\""
     },
-    "SleepTimeout": {
-      "displayText": "Unerežiimi\nviide",
-      "description": "Aeg enne \"unerežiimi\" algust (s=sekundid | m=minutid)"
-    },
     "ShutdownTimeout": {
       "displayText": "Seiskumise\nviide",
       "description": "Aeg enne jootekolvi välja lülitamist (m=minutid)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Halli anduri\ntundlikkus",
-      "description": "Tundlikkus magnetite suhtes (1=vähetundlikum | ... | 9=kõige tundlikum)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Intervall enne \"unerežiimi\" käivitub, kui saaliefekt on üle läve"
     },
     "TemperatureUnit": {
       "displayText": "Temperatuuri\nühik",

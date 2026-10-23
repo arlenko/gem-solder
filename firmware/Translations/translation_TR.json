@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Ayarlar\nSıfırlandı"
     },
-    "NoAccelerometerMessage": {
-      "message": "İvme sensörü\ntespit edilmedi!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "USB-PD IC\ntespit edilmedi!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "R",
     "SettingLeftChar": "L",
-    "SettingAutoChar": "O",
     "SettingSlowChar": "Y",
     "SettingMediumChar": "O",
     "SettingFastChar": "H",
@@ -233,29 +229,13 @@
       "displayText": "Soğuma\nHızı",
       "description": "Profil modunun sonunda bu hızda soğuma yapın (saniye başına derece)"
     },
-    "MotionSensitivity": {
-      "displayText": "HARHAS\n",
-      "description": "Hareket Hassasiyeti (1=En az duyarlı | ... | 9=En duyarlı)"
-    },
     "SleepTemperature": {
       "displayText": "BKSC\n",
       "description": "Bekleme Modu Sıcaklığı (C)"
     },
-    "SleepTimeout": {
-      "displayText": "BMZA\n",
-      "description": "Bekleme Modu Zaman Aşımı (Dakika | Saniye)"
-    },
     "ShutdownTimeout": {
       "displayText": "KPTZA\n",
       "description": "Kapatma Zaman Aşımı (Dakika)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Hall Sensör\nHassasiyeti",
-      "description": "Mıknatıslara duyarlılık (1=En az duyarlı | ... | 9=En duyarlı)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Hall etkisi eşiğin üzerinde olduğunda \"uyku modu\" başlamadan önceki aralık"
     },
     "TemperatureUnit": {
       "displayText": "SCKBRM\n",

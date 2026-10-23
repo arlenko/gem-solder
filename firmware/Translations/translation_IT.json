@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Impostazioni\nripristinate"
     },
-    "NoAccelerometerMessage": {
-      "message": "Accelerometro\nnon rilevato"
-    },
     "NoPowerDeliveryMessage": {
       "message": "USB PD\nnon rilevato"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "D",
     "SettingLeftChar": "S",
-    "SettingAutoChar": "A",
     "SettingSlowChar": "L",
     "SettingMediumChar": "M",
     "SettingFastChar": "V",
@@ -233,29 +229,13 @@
       "displayText": "Velocità\nraffreddamento",
       "description": "Imposta la velocità di raffreddamento al termine del profilo di riscaldamento [°C/s]"
     },
-    "MotionSensitivity": {
-      "displayText": "Sensibilità\nal movimento",
-      "description": "Imposta la sensibilità al movimento per uscire dalla modalità riposo [1: minima; 9: massima]"
-    },
     "SleepTemperature": {
       "displayText": "Temperatura\nriposo",
       "description": "Imposta la temperatura da mantenere in modalità riposo [°C/°F]"
     },
-    "SleepTimeout": {
-      "displayText": "Timer\nriposo",
-      "description": "Imposta un timer per entrare in modalità riposo [secondi/minuti]"
-    },
     "ShutdownTimeout": {
       "displayText": "Timer\nspegnimento",
       "description": "Imposta un timer per lo spegnimento [minuti]"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Sensore\nHall",
-      "description": "Regola la sensibilità del sensore ad effetto Hall per entrare in modalità riposo [1: minima; 9: massima]"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "Timer\nHall",
-      "description": "Imposta un timer per entrare in modalità riposo quando il sensore ad effetto Hall è al di sopra della soglia di attivazione [secondi]"
     },
     "TemperatureUnit": {
       "displayText": "Unità di\ntemperatura",

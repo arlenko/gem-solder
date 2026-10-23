@@ -12,9 +12,6 @@
     "SettingsResetMessage": {
       "message": "Certain settings\nwere changed!"
     },
-    "NoAccelerometerMessage": {
-      "message": "No accelerometer\ndetected!"
-    },
     "NoPowerDeliveryMessage": {
       "message": "No USB-PD IC\ndetected!"
     },
@@ -73,7 +70,6 @@
   "characters": {
     "SettingRightChar": "Д",
     "SettingLeftChar": "Л",
-    "SettingAutoChar": "А",
     "SettingSlowChar": "С",
     "SettingMediumChar": "M",
     "SettingFastChar": "Б",
@@ -233,29 +229,13 @@
       "displayText": "Cooldown\nSpeed",
       "description": "Cooldown at this rate at the end of profile mode (degrees per second)"
     },
-    "MotionSensitivity": {
-      "displayText": "Осетљивост\nна покрет",
-      "description": "Осетљивост сензора покрета. (1=најмање осетљиво | ... | 9=најосетљивије)"
-    },
     "SleepTemperature": {
       "displayText": "Темп.\nспавања",
       "description": "Температура на коју се спушта лемилица након одређеног времена мировања. (C | F)"
     },
-    "SleepTimeout": {
-      "displayText": "Време до\nспавања",
-      "description": "Време мировања након кога лемилица спушта температуру. (m=минути | s=секунде)"
-    },
     "ShutdownTimeout": {
       "displayText": "Време до\nгашења",
       "description": "Време мировања након кога се лемилица гаси. (m=минути)"
-    },
-    "HallEffSensitivity": {
-      "displayText": "Hall sensor\nsensitivity",
-      "description": "Sensitivity to magnets (1=најмање осетљиво | ... | 9=најосетљивије)"
-    },
-    "HallEffSleepTimeout": {
-      "displayText": "HallSensor\nSleepTime",
-      "description": "Интервал пре почетка \"режима спавања\" када је ефекат Хола изнад прага"
     },
     "TemperatureUnit": {
       "displayText": "Јединица\nтемпературе",

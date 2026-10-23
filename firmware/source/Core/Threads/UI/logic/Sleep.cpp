@@ -4,10 +4,9 @@ OperatingMode gui_SolderingSleepingMode(const ButtonState buttons, guiContext *c
 #ifdef NO_SLEEP_MODE
   return OperatingMode::Soldering;
 #endif
-  // Drop to sleep temperature and display until movement or button press
+  // Drop to sleep temperature and display until a button press
 
-  // user moved or pressed a button, go back to soldering
-  // If in the first two seconds we disable this to let accelerometer warm up
+  // user pressed a button, go back to soldering
 
 #ifdef POW_DC
   if (checkForUnderVoltage()) {
@@ -31,6 +30,11 @@ OperatingMode gui_SolderingSleepingMode(const ButtonState buttons, guiContext *c
   // draw the lcd
   uint16_t tipTemp =
       getSettingValue(SettingsOptions::TemperatureInF) ? TipThermoModel::getTipInF() : TipThermoModel::getTipInC();
+
+  if (thermalRunawayTripped()) {
+    currentTempTargetDegC = 0; // heater control off
+    return OperatingMode::ThermalRunaway;
+  }
 
   if (getSettingValue(SettingsOptions::DetailedSoldering)) {
     ui_draw_soldering_detailed_sleep(tipTemp);
