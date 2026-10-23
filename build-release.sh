@@ -40,18 +40,9 @@ done
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="${BUILD_DIR:-$SCRIPT_DIR/Build}"
-FIRMWARE_DIR="$SCRIPT_DIR/firmware"
-FIRMWARE_TRANSLATIONS_DIR="$FIRMWARE_DIR/Translations"
-FIRMWARE_SOURCE="$FIRMWARE_DIR/source"
-FIRMWARE_OUTPUT_DIR="$BUILD_DIR/Firmware"
-
-BOOTLOADER_REPO_URL="https://github.com/arlenko/IronOS-dfu"
-BOOTLOADER_BRANCH="Gem"
-BOOTLOADER_TEMP_DIR="/tmp/ironos-dfu-gem"
-BOOTLOADER_VENV="$BOOTLOADER_TEMP_DIR/venv"
-BOOTLOADER_OUTPUT_DIR="$BUILD_DIR/Bootloader"
 
 HARDWARE_PCB="$SCRIPT_DIR/hardware/Gem-solder.kicad_pcb"
+HARDWARE_SCH="$SCRIPT_DIR/hardware/Gem-solder.kicad_sch"
 GERBER_LAYERS="F.Cu,B.Cu,F.Mask,B.Mask,F.SilkS,B.SilkS,F.Paste,B.Paste,Edge.Cuts"
 PCB_OUTPUT_DIR="$BUILD_DIR/PCB"
 
@@ -61,15 +52,6 @@ ENCLOSURE_MESH_DEFLECTION=0.1
 
 BOM_DIR="$SCRIPT_DIR/BOM"
 BOM_OUTPUT_DIR="$BUILD_DIR/BOM"
-
-# Prefer the poetry/venv-hosted python (has bdflib + pyyaml); fall back to system python3
-if [ -x "$FIRMWARE_SOURCE/ironos-venv/bin/python" ]; then
-    HOST_PYTHON="$FIRMWARE_SOURCE/ironos-venv/bin/python"
-else
-    HOST_PYTHON="python3"
-fi
-
-AVAILABLE_LANGUAGES=()
 
 clean() {
     echo "${CLR_MAGENTA}***** Cleaning Build directory${CLR_RESET}"
@@ -93,85 +75,16 @@ render_last_lines() {
     done
 }
 
-build_firmware() {
-    echo "${CLR_MAGENTA}***** Building firmware${CLR_RESET}"
-
-    if [ ! -d "$FIRMWARE_TRANSLATIONS_DIR" ]; then
-        echo "    ${CLR_RED}[Error]${CLR_RESET} Translations dir not found: $FIRMWARE_TRANSLATIONS_DIR" >&2
-        exit 1
-    fi
-
-    shopt -s nullglob
-    local translations=("$FIRMWARE_TRANSLATIONS_DIR"/translation_*.json)
-    shopt -u nullglob
-    if [ ${#translations[@]} -eq 0 ]; then
-        echo "    ${CLR_RED}[Error]${CLR_RESET} No translation_*.json found in $FIRMWARE_TRANSLATIONS_DIR" >&2
-        exit 1
-    fi
-
-    # Get available languages (upper-case codes, e.g. EN, DE, JA_JP)
-    for f in "${translations[@]}"; do
-        AVAILABLE_LANGUAGES+=("$(basename "$f" | tr '[:lower:]' '[:upper:]' | sed 's/^TRANSLATION_//; s/\.JSON$//')")
-    done
-
-    echo "Languages: ${AVAILABLE_LANGUAGES[*]}"
-
-    pushd "$FIRMWARE_SOURCE" >/dev/null
-    make clean >/dev/null
-    if [ -t 1 ]; then
-        make -j"$(nproc)" model=Gem HOST_PYTHON="$HOST_PYTHON" "${AVAILABLE_LANGUAGES[@]/#/firmware-}" 2>&1 | render_last_lines
-    else
-        make -j"$(nproc)" model=Gem HOST_PYTHON="$HOST_PYTHON" "${AVAILABLE_LANGUAGES[@]/#/firmware-}"
-    fi
-    popd >/dev/null
-
-    mkdir -p "$FIRMWARE_OUTPUT_DIR"
-    for lang in "${AVAILABLE_LANGUAGES[@]}"; do
-        cp "$FIRMWARE_SOURCE/Hexfile/Gem_$lang".{hex,bin,dfu} "$FIRMWARE_OUTPUT_DIR"/
-    done
-
-    echo "${CLR_GREEN}***** Firmware written to $FIRMWARE_OUTPUT_DIR${CLR_RESET}"
-}
-
-build_bootloader() {
-    echo "${CLR_MAGENTA}***** Building bootloader${CLR_RESET}"
-
-    if [ ! -d "$BOOTLOADER_TEMP_DIR/.git" ]; then
-        git clone --depth 1 --branch "$BOOTLOADER_BRANCH" "$BOOTLOADER_REPO_URL" "$BOOTLOADER_TEMP_DIR"
-    else
-        git -C "$BOOTLOADER_TEMP_DIR" fetch --depth 1 origin "$BOOTLOADER_BRANCH"
-        git -C "$BOOTLOADER_TEMP_DIR" reset --hard "origin/$BOOTLOADER_BRANCH"
-    fi
-
-    if [ ! -x "$BOOTLOADER_VENV/bin/python" ]; then
-        python3 -m venv "$BOOTLOADER_VENV"
-        "$BOOTLOADER_VENV/bin/pip" install intelhex
-    fi
-
-    pushd "$BOOTLOADER_TEMP_DIR" >/dev/null
-    export PATH="$BOOTLOADER_VENV/bin:$PATH"
-
-    make clean >/dev/null 2>&1
-    if [ -t 1 ]; then
-        make all build_type=bootloader model=GEM 2>&1 | render_last_lines
-    else
-        make all build_type=bootloader model=GEM
-    fi
-    mkdir -p "$BOOTLOADER_OUTPUT_DIR"
-    for f in hex bin dfu; do
-        cp "build/bootloader.$f" "$BOOTLOADER_OUTPUT_DIR/Gem_bootloader.$f"
-    done
-
-    popd >/dev/null
-
-    echo "${CLR_GREEN}***** Bootloader written to $BOOTLOADER_OUTPUT_DIR${CLR_RESET}"
-}
-
 build_pcb() {
     echo "${CLR_MAGENTA}***** Exporting PCB fabrication files${CLR_RESET}"
 
     if [ ! -f "$HARDWARE_PCB" ]; then
         echo "    ${CLR_RED}[Error]${CLR_RESET} PCB file not found: $HARDWARE_PCB" >&2
+        exit 1
+    fi
+
+    if [ ! -f "$HARDWARE_SCH" ]; then
+        echo "    ${CLR_RED}[Error]${CLR_RESET} Schematic file not found: $HARDWARE_SCH" >&2
         exit 1
     fi
 
@@ -195,8 +108,9 @@ build_pcb() {
         --generate-map --map-format gerberx2 \
         --generate-report --report-path "$PCB_OUTPUT_DIR/Gem-solder-drill_report.txt" \
         -o "$PCB_OUTPUT_DIR" "$HARDWARE_PCB" >/dev/null
+    kicad-cli sch export pdf -o "$PCB_OUTPUT_DIR/Gem-solder-schematic.pdf" "$HARDWARE_SCH" >/dev/null
 
-    echo "${CLR_GREEN}***** PCB files written to $PCB_OUTPUT_DIR${CLR_RESET}"
+    echo "${CLR_GREEN}***** PCB and schematic files written to $PCB_OUTPUT_DIR${CLR_RESET}"
 }
 
 build_enclosure() {
@@ -291,8 +205,6 @@ copy_bom() {
 }
 
 clean
-build_firmware
-build_bootloader
 build_pcb
 build_enclosure
 copy_bom
