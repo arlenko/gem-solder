@@ -173,9 +173,9 @@
 #define HARDWARE_MAX_WATTAGE_X10  1400
 #define FILTER_DISPLAYED_TIP_TEMP 8 // Filtering for GUI display
 
-#define TIP_PID_KP 45
-#define TIP_PID_KI 700
-#define TIP_PID_KD 8000
+#define TIP_PID_KP 36 // x10W / °C
+#define TIP_PID_KI 8  // x10W / (°C*s)
+#define TIP_PID_KD 6  // x10W / (°C/s)
 // PID_DEBUG displays PID results on the detailed soldering screen
 // #define PID_DEBUG
 

@@ -128,18 +128,20 @@ template <class T, T Kp, T Ki, T Kd> struct PID {
   T previous_error_term;
   T integration_running_sum;
   // Filter Kd result to reduce power swings caused by temperature measurement noise amplification
-  expMovingAverage<T, 48> kd_result_filter = {0};
+  expMovingAverage<T, 84> kd_result_filter = {0};
 
   T update(const T set_point, const T new_reading, const TickType_t interval_ms, const T max_output) {
-    const T target_delta = set_point - new_reading;
+    // We use a shift to get precision in integral as need small amounts at setpoint
+    constexpr T integral_precision_shift = 100;
+    const T     target_delta             = set_point - new_reading;
 
     // Proportional term
     const T kp_result = Kp * target_delta;
     // Integral probe before anti-windup decision
-    T ki_probe = integration_running_sum / 100;
+    T ki_probe = integration_running_sum / integral_precision_shift;
     // Derivative term
     T derivative        = (target_delta - previous_error_term);
-    T kd_result_instant = ((Kd * derivative) / (T)(interval_ms));
+    T kd_result_instant = ((Kd * derivative * 1000) / (T)(interval_ms));
     kd_result_filter.update(kd_result_instant);
     T kd_result = kd_result_filter.average();
 
@@ -151,11 +153,10 @@ template <class T, T Kp, T Ki, T Kd> struct PID {
     // In order to prevent windup we don't accumulate integrator when the output is already saturated
     bool is_saturated = (output_probe >= max_output && target_delta > 0) || (output_probe <= 0 && target_delta < 0);
     if (!is_saturated) {
-      integration_running_sum += (target_delta * (T)interval_ms * Ki) / 1000;
+      integration_running_sum += (target_delta * Ki * integral_precision_shift * (T)interval_ms) / 1000;
     }
 
-    // Calculate the integral term, we use a shift 100 to get precision in integral as we often need small amounts
-    T ki_result = integration_running_sum / 100;
+    T ki_result = integration_running_sum / integral_precision_shift;
 
     // Summation of the outputs
     T output = kp_result + ki_result + kd_result;
@@ -211,7 +212,7 @@ void detectThermalRunaway(const TemperatureType_t currentTipTempInC, const int32
     TemperatureType_t offTemp;         // Reading when the heater was last commanded off
     TemperatureType_t offFloor;        // Low-water mark once the tip has settled after heating
     bool              offSettled;
-    TickType_t        peggedStart;     // 0 => reading not pinned
+    TickType_t        peggedStart; // 0 => reading not pinned
   } runaway = {};
 
   if (thermalRunawayLatched) {
