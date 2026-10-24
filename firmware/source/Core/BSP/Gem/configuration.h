@@ -176,8 +176,7 @@
 #define TIP_PID_KP 36 // x10W / °C
 #define TIP_PID_KI 8  // x10W / (°C*s)
 #define TIP_PID_KD 6  // x10W / (°C/s)
-// PID_DEBUG displays PID results on the detailed soldering screen
-// #define PID_DEBUG
+// #define PID_DEBUG // PID_DEBUG displays PID results on the detailed soldering screen
 
 #define TIP_HAS_DIRECT_PWM 1
 #define POW_DC             1
