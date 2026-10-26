@@ -62,12 +62,12 @@
  * OLED Brightness
  *
  */
-//   #define MIN_BRIGHTNESS     1   // Min OLED brightness selectable
-//   #define MAX_BRIGHTNESS     101 // Max OLED brightness selectable
-#define MIN_BRIGHTNESS     0   // Min OLED brightness selectable
-#define MAX_BRIGHTNESS     100 // Max OLED brightness selectable
-#define BRIGHTNESS_STEP    25  // OLED brightness increment
-#define DEFAULT_BRIGHTNESS 25  // default OLED brightness
+#define MIN_BRIGHTNESS 1   // Min OLED brightness selectable
+#define MAX_BRIGHTNESS 101 // Max OLED brightness selectable
+// #define MIN_BRIGHTNESS     0   // Min OLED brightness selectable
+// #define MAX_BRIGHTNESS     100 // Max OLED brightness selectable
+#define BRIGHTNESS_STEP    20 // OLED brightness increment
+#define DEFAULT_BRIGHTNESS 20 // default OLED brightness
 
 /**
  * Temp change settings
@@ -181,7 +181,7 @@
 #define TIP_HAS_DIRECT_PWM 1
 #define POW_DC             1
 #define OLED_I2CBB1        1
-#define OLED_128x32        1
+#define OLED_128x64        1
 #define OLED_FLIP          1
 #define TEMP_TMP36         1 // Gem uses MCP9700 which has the same characteristics as TMP36
 // #define TIP_TYPE_SUPPORT     1 // Support for tips of different types, i.e. resistance

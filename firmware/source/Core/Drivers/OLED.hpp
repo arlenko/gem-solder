@@ -37,17 +37,33 @@ extern "C" {
 
 #define DEVICEADDR_OLED (0x3c << 1)
 
+#if defined(OLED_128x32)
 #define OLED_WIDTH           128
 #define OLED_HEIGHT          32
-#define OLED_GRAM_START      0x00 // Should be 0x00 when we have full width
-#define OLED_GRAM_END        0x7F // Should be 0x7F when we have full width
+#define OLED_GRAM_START      0x00
+#define OLED_GRAM_END        0x7F
 #define OLED_GRAM_START_FLIP 0
 #define OLED_GRAM_END_FLIP   0x7F
 
 #define OLED_VCOM_LAYOUT 0x02
+#define OLED_DIVIDER     0xD5
 // #define OLED_SEGMENT_MAP_REVERSED
-#define OLED_DIVIDER 0xD5
+#elif defined(OLED_128x64)
+#define OLED_WIDTH           128
+#define OLED_HEIGHT          64
+#define OLED_GRAM_START      0x00
+#define OLED_GRAM_END        0x7F
+#define OLED_GRAM_START_FLIP 0
+#define OLED_GRAM_END_FLIP   0x7F
 
+#define OLED_VCOM_LAYOUT 0x12
+#define OLED_DIVIDER     0xD5
+// #define OLED_SEGMENT_MAP_REVERSED
+#else
+#error "Define exactly one of OLED_128x32 or OLED_128x64"
+#endif
+
+#define OLED_PAGES (OLED_HEIGHT / 8) // Page size is 8 bits vertically
 
 #define OLED_ON  0xAF
 #define OLED_OFF 0xAE
@@ -70,7 +86,7 @@ public:
   static void refresh() {
 
     if (checkDisplayBufferChecksum()) {
-      const int len = FRAMEBUFFER_START + (OLED_WIDTH * (OLED_HEIGHT / 8));
+      const int len = FRAMEBUFFER_START + (OLED_WIDTH * OLED_PAGES);
       I2C_CLASS::Transmit(DEVICEADDR_OLED, screenBuffer, len);
       // DMA tx time is ~ 20mS Ensure after calling this you delay for at least 25ms
       // or we need to goto double buffering
@@ -115,20 +131,25 @@ public:
   // Draws a number at the current cursor location
   static void printNumber(uint16_t number, uint8_t places, FontStyle fontStyle, bool noLeaderZeros = true);
   // Clears the buffer
-  static void clearScreen() { memset(stripPointers[0], 0, OLED_WIDTH * (OLED_HEIGHT / 8)); }
+  static void clearScreen() { memset(stripPointers[0], 0, OLED_WIDTH * OLED_PAGES); }
   // Draws the battery level symbol
   static void drawBattery(uint8_t state) { drawSymbol(3 + (state > 10 ? 10 : state)); }
   static void drawCheckbox(bool state) {
     setCursor(getCursorX(), (OLED_HEIGHT - 16) / 2);
     drawSymbol((state) ? 16 : 17);
   }
-  inline static void drawUnavailableIcon() { drawArea(OLED_WIDTH - OLED_HEIGHT - 2, 0, OLED_HEIGHT, OLED_HEIGHT, UnavailableIcon); }
+  inline static void drawUnavailableIcon() {
+    drawArea(OLED_WIDTH - OLED_HEIGHT - 2, 0, OLED_HEIGHT, OLED_HEIGHT, UnavailableIcon);
+  }
   static void debugNumber(int32_t val, FontStyle fontStyle);
   static void drawHex(uint32_t x, FontStyle fontStyle, uint8_t digits);
-  static void drawSymbol(uint8_t symbolID);                                                           // Used for drawing symbols of a predictable width
-  static void drawArea(int16_t x, int8_t y, uint8_t wide, uint8_t height, const uint8_t *ptr);        // Draw an area, but y must be aligned on 0/8 offset
-  static void drawAreaSwapped(int16_t x, int8_t y, uint8_t wide, uint8_t height, const uint8_t *ptr); // Draw an area, but y must be aligned on 0/8 offset
-  static void fillArea(int16_t x, int8_t y, uint8_t wide, uint8_t height, const uint8_t value);       // Fill an area, but y must be aligned on 0/8 offset
+  static void drawSymbol(uint8_t symbolID); // Used for drawing symbols of a predictable width
+  static void drawArea(int16_t x, int8_t y, uint8_t wide, uint8_t height,
+                       const uint8_t *ptr); // Draw an area, but y must be aligned on 0/8 offset
+  static void drawAreaSwapped(int16_t x, int8_t y, uint8_t wide, uint8_t height,
+                              const uint8_t *ptr); // Draw an area, but y must be aligned on 0/8 offset
+  static void fillArea(int16_t x, int8_t y, uint8_t wide, uint8_t height,
+                       const uint8_t value); // Fill an area, but y must be aligned on 0/8 offset
   static void drawFilledRect(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool clear);
   static void drawHeatSymbol(uint32_t x10Watts);
   static void drawScrollIndicator(uint8_t p, uint8_t h); // Draws a scrolling position indicator
@@ -150,17 +171,18 @@ private:
     displayChecksum = hash;
     return result;
   }
-  static void         drawChar(uint16_t charCode, FontStyle fontStyle, const uint8_t soft_x_limit); // Draw a character to the current cursor location
+  static void         drawChar(uint16_t charCode, FontStyle fontStyle,
+                               const uint8_t soft_x_limit); // Draw a character to the current cursor location
   static void         setFramebuffer(uint8_t *buffer);
-  static uint8_t     *stripPointers[4]; // Pointers to the strips to allow for buffer having extra content
-  static bool         inLeftHandedMode; // Whether the screen is in left or not (used for offsets in GRAM)
+  static uint8_t     *stripPointers[OLED_PAGES]; // Pointers to the strips to allow for buffer having extra content
+  static bool         inLeftHandedMode;          // Whether the screen is in left or not (used for offsets in GRAM)
   static bool         initDone;
   static DisplayState displayState;
   static int16_t      cursor_x, cursor_y;
   static uint8_t      displayOffset;
   static uint32_t     displayChecksum;
-  static uint8_t      screenBuffer[16 + (OLED_WIDTH * (OLED_HEIGHT / 8)) + 10]; // The data buffer
-  static uint8_t      secondFrameBuffer[16 + OLED_WIDTH * (OLED_HEIGHT / 8) + 10];
+  static uint8_t      screenBuffer[16 + (OLED_WIDTH * OLED_PAGES) + 10]; // The data buffer
+  static uint8_t      secondFrameBuffer[16 + (OLED_WIDTH * OLED_PAGES) + 10];
 };
 
 #endif /* OLED_HPP_ */

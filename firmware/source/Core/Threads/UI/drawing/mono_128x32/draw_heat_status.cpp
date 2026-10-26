@@ -2,6 +2,7 @@
 #include "ui_drawing.hpp"
 #include <OperatingModes.h>
 
+#ifdef OLED_128x32
 void ui_draw_heat_status(int16_t posX, bool boostModeOn) {
   // Heat symbol
   OLED::setCursor(posX, 0);
@@ -13,3 +14,4 @@ void ui_draw_heat_status(int16_t posX, bool boostModeOn) {
     OLED::print(LargeSymbolSpace, FontStyle::LARGE);
   }
 }
+#endif
