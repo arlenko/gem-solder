@@ -33,11 +33,12 @@
 
 #define SOFT_I2C_DELAY()              \
   {                                   \
-    for (int xx = 0; xx < 15; xx++) { \
+    for (int xx = 0; xx < 12; xx++) { \
       asm("nop");                     \
     }                                 \
   }
 
 // 40 ~= 100kHz; 15 gives around 250kHz or so which is fast _and_ stable
+// 12 gives ~305kHz
 
 #endif /* BSP_MINIWARE_SOFTWARE_I2C_H_ */

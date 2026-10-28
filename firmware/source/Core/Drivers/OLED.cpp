@@ -397,36 +397,49 @@ void OLED::transitionScroll(const bool down, const uint8_t rows, const TickType_
     }
   }
 
-  for (uint8_t heightPos = 0; heightPos < rows; heightPos++) {
-    // Pixel row of the new frame that enters the vacated edge on this step.
-    const uint8_t incomingRow  = down ? (OLED_HEIGHT - rows + heightPos) : (rows - 1 - heightPos);
-    const uint8_t incomingPage = incomingRow / 8;
-    const uint8_t incomingBit  = incomingRow % 8;
+  // The panel is updated over a blocking software I2C bus, so on the 64px
+  // display each refresh moves twice the data and sending every pixel row makes
+  // the animation noticeably slower. Animate in coarser frames there, while
+  // keeping the 32px display's original timing untouched.
+  const uint8_t    pixelsPerFrame = (OLED_HEIGHT > 32) ? 2 : 1;
+  const uint8_t    refreshEvery   = (OLED_HEIGHT > 32) ? 1 : 2;
+  const TickType_t framePeriod    = (OLED_HEIGHT > 32) ? (TICKS_100MS * 2 / 10) : (TICKS_100MS / 7);
+  const uint8_t    frameCount     = (rows + pixelsPerFrame - 1) / pixelsPerFrame;
 
-    for (uint8_t xPos = 0; xPos < OLED_WIDTH; xPos++) {
-      const uint8_t incomingByte = secondFrameBuffer[FRAMEBUFFER_START + (OLED_WIDTH * incomingPage) + xPos];
-      const uint8_t incoming     = (incomingByte >> incomingBit) & 0x01;
+  uint8_t heightPos = 0;
+  for (uint8_t frame = 0; frame < frameCount; frame++) {
+    const uint8_t rowsThisFrame = ((rows - heightPos) < pixelsPerFrame) ? (rows - heightPos) : pixelsPerFrame;
+    for (uint8_t sub = 0; sub < rowsThisFrame; sub++, heightPos++) {
+      // Pixel row of the new frame that enters the vacated edge on this step.
+      const uint8_t incomingRow  = down ? (OLED_HEIGHT - rows + heightPos) : (rows - 1 - heightPos);
+      const uint8_t incomingPage = incomingRow / 8;
+      const uint8_t incomingBit  = incomingRow % 8;
 
-      if (down) {
-        // Move the MSB of each strip into the LSB of the strip above it
-        for (uint8_t page = 0; page < OLED_PAGES - 1; page++) {
-          const uint16_t pos     = FRAMEBUFFER_START + (OLED_WIDTH * page) + xPos;
-          const uint16_t nextPos = pos + OLED_WIDTH;
-          screenBuffer[pos]      = (screenBuffer[pos] >> 1) | ((screenBuffer[nextPos] & 0x01) << 7);
+      for (uint8_t xPos = 0; xPos < OLED_WIDTH; xPos++) {
+        const uint8_t incomingByte = secondFrameBuffer[FRAMEBUFFER_START + (OLED_WIDTH * incomingPage) + xPos];
+        const uint8_t incoming     = (incomingByte >> incomingBit) & 0x01;
+
+        if (down) {
+          // Move the MSB of each strip into the LSB of the strip above it
+          for (uint8_t page = 0; page < OLED_PAGES - 1; page++) {
+            const uint16_t pos     = FRAMEBUFFER_START + (OLED_WIDTH * page) + xPos;
+            const uint16_t nextPos = pos + OLED_WIDTH;
+            screenBuffer[pos]      = (screenBuffer[pos] >> 1) | ((screenBuffer[nextPos] & 0x01) << 7);
+          }
+          // The bottom strip takes the next row of the new frame
+          const uint16_t lastPos = FRAMEBUFFER_START + (OLED_WIDTH * (OLED_PAGES - 1)) + xPos;
+          screenBuffer[lastPos]  = (screenBuffer[lastPos] >> 1) | (incoming << 7);
+        } else {
+          // Shift every strip into the strip below it
+          for (uint8_t page = OLED_PAGES - 1; page > 0; page--) {
+            const uint16_t pos     = FRAMEBUFFER_START + (OLED_WIDTH * page) + xPos;
+            const uint16_t prevPos = pos - OLED_WIDTH;
+            screenBuffer[pos]      = (screenBuffer[pos] << 1) | ((screenBuffer[prevPos] & 0x80) >> 7);
+          }
+          // The top strip takes the next row of the new frame
+          const uint16_t firstPos = FRAMEBUFFER_START + xPos;
+          screenBuffer[firstPos]  = (screenBuffer[firstPos] << 1) | incoming;
         }
-        // The bottom strip takes the next row of the new frame
-        const uint16_t lastPos = FRAMEBUFFER_START + (OLED_WIDTH * (OLED_PAGES - 1)) + xPos;
-        screenBuffer[lastPos]  = (screenBuffer[lastPos] >> 1) | (incoming << 7);
-      } else {
-        // Shift every strip into the strip below it
-        for (uint8_t page = OLED_PAGES - 1; page > 0; page--) {
-          const uint16_t pos     = FRAMEBUFFER_START + (OLED_WIDTH * page) + xPos;
-          const uint16_t prevPos = pos - OLED_WIDTH;
-          screenBuffer[pos]      = (screenBuffer[pos] << 1) | ((screenBuffer[prevPos] & 0x80) >> 7);
-        }
-        // The top strip takes the next row of the new frame
-        const uint16_t firstPos = FRAMEBUFFER_START + xPos;
-        screenBuffer[firstPos]  = (screenBuffer[firstPos] << 1) | incoming;
       }
     }
 
@@ -449,10 +462,10 @@ void OLED::transitionScroll(const bool down, const uint8_t rows, const TickType_
       return;
     }
     // To keep things faster, only redraw every second line
-    if (heightPos % 2 == 0) {
+    if (frame % refreshEvery == 0) {
       refresh(); // Now refresh to write out the contents to the new page
     }
-    vTaskDelayUntil(&startDraw, TICKS_100MS / 7);
+    vTaskDelayUntil(&startDraw, framePeriod);
   }
 
   // A partial scroll is only exact when the menu window moved by one row. Copy
