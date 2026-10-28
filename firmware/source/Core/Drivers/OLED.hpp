@@ -63,7 +63,9 @@ extern "C" {
 #error "Define exactly one of OLED_128x32 or OLED_128x64"
 #endif
 
-#define OLED_PAGES (OLED_HEIGHT / 8) // Page size is 8 bits vertically
+#define OLED_PAGES     (OLED_HEIGHT / 8) // Page size is 8 bits vertically
+#define OLED_ROW_HEIGHT 32               // Height of one settings-menu row
+#define OLED_ICON_SIZE  32               // Width/height of the built-in 32x32 symbols
 
 #define OLED_ON  0xAF
 #define OLED_OFF 0xAE
@@ -116,6 +118,11 @@ public:
   static void    setBrightness(uint8_t contrast);
   static void    setInverseDisplay(bool inverted);
   static int16_t getCursorX() { return cursor_x; }
+  // Restrict drawing to a vertical sub-window of the framebuffer (in pages).
+  // Menu rows use this so existing 32px-high item drawing code can be reused.
+  static void setDrawingWindow(uint8_t firstPage, uint8_t pageCount);
+  static void resetDrawingWindow() { setDrawingWindow(0, OLED_PAGES); }
+  static uint8_t drawingWindowHeight() { return drawPageCount * 8; }
   // Draw a string to the current location, with selected font; optionally - with MAX length only
   static void print(const char *string, FontStyle fontStyle, uint8_t length = 255, const uint8_t soft_x_limit = 0);
   static void printWholeScreen(const char *string);
@@ -130,16 +137,17 @@ public:
   static void drawImage(const uint8_t *buffer, uint8_t x, uint8_t width) { drawArea(x, 0, width, 16, buffer); }
   // Draws a number at the current cursor location
   static void printNumber(uint16_t number, uint8_t places, FontStyle fontStyle, bool noLeaderZeros = true);
-  // Clears the buffer
-  static void clearScreen() { memset(stripPointers[0], 0, OLED_WIDTH * OLED_PAGES); }
+  // Clears the active framebuffer and resets the drawing window
+  static void clearScreen();
   // Draws the battery level symbol
   static void drawBattery(uint8_t state) { drawSymbol(3 + (state > 10 ? 10 : state)); }
   static void drawCheckbox(bool state) {
-    setCursor(getCursorX(), (OLED_HEIGHT - 16) / 2);
+    setCursor(getCursorX(), (drawingWindowHeight() - 16) / 2);
     drawSymbol((state) ? 16 : 17);
   }
   inline static void drawUnavailableIcon() {
-    drawArea(OLED_WIDTH - OLED_HEIGHT - 2, 0, OLED_HEIGHT, OLED_HEIGHT, UnavailableIcon);
+    drawArea(OLED_WIDTH - OLED_ICON_SIZE - 2, (drawingWindowHeight() - OLED_ICON_SIZE) / 2, OLED_ICON_SIZE, OLED_ICON_SIZE,
+             UnavailableIcon);
   }
   static void debugNumber(int32_t val, FontStyle fontStyle);
   static void drawHex(uint32_t x, FontStyle fontStyle, uint8_t digits);
@@ -151,13 +159,15 @@ public:
   static void fillArea(int16_t x, int8_t y, uint8_t wide, uint8_t height,
                        const uint8_t value); // Fill an area, but y must be aligned on 0/8 offset
   static void drawFilledRect(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool clear);
+  // Inverts an area (XOR), y may be unaligned; used to highlight the active menu row
+  static void invertArea(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1);
   static void drawHeatSymbol(uint32_t x10Watts);
   static void drawScrollIndicator(uint8_t p, uint8_t h); // Draws a scrolling position indicator
   static void maskScrollIndicatorOnOLED();
   static void transitionSecondaryFramebuffer(const bool forwardNavigation, const TickType_t viewEnterTime);
   static void useSecondaryFramebuffer(bool useSecondary);
-  static void transitionScrollDown(const TickType_t viewEnterTime);
-  static void transitionScrollUp(const TickType_t viewEnterTime);
+  static void transitionScrollDown(const TickType_t viewEnterTime, uint8_t rows = OLED_HEIGHT);
+  static void transitionScrollUp(const TickType_t viewEnterTime, uint8_t rows = OLED_HEIGHT);
 
 private:
   static bool checkDisplayBufferChecksum() {
@@ -174,7 +184,10 @@ private:
   static void         drawChar(uint16_t charCode, FontStyle fontStyle,
                                const uint8_t soft_x_limit); // Draw a character to the current cursor location
   static void         setFramebuffer(uint8_t *buffer);
+  static void         transitionScroll(bool down, uint8_t rows, TickType_t viewEnterTime);
   static uint8_t     *stripPointers[OLED_PAGES]; // Pointers to the strips to allow for buffer having extra content
+  static uint8_t     *framebufferBase;           // Start of the framebuffer currently being drawn to
+  static uint8_t      drawPageCount;             // Number of pages drawing is currently restricted to
   static bool         inLeftHandedMode;          // Whether the screen is in left or not (used for offsets in GRAM)
   static bool         initDone;
   static DisplayState displayState;

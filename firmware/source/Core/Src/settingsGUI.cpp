@@ -450,23 +450,6 @@ const menuitem *subSettingsMenus[]{
 };
 /* ^^^ !!!ENABLE CLANG-FORMAT back!!! ^^^ */
 
-/**
- * Prints two small lines (or one line for CJK) of short description for
- * setting items and prepares cursor after it.
- * @param settingsItemIndex Index of the setting item.
- * @param cursorCharPosition Custom cursor char position to set after printing
- * description.
- */
-static void printShortDescription(SettingsItemIndex settingsItemIndex, uint16_t cursorCharPosition) {
-  // print short description (default single line, explicit double line)
-  uint8_t shortDescIndex = static_cast<uint8_t>(settingsItemIndex);
-  OLED::printWholeScreen(translatedString(Tr->SettingsShortNames[shortDescIndex]));
-
-  // prepare cursor for value
-  // make room for scroll indicator
-  OLED::setCursor(cursorCharPosition * FONT_12_WIDTH - 2, 0);
-}
-
 static int userConfirmation(const char *message) {
   TickType_t tickStart = xTaskGetTickCount();
   for (;;) {
@@ -928,10 +911,12 @@ static void displayLogoTime(void) {
     OLED::drawUnavailableIcon();
     break;
   case logoMode_t::ONETIME:
-    OLED::drawArea(OLED_WIDTH - OLED_HEIGHT - 2, 0, OLED_HEIGHT, OLED_HEIGHT, RepeatOnce);
+    OLED::drawArea(OLED_WIDTH - OLED_ICON_SIZE - 2, (OLED::drawingWindowHeight() - OLED_ICON_SIZE) / 2, OLED_ICON_SIZE,
+                   OLED_ICON_SIZE, RepeatOnce);
     break;
   case logoMode_t::INFINITY:
-    OLED::drawArea(OLED_WIDTH - OLED_HEIGHT - 2, 0, OLED_HEIGHT, OLED_HEIGHT, RepeatInf);
+    OLED::drawArea(OLED_WIDTH - OLED_ICON_SIZE - 2, (OLED::drawingWindowHeight() - OLED_ICON_SIZE) / 2, OLED_ICON_SIZE,
+                   OLED_ICON_SIZE, RepeatInf);
     break;
   default:
     OLED::printNumber(getSettingValue(SettingsOptions::LOGOTime), 1, FontStyle::LARGE);
@@ -1062,9 +1047,11 @@ static void setResetSettings(void) {
   }
 }
 
-// Indicates whether a menu transition is in progress, so that the menu icon
-// animation is paused during the transition.
-static bool animOpenState = false;
+// Indicates whether the entry currently being drawn is the highlighted one, so
+// that only the active menu icon animation runs.
+static bool menuItemActive = true;
+
+void settingsMenuSetItemActive(bool active) { menuItemActive = active; }
 
 static void displayMenu(size_t index) {
   // Call into the menu
@@ -1083,8 +1070,9 @@ static void displayMenu(size_t index) {
   default: // SLOW or off - defaulted above
     break;
   }
-  size_t currentFrame;
-  if (!animOpenState && (getSettingValue(SettingsOptions::AnimationSpeed) != settingOffSpeed_t::OFF)) {
+  // Inactive entries always show the final frame; only the highlighted entry animates.
+  size_t currentFrame = 2;
+  if (menuItemActive && (getSettingValue(SettingsOptions::AnimationSpeed) != settingOffSpeed_t::OFF)) {
     if (menuCurrentIndex != index) {
       menuCurrentIndex   = index;
       menuSwitchLoopTick = xTaskGetTickCount();
@@ -1095,17 +1083,13 @@ static void displayMenu(size_t index) {
     } else if (currentFrame > 2) {
       currentFrame = 2;
     }
-  } else {
-    // We want the animation to restart after completing the transition.
-    menuCurrentIndex = sizeof(rootSettingsMenu) + 1;
-    // Always draw the last frame if icon animation is disabled.
-    currentFrame = getSettingValue(SettingsOptions::AnimationSpeed) == settingOffSpeed_t::OFF ? 2 : 0;
   }
   // Draw symbol
   // 16 pixel wide image
   // less 2 pixel wide scrolling indicator
 
-  OLED::drawArea(OLED_WIDTH - SETTINGS_ICON_WIDTH - 2, 0, SETTINGS_ICON_WIDTH, SETTINGS_ICON_HEIGHT,
+  OLED::drawArea(OLED_WIDTH - SETTINGS_ICON_WIDTH - 2, (OLED::drawingWindowHeight() - SETTINGS_ICON_HEIGHT) / 2,
+                 SETTINGS_ICON_WIDTH, SETTINGS_ICON_HEIGHT,
                  (&SettingsMenuIcons[index][(SETTINGS_ICON_WIDTH * (SETTINGS_ICON_HEIGHT / 8)) * currentFrame]));
 }
 

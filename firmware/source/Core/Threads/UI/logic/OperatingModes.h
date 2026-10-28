@@ -42,11 +42,13 @@ enum class OperatingMode {
 };
 
 enum class TransitionAnimation {
-  None  = 0,
-  Right = 1,
-  Left  = 2,
-  Down  = 3,
-  Up    = 4,
+  None    = 0,
+  Right   = 1,
+  Left    = 2,
+  Down    = 3,
+  Up      = 4,
+  RowDown = 5, // Scroll by one settings-menu row (32px)
+  RowUp   = 6, // Scroll by one settings-menu row (32px)
 };
 
 // Generic context struct used for gui functions to be able to retain state

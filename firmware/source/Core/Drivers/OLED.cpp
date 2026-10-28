@@ -18,6 +18,8 @@
 
 // rendering to the buffer
 uint8_t *OLED::stripPointers[OLED_PAGES]; // Pointers to the strips to allow for buffer having extra content
+uint8_t *OLED::framebufferBase;
+uint8_t  OLED::drawPageCount = OLED_PAGES;
 
 bool OLED::inLeftHandedMode; // Whether the screen is in left or not (used for
 // offsets in GRAM)
@@ -121,9 +123,7 @@ void OLED::initialize() {
   cursor_x = cursor_y = 0;
   inLeftHandedMode    = false;
 
-  for (uint8_t page = 0; page < OLED_PAGES; page++) {
-    stripPointers[page] = &screenBuffer[FRAMEBUFFER_START + (OLED_WIDTH * page)];
-  }
+  setFramebuffer(screenBuffer);
 
   displayOffset = 0;
   memcpy(&screenBuffer[0], &REFRESH_COMMANDS[0], sizeof(REFRESH_COMMANDS));
@@ -143,9 +143,29 @@ void OLED::initialize() {
 }
 
 void OLED::setFramebuffer(uint8_t *buffer) {
-  for (uint8_t page = 0; page < OLED_PAGES; page++) {
-    stripPointers[page] = &buffer[FRAMEBUFFER_START + (OLED_WIDTH * page)];
+  framebufferBase = buffer;
+  resetDrawingWindow();
+}
+
+void OLED::setDrawingWindow(uint8_t firstPage, uint8_t pageCount) {
+  if (pageCount == 0 || firstPage + pageCount > OLED_PAGES) {
+    // Fall back to the whole framebuffer on invalid windows
+    firstPage = 0;
+    pageCount = OLED_PAGES;
   }
+  drawPageCount = pageCount;
+  for (uint8_t page = 0; page < pageCount; page++) {
+    stripPointers[page] = &framebufferBase[FRAMEBUFFER_START + (OLED_WIDTH * (firstPage + page))];
+  }
+  // Keep the unused slots pointing at a valid strip in case a caller forgets the window
+  for (uint8_t page = pageCount; page < OLED_PAGES; page++) {
+    stripPointers[page] = stripPointers[pageCount - 1];
+  }
+}
+
+void OLED::clearScreen() {
+  resetDrawingWindow();
+  memset(framebufferBase + FRAMEBUFFER_START, 0, OLED_WIDTH * OLED_PAGES);
 }
 
 /*
@@ -214,7 +234,7 @@ void OLED::drawChar(const uint16_t charCode, const FontStyle fontStyle, const ui
       bits <<= shift;
       for (uint8_t s = 0; s <= srcStrips; s++) {
         const int16_t destStrip = baseStrip + s;
-        if (destStrip < 0 || destStrip >= OLED_PAGES) {
+        if (destStrip < 0 || destStrip >= (int16_t)drawPageCount) {
           continue;
         }
         stripPointers[destStrip][x] = (bits >> (8 * s)) & 0xFF;
@@ -231,7 +251,7 @@ void OLED::drawChar(const uint16_t charCode, const FontStyle fontStyle, const ui
 void OLED::drawScrollIndicator(uint8_t y, uint8_t height) {
   const uint16_t endRow = static_cast<uint16_t>(y) + height; // exclusive
 
-  for (uint8_t page = 0; page < OLED_PAGES; page++) {
+  for (uint8_t page = 0; page < drawPageCount; page++) {
     const uint16_t pageTop = static_cast<uint16_t>(page) * 8;
     uint8_t        mask    = 0;
     for (uint8_t bit = 0; bit < 8; bit++) {
@@ -344,39 +364,70 @@ void OLED::useSecondaryFramebuffer(bool useSecondary) {
 }
 
 /**
- * This assumes that the current display output buffer has the current on screen contents
- * Then the secondary buffer has the "new" contents to be slid up onto the screen
- * Sadly we cant use the hardware scroll: the panel has no spare GRAM to hold both screens at
- * once, so we shift one row at a time and redraw.
+ * Scrolls the screen contents by `rows` pixel rows, pulling the matching rows of
+ * the secondary framebuffer in from the opposite edge. `rows == OLED_HEIGHT`
+ * performs the historical full-screen transition.
+ *
+ * Sadly we cant use the hardware scroll: the panel has no spare GRAM to hold
+ * both screens at once, so we shift one row at a time and redraw.
  *
  * **This function blocks until the transition has completed or user presses button**
  */
-void OLED::transitionScrollDown(const TickType_t viewEnterTime) {
+void OLED::transitionScroll(const bool down, const uint8_t rows, const TickType_t viewEnterTime) {
+  (void)viewEnterTime;
+  if (rows == 0) {
+    return;
+  }
   TickType_t startDraw       = xTaskGetTickCount();
   bool       buttonsReleased = getButtonState() == BUTTON_NONE;
 
-  for (uint8_t heightPos = 0; heightPos < OLED_HEIGHT; heightPos++) {
-    // For each line, we shuffle all bits up a row
-    for (uint8_t xPos = 0; xPos < OLED_WIDTH; xPos++) {
-      // Move the MSB of each strip into the LSB of the strip above it
-      for (uint8_t page = 0; page < OLED_PAGES - 1; page++) {
-        const uint16_t pos     = FRAMEBUFFER_START + (OLED_WIDTH * page) + xPos;
-        const uint16_t nextPos = pos + OLED_WIDTH;
-        screenBuffer[pos]      = (screenBuffer[pos] >> 1) | ((screenBuffer[nextPos] & 0x01) << 7);
-      }
-      // The bottom strip takes the first row of the new frame
-      const uint16_t lastPos = FRAMEBUFFER_START + (OLED_WIDTH * (OLED_PAGES - 1)) + xPos;
-      screenBuffer[lastPos] =
-          (screenBuffer[lastPos] >> 1) | ((secondFrameBuffer[FRAMEBUFFER_START + xPos] & 0x01) << 7);
+  // For partial scrolls, pre-load the new frame's content that will remain on
+  // screen after the slide into the outgoing frame's opposite edge. This makes
+  // the incoming content (e.g. the newly highlighted menu row) correct from the
+  // first animation step instead of popping in when the transition finishes.
+  if (rows < OLED_HEIGHT) {
+    const uint8_t keptPages = (OLED_HEIGHT - rows) / 8; // rows are pixel rows
+    const uint8_t dstPage   = down ? (rows / 8) : 0;
+    const uint8_t srcPage   = down ? 0 : (rows / 8);
+    for (uint8_t page = 0; page < keptPages; page++) {
+      const uint16_t dst = FRAMEBUFFER_START + (OLED_WIDTH * (dstPage + page));
+      const uint16_t src = FRAMEBUFFER_START + (OLED_WIDTH * (srcPage + page));
+      // Leave the right-most column alone so the scroll indicator is not disturbed.
+      memcpy(&screenBuffer[dst], &secondFrameBuffer[src], OLED_WIDTH - 1);
+    }
+  }
 
-      // Now cycle all the secondary strips the same way
-      for (uint8_t page = 0; page < OLED_PAGES - 1; page++) {
-        const uint16_t pos     = FRAMEBUFFER_START + (OLED_WIDTH * page) + xPos;
-        const uint16_t nextPos = pos + OLED_WIDTH;
-        secondFrameBuffer[pos] = (secondFrameBuffer[pos] >> 1) | ((secondFrameBuffer[nextPos] & 0x01) << 7);
+  for (uint8_t heightPos = 0; heightPos < rows; heightPos++) {
+    // Pixel row of the new frame that enters the vacated edge on this step.
+    const uint8_t incomingRow  = down ? (OLED_HEIGHT - rows + heightPos) : (rows - 1 - heightPos);
+    const uint8_t incomingPage = incomingRow / 8;
+    const uint8_t incomingBit  = incomingRow % 8;
+
+    for (uint8_t xPos = 0; xPos < OLED_WIDTH; xPos++) {
+      const uint8_t incomingByte = secondFrameBuffer[FRAMEBUFFER_START + (OLED_WIDTH * incomingPage) + xPos];
+      const uint8_t incoming     = (incomingByte >> incomingBit) & 0x01;
+
+      if (down) {
+        // Move the MSB of each strip into the LSB of the strip above it
+        for (uint8_t page = 0; page < OLED_PAGES - 1; page++) {
+          const uint16_t pos     = FRAMEBUFFER_START + (OLED_WIDTH * page) + xPos;
+          const uint16_t nextPos = pos + OLED_WIDTH;
+          screenBuffer[pos]      = (screenBuffer[pos] >> 1) | ((screenBuffer[nextPos] & 0x01) << 7);
+        }
+        // The bottom strip takes the next row of the new frame
+        const uint16_t lastPos = FRAMEBUFFER_START + (OLED_WIDTH * (OLED_PAGES - 1)) + xPos;
+        screenBuffer[lastPos]  = (screenBuffer[lastPos] >> 1) | (incoming << 7);
+      } else {
+        // Shift every strip into the strip below it
+        for (uint8_t page = OLED_PAGES - 1; page > 0; page--) {
+          const uint16_t pos     = FRAMEBUFFER_START + (OLED_WIDTH * page) + xPos;
+          const uint16_t prevPos = pos - OLED_WIDTH;
+          screenBuffer[pos]      = (screenBuffer[pos] << 1) | ((screenBuffer[prevPos] & 0x80) >> 7);
+        }
+        // The top strip takes the next row of the new frame
+        const uint16_t firstPos = FRAMEBUFFER_START + xPos;
+        screenBuffer[firstPos]  = (screenBuffer[firstPos] << 1) | incoming;
       }
-      // Finally on the bottom strip; we shuffle it up ready
-      secondFrameBuffer[lastPos] >>= 1;
     }
     buttonsReleased |= getButtonState() == BUTTON_NONE;
     if (getButtonState() != BUTTON_NONE && buttonsReleased) {
@@ -391,59 +442,23 @@ void OLED::transitionScrollDown(const TickType_t viewEnterTime) {
       refresh(); // Now refresh to write out the contents to the new page
     }
     vTaskDelayUntil(&startDraw, TICKS_100MS / 7);
+  }
+
+  // A partial scroll is only exact when the menu window moved by one row. Copy
+  // the complete new frame so skipped (invisible) entries cannot leave a mixed
+  // image on screen. This is a no-op for the normal one-row movement.
+  if (rows < OLED_HEIGHT) {
+    memcpy(screenBuffer + FRAMEBUFFER_START, secondFrameBuffer + FRAMEBUFFER_START,
+           sizeof(screenBuffer) - FRAMEBUFFER_START);
   }
 }
 
-/**
- * This assumes that the current display output buffer has the current on screen contents
- * Then the secondary buffer has the "new" contents to be slid down onto the screen
- * Sadly we cant use the hardware scroll: the panel has no spare GRAM to hold both screens at
- * once, so we shift one row at a time and redraw.
- *
- * **This function blocks until the transition has completed or user presses button**
- */
-void OLED::transitionScrollUp(const TickType_t viewEnterTime) {
-  TickType_t startDraw       = xTaskGetTickCount();
-  bool       buttonsReleased = getButtonState() == BUTTON_NONE;
+void OLED::transitionScrollDown(const TickType_t viewEnterTime, uint8_t rows) {
+  transitionScroll(true, rows, viewEnterTime);
+}
 
-  for (uint8_t heightPos = 0; heightPos < OLED_HEIGHT; heightPos++) {
-    // For each line, we shuffle all bits down a row
-    for (uint8_t xPos = 0; xPos < OLED_WIDTH; xPos++) {
-      // Shift every strip into the strip below it
-      for (uint8_t page = OLED_PAGES - 1; page > 0; page--) {
-        const uint16_t pos     = FRAMEBUFFER_START + (OLED_WIDTH * page) + xPos;
-        const uint16_t prevPos = pos - OLED_WIDTH;
-        screenBuffer[pos]      = (screenBuffer[pos] << 1) | ((screenBuffer[prevPos] & 0x80) >> 7);
-      }
-      // The top strip takes the last row of the new frame
-      const uint16_t firstPos = FRAMEBUFFER_START + xPos;
-      screenBuffer[firstPos] =
-          (screenBuffer[firstPos] << 1) |
-          ((secondFrameBuffer[FRAMEBUFFER_START + (OLED_WIDTH * (OLED_PAGES - 1)) + xPos] & 0x80) >> 7);
-
-      for (uint8_t page = OLED_PAGES - 1; page > 0; page--) {
-        const uint16_t pos     = FRAMEBUFFER_START + (OLED_WIDTH * page) + xPos;
-        const uint16_t prevPos = pos - OLED_WIDTH;
-        secondFrameBuffer[pos] = (secondFrameBuffer[pos] << 1) | ((secondFrameBuffer[prevPos] & 0x80) >> 7);
-      }
-      // Finally on the top strip; we shuffle it down ready
-      secondFrameBuffer[firstPos] <<= 1;
-    }
-    buttonsReleased |= getButtonState() == BUTTON_NONE;
-    if (getButtonState() != BUTTON_NONE && buttonsReleased) {
-      // Exit early, but have to transition whole buffer
-      memcpy(screenBuffer + FRAMEBUFFER_START, secondFrameBuffer + FRAMEBUFFER_START,
-             sizeof(screenBuffer) - FRAMEBUFFER_START);
-      refresh(); // Now refresh to write out the contents to the new page
-      return;
-    }
-
-    // To keep things faster, only redraw every second line
-    if (heightPos % 2 == 0) {
-      refresh(); // Now refresh to write out the contents to the new page
-    }
-    vTaskDelayUntil(&startDraw, TICKS_100MS / 7);
-  }
+void OLED::transitionScrollUp(const TickType_t viewEnterTime, uint8_t rows) {
+  transitionScroll(false, rows, viewEnterTime);
 }
 
 void OLED::setRotation(bool leftHanded) {
@@ -661,7 +676,7 @@ void OLED::drawArea(int16_t x, int8_t y, uint8_t width, uint8_t height, const ui
   uint8_t rowsDrawn = 0;
   while (height > 0) {
     const uint8_t strip = static_cast<uint8_t>((y / 8) + rowsDrawn);
-    if (strip >= OLED_PAGES) {
+    if (strip >= drawPageCount) {
       break; // clipped at the bottom of the panel
     }
     for (uint8_t xx = visibleStart; xx < visibleEnd; xx++) {
@@ -697,7 +712,7 @@ void OLED::drawAreaSwapped(int16_t x, int8_t y, uint8_t width, uint8_t height, c
   uint8_t rowsDrawn = 0;
   while (height > 0) {
     const uint8_t strip = static_cast<uint8_t>((y / 8) + rowsDrawn);
-    if (strip >= OLED_PAGES) {
+    if (strip >= drawPageCount) {
       break; // clipped at the bottom of the panel
     }
     for (uint8_t xx = visibleStart; xx < visibleEnd; xx += 2) {
@@ -732,7 +747,7 @@ void OLED::fillArea(int16_t x, int8_t y, uint8_t wide, uint8_t height, const uin
   uint8_t rowsDrawn = 0;
   while (height > 0) {
     const uint8_t strip = static_cast<uint8_t>((y / 8) + rowsDrawn);
-    if (strip >= OLED_PAGES) {
+    if (strip >= drawPageCount) {
       break; // clipped at the bottom of the panel
     }
     for (uint8_t xx = visibleStart; xx < visibleEnd; xx++) {
@@ -755,6 +770,13 @@ void OLED::drawFilledRect(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool c
   uint8_t startMask = 0xFF << (y0 % 8);
   uint8_t endMask   = 0xFF >> (7 - (y1 % 8));
 
+  if (startRow >= drawPageCount) {
+    return;
+  }
+  if (endRow >= drawPageCount) {
+    endRow = drawPageCount - 1;
+  }
+
   for (uint8_t row = startRow; row <= endRow; row++) {
     uint8_t mask = 0xFF;
     if (row == startRow) {
@@ -770,6 +792,32 @@ void OLED::drawFilledRect(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, bool c
       } else {
         stripPointers[row][x] |= mask;
       }
+    }
+  }
+}
+
+void OLED::invertArea(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
+  // Ensure coordinates are within bounds
+  if (x0 >= OLED_WIDTH || y0 >= OLED_HEIGHT || x1 >= OLED_WIDTH || y1 >= OLED_HEIGHT) {
+    return;
+  }
+
+  const uint8_t startRow  = y0 / 8;
+  const uint8_t endRow    = y1 / 8;
+  const uint8_t startMask = 0xFF << (y0 % 8);
+  const uint8_t endMask   = 0xFF >> (7 - (y1 % 8));
+
+  for (uint8_t row = startRow; row <= endRow && row < drawPageCount; row++) {
+    uint8_t mask = 0xFF;
+    if (row == startRow) {
+      mask &= startMask;
+    }
+    if (row == endRow) {
+      mask &= endMask;
+    }
+
+    for (uint8_t x = x0; x <= x1; x++) {
+      stripPointers[row][x] ^= mask;
     }
   }
 }

@@ -66,7 +66,7 @@ void drawScrollingText(const char *message, TickType_t currentTickOffset) {
 
   //^ Rolling offset based on time
   // make_translation.py encodes descriptions against the small font, so draw
-  // them with the small font, vertically centred on the 32px panel.
-  OLED::setCursor((OLED_WIDTH - messageOffset), 8);
+  // them with the small font, vertically centred on the panel.
+  OLED::setCursor((OLED_WIDTH - messageOffset), (OLED_HEIGHT - 16) / 2);
   OLED::print(message, FontStyle::SMALL);
 }

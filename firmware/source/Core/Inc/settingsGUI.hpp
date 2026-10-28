@@ -36,6 +36,9 @@ typedef struct {
 } menuitem;
 
 void                   enterSettingsMenu();
+// Lets the menu renderer tell displayMenu() whether the entry it is drawing is
+// the currently highlighted one (only that icon animation runs).
+void                   settingsMenuSetItemActive(bool active);
 extern const menuitem  rootSettingsMenu[];
 extern const menuitem *subSettingsMenus[];
 

@@ -2,6 +2,8 @@
 #include "ScrollMessage.hpp"
 
 #define HELP_TEXT_TIMEOUT_TICKS (TICKS_SECOND * 3)
+#define MENU_ROW_HEIGHT         OLED_ROW_HEIGHT
+#define MENU_ROWS               (OLED_HEIGHT / MENU_ROW_HEIGHT)
 /*
  * The settings menu is the most complex bit of GUI code we have
  * The menu consists of a two tier menu
@@ -28,26 +30,6 @@ static void printShortDescription(SettingsItemIndex settingsItemIndex, uint16_t 
   OLED::setCursor((cursorCharPosition * FONT_12_WIDTH - 2) + (OLED_WIDTH - 96), 4);
 }
 
-// Render a menu, based on the position given
-// This will either draw the menu item, or the help text depending on how long its been since button press
-void render_menu(const menuitem *item, guiContext *cxt) {
-  // If recent interaction or not help text draw the entry
-  if ((xTaskGetTickCount() - lastButtonTime < HELP_TEXT_TIMEOUT_TICKS) || item->description == 0) {
-
-    if (item->shortDescriptionSize > 0) {
-      printShortDescription(item->shortDescriptionIndex, item->shortDescriptionSize);
-    }
-    item->draw();
-  } else {
-
-    uint16_t *isRenderingHelp = &(cxt->scratch_state.state6);
-    *isRenderingHelp          = 1;
-    // Draw description
-    const char *description = translatedString(Tr->SettingsDescriptions[item->description - 1]);
-    drawScrollingText(description, (xTaskGetTickCount() - lastButtonTime) - HELP_TEXT_TIMEOUT_TICKS);
-  }
-}
-
 uint16_t getMenuLength(const menuitem *menu, const uint16_t stop) {
   // walk this menu to find the length
   uint16_t counter = 0;
@@ -64,6 +46,69 @@ uint16_t getMenuLength(const menuitem *menu, const uint16_t stop) {
   return counter;
 }
 
+/**
+ * Translates a visible position in a menu (counting only visible entries) into
+ * the raw index into the menu array. Returns 0xFFFF if not found.
+ */
+static uint16_t getVisibleEntryIndex(const menuitem *menu, const uint16_t visiblePosition) {
+  uint16_t visible = 0;
+  for (uint16_t pos = 0; menu[pos].draw != nullptr; pos++) {
+    if (menu[pos].isVisible == nullptr || menu[pos].isVisible()) {
+      if (visible == visiblePosition) {
+        return pos;
+      }
+      visible++;
+    }
+  }
+  return 0xFFFF;
+}
+
+/**
+ * Virtual (visible) position of a raw menu entry.
+ */
+static uint16_t getActiveVirtualPosition(const menuitem *menu, const uint16_t rawIndex) {
+  uint16_t position = getMenuLength(menu, rawIndex + 1);
+  if (position > 0) {
+    position--;
+  }
+  return position;
+}
+
+/**
+ * First visible entry of the on-screen page. The active entry is kept at the top
+ * of the screen unless that would leave the last page short, in which case the
+ * page is clamped so the last entry sits at the bottom.
+ */
+static uint16_t getWindowStart(const menuitem *menu, const uint16_t rawIndex, const uint16_t menuLength) {
+  if (menuLength == 0) {
+    return 0;
+  }
+  const uint16_t visibleRows = (menuLength < MENU_ROWS) ? menuLength : MENU_ROWS;
+  uint16_t       start       = getActiveVirtualPosition(menu, rawIndex);
+  if (start + visibleRows > menuLength) {
+    start = menuLength - visibleRows;
+  }
+  return start;
+}
+
+/**
+ * Renders one menu entry into a single 32px row. Existing 32px-oriented item
+ * drawing code is reused by moving the driver's drawing window to the row.
+ */
+static void renderMenuItem(const menuitem *item, const uint8_t row, const bool active) {
+  OLED::setDrawingWindow(row * (MENU_ROW_HEIGHT / 8), MENU_ROW_HEIGHT / 8);
+  if (item->shortDescriptionSize > 0) {
+    printShortDescription(item->shortDescriptionIndex, item->shortDescriptionSize);
+  }
+  settingsMenuSetItemActive(active);
+  item->draw();
+  if (active && MENU_ROWS > 1) {
+    // Highlight the active row, leaving the right-most column for the scroll indicator.
+    OLED::invertArea(0, 0, OLED_WIDTH - 2, MENU_ROW_HEIGHT - 1);
+  }
+  OLED::resetDrawingWindow();
+}
+
 OperatingMode moveToNextEntry(guiContext *cxt) {
   uint16_t *mainEntry         = &(cxt->scratch_state.state1);
   uint16_t *subEntry          = &(cxt->scratch_state.state2);
@@ -72,41 +117,69 @@ OperatingMode moveToNextEntry(guiContext *cxt) {
 
   if (*isRenderingHelp) {
     *isRenderingHelp = 0;
-  } else {
-    *currentMenuLength = 0; // Reset menu length
-    // Scroll down
-    // We can increment freely _once_
-    cxt->transitionMode = TransitionAnimation::Down;
-    if (*subEntry == 0) {
-      (*mainEntry) += 1;
+    return OperatingMode::SettingsMenu;
+  }
 
-      if (rootSettingsMenu[*mainEntry].draw == nullptr) {
-        // We are off the end of the menu now
-        saveSettings();
-        cxt->transitionMode = TransitionAnimation::Left;
-        return OperatingMode::HomeScreen;
-      }
-      // Check if visible
-      if (rootSettingsMenu[*mainEntry].isVisible != nullptr && !rootSettingsMenu[*mainEntry].isVisible()) {
-        // We need to move on as this one isn't visible
-        return moveToNextEntry(cxt);
-      }
-    } else {
-      (*subEntry) += 1;
+  // Remember the page position before moving so we know whether to scroll.
+  const menuitem *oldMenu   = (*subEntry == 0) ? rootSettingsMenu : subSettingsMenus[*mainEntry];
+  const uint16_t  oldScreen = (*subEntry == 0) ? *mainEntry : (*subEntry) - 1;
+  const uint16_t  oldWindow = getWindowStart(oldMenu, oldScreen, getMenuLength(oldMenu, 128));
 
-      // If the new entry is null, we need to exit
-      if (subSettingsMenus[*mainEntry][(*subEntry) - 1].draw == nullptr) {
-        (*subEntry)         = 0; // Reset back to the main menu
-        cxt->transitionMode = TransitionAnimation::Left;
-        // Have to break early to avoid the below check underflowing
-        return OperatingMode::SettingsMenu;
-      }
-      // Check if visible
-      if (subSettingsMenus[*mainEntry][(*subEntry) - 1].isVisible != nullptr && !subSettingsMenus[*mainEntry][(*subEntry) - 1].isVisible()) {
-        // We need to move on as this one isn't visible
-        return moveToNextEntry(cxt);
-      }
+  *currentMenuLength = 0; // Reset menu length
+  // Scroll down
+  // We can increment freely _once_
+  if (*subEntry == 0) {
+    (*mainEntry) += 1;
+
+    if (rootSettingsMenu[*mainEntry].draw == nullptr) {
+      // We are off the end of the menu now
+      saveSettings();
+      cxt->transitionMode = TransitionAnimation::Left;
+      return OperatingMode::HomeScreen;
     }
+    // Check if visible
+    if (rootSettingsMenu[*mainEntry].isVisible != nullptr && !rootSettingsMenu[*mainEntry].isVisible()) {
+      // We need to move on as this one isn't visible
+      return moveToNextEntry(cxt);
+    }
+  } else {
+    (*subEntry) += 1;
+
+    // If the new entry is null, we need to exit
+    if (subSettingsMenus[*mainEntry][(*subEntry) - 1].draw == nullptr) {
+      (*subEntry)         = 0; // Reset back to the main menu
+      cxt->transitionMode = TransitionAnimation::Left;
+      // Have to break early to avoid the below check underflowing
+      return OperatingMode::SettingsMenu;
+    }
+    // Check if visible
+    if (subSettingsMenus[*mainEntry][(*subEntry) - 1].isVisible != nullptr &&
+        !subSettingsMenus[*mainEntry][(*subEntry) - 1].isVisible()) {
+      // We need to move on as this one isn't visible
+      return moveToNextEntry(cxt);
+    }
+  }
+
+  const menuitem *newMenu   = (*subEntry == 0) ? rootSettingsMenu : subSettingsMenus[*mainEntry];
+  const uint16_t  newScreen = (*subEntry == 0) ? *mainEntry : (*subEntry) - 1;
+  const uint16_t  newWindow = getWindowStart(newMenu, newScreen, getMenuLength(newMenu, 128));
+  if (newWindow == oldWindow) {
+    // Last page: only the highlight moves, nothing scrolls.
+    cxt->transitionMode = TransitionAnimation::None;
+  } else if (MENU_ROWS > 1) {
+    // Only slide when the visible window moved by exactly one row; a larger
+    // jump (skipped invisible entries) is redrawn directly instead.
+    if (newWindow == oldWindow + 1) {
+      cxt->transitionMode = TransitionAnimation::RowDown;
+      // Clear the outgoing top row's highlight now. The transition pre-loads
+      // the incoming row from the new frame, so the highlight moves onto it
+      // before the list starts sliding.
+      OLED::invertArea(0, 0, OLED_WIDTH - 2, MENU_ROW_HEIGHT - 1);
+    } else {
+      cxt->transitionMode = TransitionAnimation::None;
+    }
+  } else {
+    cxt->transitionMode = TransitionAnimation::Down;
   }
   return OperatingMode::SettingsMenu;
 }
@@ -136,7 +209,6 @@ OperatingMode gui_SettingsMenu(const ButtonState buttons, guiContext *cxt) {
     currentMenu   = subSettingsMenus[*mainEntry];
     currentScreen = (*subEntry) - 1;
   }
-  render_menu(&(currentMenu[currentScreen]), cxt);
 
   // Update the cached menu length if unknown
   if (*currentMenuLength == 0) {
@@ -144,22 +216,41 @@ OperatingMode gui_SettingsMenu(const ButtonState buttons, guiContext *cxt) {
     *currentMenuLength = getMenuLength(currentMenu, 128 /* Max length of any menu*/);
   }
 
-  if (*isRenderingHelp == 0) {
-    //  Draw scroll
-
-    // Get virtual pos by counting entries from start to _here_
-    uint16_t currentVirtualPosition = getMenuLength(currentMenu, currentScreen + 1);
-    if (currentVirtualPosition > 0) {
-      currentVirtualPosition--;
+  const menuitem *activeItem = &(currentMenu[currentScreen]);
+  if (activeItem->description != 0 && (xTaskGetTickCount() - lastButtonTime) >= HELP_TEXT_TIMEOUT_TICKS) {
+    // Help text is still drawn full screen, independent of the number of rows.
+    *isRenderingHelp = 1;
+    const char *description = translatedString(Tr->SettingsDescriptions[activeItem->description - 1]);
+    drawScrollingText(description, (xTaskGetTickCount() - lastButtonTime) - HELP_TEXT_TIMEOUT_TICKS);
+  } else {
+    const uint16_t windowStart = getWindowStart(currentMenu, currentScreen, *currentMenuLength);
+    for (uint8_t row = 0; row < MENU_ROWS; row++) {
+      const uint16_t visiblePosition = windowStart + row;
+      if (visiblePosition >= *currentMenuLength) {
+        break;
+      }
+      const uint16_t rawIndex = getVisibleEntryIndex(currentMenu, visiblePosition);
+      if (rawIndex == 0xFFFF) {
+        break;
+      }
+      renderMenuItem(&(currentMenu[rawIndex]), row, rawIndex == currentScreen);
     }
+  }
+
+  if (*isRenderingHelp == 0 && *currentMenuLength > 0) {
+    //  Draw scroll
+    const uint16_t windowStart = getWindowStart(currentMenu, currentScreen, *currentMenuLength);
+    const uint16_t visibleRows = (*currentMenuLength < MENU_ROWS) ? *currentMenuLength : MENU_ROWS;
 
     // The height of the indicator is screen res height / total menu entries
-    uint8_t indicatorHeight = OLED_HEIGHT / *currentMenuLength;
+    uint16_t indicatorHeight = (OLED_HEIGHT * visibleRows) / *currentMenuLength;
     if (indicatorHeight == 0) {
       indicatorHeight = 1; // always at least 1 pixel
     }
-
-    uint16_t position = (OLED_HEIGHT * (uint16_t)currentVirtualPosition) / *currentMenuLength;
+    uint16_t position = (OLED_HEIGHT * windowStart) / *currentMenuLength;
+    if (position + indicatorHeight > OLED_HEIGHT) {
+      position = OLED_HEIGHT - indicatorHeight;
+    }
 
     bool showScrollbar = true;
 
@@ -178,7 +269,7 @@ OperatingMode gui_SettingsMenu(const ButtonState buttons, guiContext *cxt) {
     showScrollbar |= (xTaskGetTickCount() % (TICKS_SECOND / 4) < (TICKS_SECOND / 8));
 
     if (showScrollbar) {
-      OLED::drawScrollIndicator((uint8_t)position, indicatorHeight);
+      OLED::drawScrollIndicator((uint8_t)position, (uint8_t)indicatorHeight);
     }
   }
 

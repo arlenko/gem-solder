@@ -181,6 +181,9 @@ void guiRenderLoop(void) {
     case TransitionAnimation::Down:
       OLED::transitionScrollDown(context.viewEnterTime);
       break;
+    case TransitionAnimation::RowDown:
+      OLED::transitionScrollDown(context.viewEnterTime, OLED_ROW_HEIGHT);
+      break;
     case TransitionAnimation::Left:
       OLED::transitionSecondaryFramebuffer(false, context.viewEnterTime);
       break;
@@ -189,6 +192,10 @@ void guiRenderLoop(void) {
       break;
     case TransitionAnimation::Up:
       OLED::transitionScrollUp(context.viewEnterTime);
+      break;
+    case TransitionAnimation::RowUp:
+      OLED::transitionScrollUp(context.viewEnterTime, OLED_ROW_HEIGHT);
+      break;
 
     case TransitionAnimation::None:
     default:
