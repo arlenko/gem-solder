@@ -429,6 +429,17 @@ void OLED::transitionScroll(const bool down, const uint8_t rows, const TickType_
         screenBuffer[firstPos]  = (screenBuffer[firstPos] << 1) | incoming;
       }
     }
+
+    if (rows < OLED_HEIGHT) {
+      // The scroll indicator belongs to the new window. Pin the right-most
+      // column to the new frame so old and new indicator segments do not scroll
+      // together and show as a broken bar during the row transition.
+      for (uint8_t page = 0; page < OLED_PAGES; page++) {
+        const uint16_t pos = FRAMEBUFFER_START + (OLED_WIDTH * page) + (OLED_WIDTH - 1);
+        screenBuffer[pos]  = secondFrameBuffer[pos];
+      }
+    }
+
     buttonsReleased |= getButtonState() == BUTTON_NONE;
     if (getButtonState() != BUTTON_NONE && buttonsReleased) {
       // Exit early, but have to transition whole buffer
