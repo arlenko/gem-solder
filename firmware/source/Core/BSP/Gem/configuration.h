@@ -106,7 +106,7 @@
 
 // Thermal runaway protection
 #define THERMAL_RUNAWAY_TIME_SEC   10                     // Sustained heating window for the "no response" test
-#define THERMAL_RUNAWAY_TEMP_C     3                      // Minimum expected rise inside that window
+#define THERMAL_RUNAWAY_TEMP_C     10                     // Minimum expected rise inside that window
 #define THERMAL_RUNAWAY_PEGGED_RAW (ADC_MAX_READING - 64) // Reading pinned at the top of the ADC range
 #define THERMAL_RUNAWAY_PEGGED_SEC 3                      // How long the reading must stay pinned
 #define THERMAL_RUNAWAY_SETTLE_SEC 3                      // Ignore thermal lag right after the heater turns off

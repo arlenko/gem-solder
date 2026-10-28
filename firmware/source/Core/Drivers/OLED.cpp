@@ -202,8 +202,8 @@ void OLED::drawChar(const uint16_t charCode, const FontStyle fontStyle, const ui
       fontWidth  = 12;
       break;
     }
-    if (charCode == '\x01' && cursor_y == 0) { // 0x01 is used as new line char
-      setCursor(soft_x_limit, fontHeight);
+    if (charCode == '\x01') { // 0x01 is used as new line char
+      setCursor(soft_x_limit, cursor_y + fontHeight);
       return;
     } else if (charCode <= 0x01) {
       return;
