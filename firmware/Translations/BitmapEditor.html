@@ -1,487 +1,1836 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="translations_commons.js"></script>
-    <title>TS100 Bitmap Editor</title>
-    <style id="styles">
-      .matrix {
-        display: inline-block;
-        padding: 0px 0px 1px 1px;
-        background-color: #666;
-        margin-top: 1em;
-        margin-bottom: 1em;
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gem Solder · Bitmap Editor</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "preact": "https://cdn.jsdelivr.net/npm/preact@10.29.8/dist/preact.module.js",
+          "preact/hooks": "https://cdn.jsdelivr.net/npm/preact@10.29.8/hooks/dist/hooks.module.js",
+          "htm": "https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.module.js"
+        }
+      }
+    </script>
+    <style>
+      :root {
+        color-scheme: dark;
+        /* Palette: Rosé Pine Moon — base/surface/overlay + iris, foam, love */
+        --bg: #232136;
+        --line: #393552;
+        --line-strong: #44415a;
+        --ink: #e0def4;
+        --muted: #908caa;
+        --accent: #c4a7e7;
+        --accent-soft: rgba(196, 167, 231, 0.14);
+        --cool: #9ccfd8;
+        --danger: #eb6f92;
+        --ok: #9ccfd8;
+        --scroll-thumb: #44415a;
+        --scroll-thumb-hover: #56526e;
+        --radius: 14px;
+        --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+        --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, sans-serif;
       }
 
-      .matrix * {
-        font-size: 0;
+      * {
+        box-sizing: border-box;
+        scrollbar-width: thin;
+        scrollbar-color: var(--scroll-thumb) transparent;
       }
-      .r {
-        white-space: nowrap;
-      }
-      .c {
-        margin: 1px 1px 0px 0px;
-        display: inline-block;
-        background-color: #fff;
-        height: 10px;
+
+      /* Chrome/Safari/Edge fallback; the standard properties above win where supported. */
+      ::-webkit-scrollbar {
         width: 10px;
+        height: 10px;
       }
 
-      .x {
-        background-color: #000;
+      ::-webkit-scrollbar-track,
+      ::-webkit-scrollbar-corner {
+        background: transparent;
       }
 
-      .header {
+      ::-webkit-scrollbar-thumb {
+        min-height: 28px;
+        border: 2px solid transparent;
+        border-radius: 8px;
+        background-color: var(--scroll-thumb);
+        background-clip: content-box;
       }
 
-      .data input,
-      .data textarea {
-        margin-top: 1em;
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: var(--scroll-thumb-hover);
+      }
+
+      ::-webkit-scrollbar-thumb:active {
+        background-color: var(--accent);
+      }
+
+      ::selection {
+        background: #c4a7e7;
+        color: #232136;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: var(--sans);
+        color: var(--ink);
+        background:
+          radial-gradient(1100px 520px at 50% -18%, rgba(196, 167, 231, 0.1), transparent 62%),
+          radial-gradient(900px 480px at 100% 100%, rgba(156, 207, 216, 0.06), transparent 60%),
+          var(--bg);
+        -webkit-font-smoothing: antialiased;
+      }
+
+      h1,
+      h2,
+      p {
+        margin: 0;
+      }
+
+      .app {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        min-height: 100vh;
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 20px 22px 26px;
+      }
+
+      /* ---------- top bar ---------- */
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        position: relative;
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+        background: linear-gradient(140deg, #c4a7e7, #9ccfd8);
+        box-shadow: 0 0 22px rgba(196, 167, 231, 0.32);
+      }
+
+      .brand-mark::after {
+        content: "";
+        position: absolute;
+        inset: 7px;
+        border-radius: 4px;
+        background: #232136;
+      }
+
+      .brand h1 {
+        font-size: 15px;
+        font-weight: 650;
+        letter-spacing: 0.01em;
+      }
+
+      .brand h1 span {
+        color: var(--muted);
+        font-weight: 500;
+      }
+
+      .brand p {
+        margin-top: 3px;
+        font-family: var(--mono);
+        font-size: 10.5px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      /* ---------- controls ---------- */
+      .btn {
+        appearance: none;
+        border: 1px solid var(--line-strong);
+        border-radius: 9px;
+        background: #2a273f;
+        color: var(--ink);
+        font: inherit;
+        font-size: 12px;
+        padding: 7px 11px;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          border-color 0.15s,
+          transform 0.08s;
+      }
+
+      .btn:hover {
+        background: #393552;
+        border-color: #56526e;
+      }
+
+      .btn:active {
+        transform: translateY(1px);
+      }
+
+      .btn.primary {
+        background: linear-gradient(180deg, #ccb2ea, #b28ede);
+        border-color: #c4a7e7;
+        color: #232136;
+        font-weight: 600;
+      }
+
+      .btn.primary:hover {
+        filter: brightness(1.06);
+      }
+
+      .btn.tiny {
+        font-size: 10.5px;
+        padding: 4px 8px;
+        border-radius: 7px;
+      }
+
+      .btn.icon {
+        display: inline-flex;
+        justify-content: center;
+        width: 28px;
+        padding: 4px 0;
+      }
+
+      .btn:focus-visible,
+      textarea:focus-visible,
+      select:focus-visible,
+      input:focus-visible,
+      .preset:focus-visible {
+        outline: 2px solid var(--cool);
+        outline-offset: 2px;
+      }
+
+      .zoom {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 3px;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        background: rgba(196, 167, 231, 0.05);
+      }
+
+      .zoom-value {
+        min-width: 38px;
+        text-align: center;
+        font-family: var(--mono);
+        font-size: 11.5px;
+        color: var(--muted);
+      }
+
+      /* ---------- layout ---------- */
+      main {
+        display: grid;
+        grid-template-columns: 232px minmax(0, 1fr) 380px;
+        gap: 14px;
+        align-items: start;
+        flex: 1;
+      }
+
+      .col-left,
+      .col-right {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+      }
+
+      .card {
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: linear-gradient(180deg, rgba(42, 39, 63, 0.95), rgba(35, 33, 54, 0.97));
+        box-shadow: 0 10px 26px -18px #191724;
+      }
+
+      .card h2 {
+        margin-bottom: 10px;
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.13em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .card-head h2 {
+        margin: 0;
+      }
+
+      /* ---------- presets ---------- */
+      .presets {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .preset {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 8px 10px;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        background: rgba(196, 167, 231, 0.04);
+        color: var(--ink);
+        font: inherit;
+        text-align: left;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          border-color 0.15s;
+      }
+
+      .preset:hover {
+        background: rgba(196, 167, 231, 0.09);
+      }
+
+      .preset.active {
+        border-color: rgba(196, 167, 231, 0.65);
+        background: var(--accent-soft);
+      }
+
+      .preset-name {
+        font-size: 12px;
+        font-weight: 550;
+      }
+
+      .preset-note {
+        font-family: var(--mono);
+        font-size: 10.5px;
+        color: var(--muted);
+      }
+
+      .custom-size {
+        display: flex;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .custom-size label {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 4px;
+        font-size: 10.5px;
+        color: var(--muted);
+      }
+
+      .hint-card p {
+        font-size: 11.5px;
+        line-height: 1.55;
+        color: var(--muted);
+      }
+
+      .hint-card p + p {
+        margin-top: 8px;
+      }
+
+      .hint-card strong {
+        color: var(--ink);
+        font-weight: 600;
+      }
+
+      /* ---------- grid stage ---------- */
+      .stage-card {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: linear-gradient(180deg, rgba(42, 39, 63, 0.92), rgba(31, 29, 46, 0.96));
+      }
+
+      .stage {
+        display: flex;
+        flex: 1;
+        align-items: flex-start;
+        min-height: 420px;
+        padding: 18px;
+        overflow: auto;
+      }
+
+      .stage-inner {
+        margin: auto;
+      }
+
+      .grid {
+        display: block;
+        border-radius: 3px;
+        cursor: crosshair;
+        touch-action: none;
+      }
+
+      .stage-foot {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 8px 14px;
+        border-top: 1px solid var(--line);
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      /* ---------- inputs ---------- */
+      input[type="number"],
+      select {
         width: 100%;
+        appearance: none;
+        padding: 6px 8px;
+        border: 1px solid var(--line-strong);
+        border-radius: 8px;
+        background: #2a283e;
+        color: var(--ink);
+        font-family: var(--mono);
+        font-size: 12px;
       }
 
-      .actions {
+      select {
+        cursor: pointer;
+      }
+
+      input[type="checkbox"] {
+        width: 14px;
+        height: 14px;
+        accent-color: var(--accent);
+      }
+
+      textarea.field,
+      pre.code {
+        width: 100%;
+        margin: 0;
+        padding: 8px 9px;
+        border: 1px solid var(--line);
+        border-radius: 9px;
+        background: #2a283e;
+        color: #e0def4;
+        font-family: var(--mono);
+        font-size: 11px;
+        line-height: 1.55;
+        resize: vertical;
+      }
+
+      textarea.field {
+        min-height: 58px;
+      }
+
+      textarea.field:focus {
+        border-color: var(--cool);
+        box-shadow: 0 0 0 3px rgba(156, 207, 216, 0.18);
+        outline: none;
+      }
+
+      textarea.field.invalid {
+        border-color: var(--danger);
+        box-shadow: 0 0 0 3px rgba(235, 111, 146, 0.18);
+      }
+
+      pre.code {
+        max-height: 132px;
+        overflow: auto;
+        white-space: pre;
+      }
+
+      .err {
+        margin-top: 6px;
+        font-size: 11px;
+        color: var(--danger);
+      }
+
+      .ok {
+        margin-top: 6px;
+        font-size: 11px;
+        color: var(--ok);
+      }
+
+      .muted {
+        font-size: 11px;
+        color: var(--muted);
+      }
+
+      /* ---------- preview ---------- */
+      .preview-frame {
+        display: flex;
+        justify-content: center;
+        padding: 14px;
+        border: 1px solid #393552;
+        border-radius: 10px;
+        background: #232136;
+        box-shadow: inset 0 0 32px rgba(196, 167, 231, 0.05);
+      }
+
+      .preview {
+        max-width: 100%;
+        background: #232136;
+        border-radius: 2px;
+        box-shadow: 0 0 20px rgba(196, 167, 231, 0.24);
+        image-rendering: pixelated;
+      }
+
+      /* ---------- import / export ---------- */
+      .drop {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 12px;
+        border: 1px dashed #44415a;
+        border-radius: 10px;
+        background: rgba(196, 167, 231, 0.03);
+        color: var(--muted);
+        font-size: 11.5px;
+        text-align: center;
+        cursor: pointer;
+        transition:
+          border-color 0.15s,
+          background 0.15s,
+          color 0.15s;
+      }
+
+      .drop:hover,
+      .drop.over {
+        border-color: var(--accent);
+        background: rgba(196, 167, 231, 0.09);
+        color: var(--ink);
+      }
+
+      .drop code {
+        font-family: var(--mono);
+        color: var(--ink);
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+
+      .row > label {
+        display: flex;
+        flex: 1 1 130px;
+        align-items: center;
+        gap: 6px;
+        font-size: 11.5px;
+        color: var(--muted);
+      }
+
+      .row > label input[type="number"] {
+        width: 78px;
+      }
+
+      .check {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11.5px;
+        color: var(--muted);
+        cursor: pointer;
+      }
+
+      .export-row {
+        justify-content: space-between;
+      }
+
+      .export-row > label {
+        flex: 0 1 150px;
+      }
+
+      /* ---------- status ---------- */
+      .status {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 0 4px;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: #908caa;
+      }
+
+      .status span + span::before {
+        content: "·";
+        margin-right: 10px;
+        color: #56526e;
+      }
+
+      /* ---------- boot / failure ---------- */
+      .boot {
+        padding: 70px 20px;
+        font-size: 13px;
+        color: var(--muted);
+        text-align: center;
+      }
+
+      .fatal {
+        max-width: 620px;
+        margin: 70px auto;
+        padding: 22px 24px;
+        border: 1px solid rgba(235, 111, 146, 0.4);
+        border-radius: 14px;
+        background: rgba(235, 111, 146, 0.08);
+      }
+
+      .fatal h1 {
+        margin-bottom: 10px;
+        font-size: 16px;
+        color: #eb6f92;
+      }
+
+      .fatal p {
+        margin-bottom: 10px;
+        font-size: 12.5px;
+        line-height: 1.6;
+        color: #e0def4;
+      }
+
+      .fatal code {
+        display: block;
+        overflow-wrap: anywhere;
+        font-family: var(--mono);
+        font-size: 11px;
+        color: #f0b1c4;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      /* ---------- responsive ---------- */
+      @media (max-width: 1180px) {
+        main {
+          grid-template-columns: 210px minmax(0, 1fr);
+        }
+
+        .col-right {
+          display: grid;
+          grid-column: 1 / -1;
+          grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+          align-items: start;
+        }
+
+        .stage {
+          min-height: 360px;
+        }
+      }
+
+      @media (max-width: 780px) {
+        .app {
+          padding: 14px;
+        }
+
+        main {
+          grid-template-columns: minmax(0, 1fr);
+        }
+
+        .stage-card {
+          order: 1;
+        }
+
+        .col-left {
+          order: 2;
+        }
+
+        .col-right {
+          order: 3;
+        }
       }
     </style>
-    <script>
-      var ink, pressed, ev;
-      function mousedown(e) {
-        c = window.event.target;
-        classes = c.className.split(" ");
-        if (classes.indexOf("c") < 0) {
-          return;
-        }
-        ink = classes.indexOf("x") < 0;
-        pressed = true;
-        ev = e;
-        enter(e);
+  </head>
+  <body>
+    <div id="root"><div class="boot">Loading editor…</div></div>
+    <noscript>
+      <div class="fatal">
+        <h1>JavaScript is required</h1>
+        <p>The bitmap editor is a browser app and needs JavaScript enabled.</p>
+      </div>
+    </noscript>
+
+    <script type="module">
+      /* =======================================================================
+         Gem Solder bitmap editor
+         -----------------------------------------------------------------------
+         Framebuffer layout matches the SSD1306 buffer used by the firmware:
+         one byte per column per 8 px page, bit 0 = top row of that page,
+         pages stacked top to bottom, columns left to right.
+         Preact + htm are loaded from jsdelivr (see the import map above).
+      ========================================================================= */
+
+      const root = document.getElementById("root");
+
+      let h, render, useState, useEffect, useMemo, useRef, useCallback, html;
+      try {
+        const [preact, hooks, htm] = await Promise.all([
+          import("preact"),
+          import("preact/hooks"),
+          import("htm"),
+        ]);
+        h = preact.h;
+        render = preact.render;
+        ({ useState, useEffect, useMemo, useRef, useCallback } = hooks);
+        html = htm.default.bind(h);
+      } catch (err) {
+        root.innerHTML =
+          '<div class="fatal">' +
+          "<h1>Could not load Preact / htm</h1>" +
+          "<p>The editor fetches its framework from jsdelivr. Check your network connection " +
+          "and reload. If you are offline, the editor cannot start.</p>" +
+          '<code>preact@10.29.8 · htm@3.1.1</code>' +
+          '<p style="margin-top:12px">' +
+          String((err && err.message) || err) +
+          "</p></div>";
+        throw err;
       }
 
-      function mouseup(e) {
-        ev = e;
-        pressed = false;
+      const GUTTER = 16;
+      const ZOOM_STEPS = [1, 2, 3, 4, 6, 8, 10, 12, 16, 20, 24, 32];
+      const STORAGE_KEY = "gem-solder.bitmap-editor.v1";
+
+      const PRESETS = [
+        {
+          id: "small",
+          label: "Small font",
+          note: "8×16 · ter-u16n",
+          w: 8,
+          h: 16,
+        },
+        {
+          id: "large",
+          label: "Large font",
+          note: "12×24 · ter-u24b",
+          w: 12,
+          h: 24,
+        },
+        {
+          id: "xlarge",
+          label: "X-large font",
+          note: "16×32 · ter-u32b",
+          w: 16,
+          h: 32,
+        },
+        {
+          id: "extras",
+          label: "Extra symbol",
+          note: "12×16 · ExtraFontChars",
+          w: 12,
+          h: 16,
+        },
+        {
+          id: "icon",
+          label: "Icon",
+          note: "32×32 · OLED_ICON_SIZE",
+          w: 32,
+          h: 32,
+        },
+        {
+          id: "screen",
+          label: "Screen",
+          note: "128×32 · full framebuffer",
+          w: 128,
+          h: 32,
+        },
+        {
+          id: "logo",
+          label: "Boot logo",
+          note: "96×16 · drawArea(16,8)",
+          w: 96,
+          h: 16,
+        },
+        {
+          id: "custom",
+          label: "Custom",
+          note: "any size, height % 8",
+          w: 64,
+          h: 16,
+        },
+      ];
+
+      /* ---------------------------------------------------------------------
+         Pure helpers (bit packing, text codecs, geometry)
+      --------------------------------------------------------------------- */
+
+      const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+      const hex2 = (b) => b.toString(16).toUpperCase().padStart(2, "0");
+
+      const getPixel = (bytes, width, x, y) =>
+        (bytes[(y >> 3) * width + x] >> (y & 7)) & 1;
+
+      function popcount(v) {
+        v = v - ((v >> 1) & 0x55);
+        v = (v & 0x33) + ((v >> 2) & 0x33);
+        return (v + (v >> 4)) & 0x0f;
       }
 
-      function enter(e) {
-        if (!pressed) {
-          return;
-        }
-        ev = e;
-        c = window.event.target;
-        paint(c, ink);
-        stringFromMatrix();
-      }
-
-      function paint(c, ink) {
-        var cellInk = isInk(c);
-        if (ink) {
-          if (!cellInk) {
-            c.className += " x";
-          }
-        } else {
-          if (cellInk) {
-            c.className = "c";
-          }
-        }
-      }
-
-      function isInk(c) {
-        try {
-          var classes = c.className.split(" ");
-          return classes.indexOf("x") >= 0;
-        } catch (e) {
-          return false;
-        }
-      }
-
-      function getMatrix() {
-        return document.getElementById("matrix");
-      }
-
-      function getCoordinatesFromId(str) {
-        i = str.indexOf("_");
-        return {
-          row: parseInt(str.substring(1, i)),
-          col: parseInt(str.substring(i + 1)),
-        };
-      }
-
-      function clearMatrix() {
-        for (var r = 0; r < app.matrix.rows; r++) {
-          for (var c = 0; c < app.matrix.cols; c++) {
-            paint(getCell(r, c), false);
-          }
-        }
-      }
-
-      function invertMatrix() {
-        for (var r = 0; r < app.matrix.rows; r++) {
-          for (var c = 0; c < app.matrix.cols; c++) {
-            cell = getCell(r, c);
-            if (isInk(cell) == true) paint(cell, false);
-            else paint(cell, true);
-          }
-        }
-        stringFromMatrix();
-      }
-
-      function getCell(row, col) {
-        return document.getElementById("C" + row + "_" + col);
-      }
-
-      function toMatrix(str) {
-        app.encodedData = str;
-        clearMatrix();
-        var strs = str.split(/[ ,]/);
-        var pair = false;
-        var c = 0;
-        var rs = 7;
-        for (var i = 0; i < strs.length; i++) {
-          var d = strs[i];
-          if (d.length > 0) {
-            if (startsWith(d, "0x")) {
-              v = parseInt(d.substring(2), 16);
-            } else {
-              v = parseInt(d);
+      function resizeBitmap(bytes, oldW, oldH, newW, newH) {
+        const out = new Uint8Array((newW * newH) / 8);
+        const cols = Math.min(oldW, newW);
+        const rows = Math.min(oldH, newH);
+        for (let y = 0; y < rows; y++) {
+          for (let x = 0; x < cols; x++) {
+            if (getPixel(bytes, oldW, x, y)) {
+              out[(y >> 3) * newW + x] |= 1 << (y & 7);
             }
-            sv = padLeft(v.toString(2), "0", 8);
-            for (r = 0; r < 8; r++) {
-              paint(getCell(rs - r, c), sv.charAt(r) == "1");
-            }
-            c++;
-            if (c >= app.matrix.cols) {
-              c = 0;
-              rs += 8;
-            }
           }
         }
-        stringFromMatrix(true, false);
+        return out;
       }
 
-      function escapedToMatrix(str) {
-        app.encodedEscapeSequence = str;
-        clearMatrix();
-        var strs = str.split("\\x");
-        var c = 0;
-        var rs = 7;
-        for (var i = 0; i < strs.length; i++) {
-          var d = strs[i];
-          if (d.length > 0) {
-            v = parseInt(d, 16);
-            sv = padLeft(v.toString(2), "0", 8);
-            for (r = 0; r < 8; r++) {
-              paint(getCell(rs - r, c), sv.charAt(r) == "1");
-            }
-            c++;
-            if (c >= app.matrix.cols) {
-              c = 0;
-              rs += 8;
-            }
-          }
-        }
-        stringFromMatrix(false, true);
+      function invertBytes(bytes) {
+        const out = bytes.slice();
+        for (let i = 0; i < out.length; i++) out[i] = ~out[i] & 0xff;
+        return out;
       }
 
-      // Rather than trying to figure these crazy cells/matrix, we just
-      // slurp up the encoded string at the end. It's updated on every
-      // pixl change, redraw, and load so just slipping into
-      // stringFromMatrix is tacky, but seemss to catch all our refreshes.
-      //
-      // The string is CSV hex, with the first byte being the first column,
-      // and bit zero being the UL corner. Second byte is second column, etc.
-      // app.matrix.{cols,rows} is set by the drawing code to size the
-      // image for a character, an icon, or the full screen image. This
-      // code adapts resizing from that.
-      // INVERT is handled by the code above us, our fill/clearRect handles
-      // that.
-      function updateCanvas(buf) {
-        // Number of squared canvas pixels to image pixels;
-        var scale = 1;
+      const toCSV = (bytes) =>
+        Array.from(bytes, (b) => "0x" + hex2(b)).join(",");
 
-        var c = document.getElementById("myCanvas");
-        var context = c.getContext("2d");
-        context.fillRect(0, 0, c.width, c.height);
+      const toEsc = (bytes) =>
+        Array.from(bytes, (b) => "\\x" + hex2(b)).join("");
 
-        if (c.width != app.matrix.cols || c.height != app.matrix.rows) {
-          c.width = app.matrix.cols * scale;
-          c.height = app.matrix.rows * scale;
+      function toCArray(bytes, width, height) {
+        const lines = [];
+        for (let i = 0; i < bytes.length; i += 12) {
+          lines.push(
+            "  " +
+              Array.from(bytes.subarray(i, i + 12), (b) => "0x" + hex2(b)).join(", ") +
+              ",",
+          );
         }
-        context.clearRect(0, 0, c.width, c.height);
-
-        var a = buf.split(",");
-        var x = 0;
-        var y = 0;
-
-        for (var e = 0; e < a.length; e++) {
-          byte = parseInt(a[e], 16);
-          for (var bit = 0; bit < 8; bit++) {
-            // debug.innerHTML+= e + ": " + x + "/" +  y + " " + a.length + "</br>";
-            // debug.innerHTML+= app.matrix.cols + "</br>";
-            if (x > c.cols) {
-              throw "write past right of canvas";
-            }
-            if (x > c.rows) {
-              throw "write past bottom of canvas";
-            }
-            if (byte & (1 << bit)) {
-              // FillRect give better B&W image
-              if (scale > 1) {
-                context.moveTo(x, y);
-                context.lineWidth = scale;
-                context.lineTo(x + scale, y);
-              } else {
-                context.beginPath();
-                context.fillRect(x, y, 1, 1);
-                context.fill();
-              }
-            }
-            y += scale;
-          }
-          y -= 8 * scale;
-          x += scale;
-          if (x == app.matrix.cols * scale) {
-            x = 0;
-            y = 8 * scale;
-          }
-          // debug.innerHTML+= x + " " + x/app.matrix.cols + " " + y + "</br>";
-          // debug.innerHTML+=byte + "</br>";
-        }
-
-        context.strokeStyle = "black";
-        context.stroke();
-        return c;
-      }
-
-      function makePNG() {
-        var canvas = document.getElementById("myCanvas");
-        //var context = c.getContext("2d");
-        //window.location = canvas.toDataURL("image/png");
-        ///var image = canvas.toDataURL("image/png");
-        //	document.write('<img src="'+image+'"/>');
-        var image = canvas
-          .toDataURL("image/png")
-          .replace("image/png", "image/octet-stream");
-        window.location.href = image;
-      }
-
-      function stringFromMatrix(skipEncodedData, skipEncodedEscapeSequence) {
-        var str = "";
-        var strEscaped = "";
-        var delim = "";
-        var blocks = app.matrix.rows / 8;
-        var rs = 7;
-        for (var block = 0; block < blocks; block++) {
-          for (var c = 0; c < app.matrix.cols; c++) {
-            var b = 0;
-            for (var r = 0; r < 8; r++) {
-              var cell = document.getElementById("C" + (rs - r) + "_" + c);
-              if (isInk(cell)) {
-                b |= 1 << (7 - r);
-              }
-            }
-            str += delim + "0x" + padLeft(b.toString(16).toUpperCase(), "0", 2);
-            strEscaped += "\\x" + padLeft(b.toString(16).toUpperCase(), "0", 2);
-            delim = ",";
-          }
-          rs += 8;
-        }
-        if (!skipEncodedData) {
-          app.encodedData = str;
-        }
-        if (!skipEncodedEscapeSequence) {
-          app.encodedEscapeSequence = strEscaped;
-        }
-        updateCanvas(str);
-        return str;
-      }
-
-      function start() {
-        app = new Vue({
-          el: "#app",
-          data: {
-            matrix: {
-              cols: 12,
-              rows: 16,
-            },
-            type: "big",
-            encodedData: "",
-            encodedEscapeSequence: "",
-          },
-          methods: {
-            VtoMatrix: function (val) {
-              toMatrix(val);
-            },
-            escapedToMatrix: function (val) {
-              escapedToMatrix(val);
-            },
-
-            VchangeSize: function () {
-              if (app.type == "big") {
-                app.matrix.cols = 12;
-                app.matrix.rows = 16;
-              } else if (app.type == "small") {
-                app.matrix.cols = 6;
-                app.matrix.rows = 8;
-              } else if (app.type == "icon") {
-                app.matrix.cols = 16;
-                app.matrix.rows = 16;
-              } else if (app.type == "icon24") {
-                app.matrix.cols = 24;
-                app.matrix.rows = 16;
-              } else if (app.type == "screen") {
-                app.matrix.cols = 84;
-                app.matrix.rows = 16;
-              }
-              stringFromMatrix();
-            },
-          },
-        });
-        toMatrix(
-          "0x00,0xF0,0x08,0x0E,0x02,0x02,0x02,0x02,0x0E,0x08,0xF0,0x00,0x00,0x3F,0x40,0x5C,0x5C,0x5C,0x5C,0x5C,0x5C,0x40,0x3F,0x00"
+        return (
+          "// " +
+          width +
+          "x" +
+          height +
+          ", " +
+          bytes.length +
+          " bytes, bit 0 = top row of each page\n" +
+          "const uint8_t bitmap[] = {\n" +
+          lines.join("\n") +
+          "\n};"
         );
       }
 
-      var margins = 1;
-
-      function changesize(x) {
-        var cursize = x;
-        var mg;
-        if (x < 6) mg = 0;
-        else mg = 1;
-        //		var elements = document.getElementsByClassName('c');
-        //		for (var i=0; i<elements.length;i++){
-        //			elements.item(i).style="height: "+x+"px; width: "+x+"px;"+mg;
-        //		}
-        styles.sheet.rules[3].style.height = x + "px";
-        styles.sheet.rules[3].style.width = x + "px";
-        styles.sheet.rules[3].style.marginRight = mg + "px";
-        styles.sheet.rules[3].style.marginTop = mg + "px";
-        styles.sheet.rules[0].style.paddingLeft = mg + "px";
-        styles.sheet.rules[0].style.paddingBottom = mg + "px";
+      function toPython(bytes, width, height) {
+        const lines = [];
+        for (let i = 0; i < bytes.length; i += 12) {
+          lines.push(
+            "    " +
+              Array.from(bytes.subarray(i, i + 12), (b) => "0x" + hex2(b)).join(", ") +
+              ",",
+          );
+        }
+        return (
+          "# " +
+          width +
+          "x" +
+          height +
+          ", " +
+          bytes.length +
+          " bytes\n" +
+          "bitmap = bytes([\n" +
+          lines.join("\n") +
+          "\n])"
+        );
       }
 
-      function importFile() {
-        var input, file, fr;
-        input = document.getElementById("fileinput");
-        if (input.files[0]) {
-          file = input.files[0];
-          fr = new FileReader();
-          fr.onload = processData;
-          fr.readAsBinaryString(file);
+      // Accepts C arrays, CSV hex, 0xAB lists, decimal lists and \xAB escapes.
+      function parseByteText(text) {
+        let s = String(text == null ? "" : text);
+        s = s.replace(/\/\*[\s\S]*?\*\//g, " ").replace(/\/\/[^\n]*/g, " ");
+
+        // Pasted C initialisers carry a size in brackets; only read the body.
+        const open = s.indexOf("{");
+        if (open >= 0) {
+          const close = s.lastIndexOf("}");
+          if (close > open) s = s.slice(open + 1, close);
         }
-        function processData() {
-          var pushy, data, aB, bS;
-          pushy = [];
-          //			bodyAppend("p","processing data");
-          data = fr.result;
-          for (i = 297; i < 297 + 192; i += 2) {
-            aB = data.charCodeAt(i + 1);
-            bS = aB.toString(16);
-            if (bS.length < 2) bS = "0" + bS;
-            pushy.push(bS);
-            aB = data.charCodeAt(i);
-            bS = aB.toString(16);
-            if (bS.length < 2) bS = "0" + bS;
-            pushy.push(bS);
+
+        const re =
+          /\\x([0-9a-fA-F]{1,2})|\b0x([0-9a-fA-F]+)\b|\b([0-9]+)\b|\b([0-9a-fA-F]{1,2})\b/g;
+        const bytes = [];
+        let m;
+        while ((m = re.exec(s)) !== null) {
+          let value;
+          if (m[1] !== undefined) value = parseInt(m[1], 16);
+          else if (m[2] !== undefined) value = parseInt(m[2], 16);
+          else if (m[3] !== undefined) value = parseInt(m[3], 10);
+          else value = parseInt(m[4], 16);
+
+          if (!Number.isFinite(value) || value > 0xff) {
+            return { bytes: new Uint8Array(0), error: `value ${m[0]} is out of range` };
           }
-          escapedToMatrix("\\x" + pushy.join("\\x"));
-          //			bodyAppend("p","\\x"+pushy.join("\\x"));
+          bytes.push(value);
+        }
+
+        if (bytes.length === 0) {
+          return { bytes: new Uint8Array(0), error: "no byte values found" };
+        }
+        return { bytes: new Uint8Array(bytes), error: "" };
+      }
+
+      // Bresenham, excluding the start point (already painted).
+      function linePoints(a, b) {
+        const points = [];
+        let x0 = a.x;
+        let y0 = a.y;
+        const dx = Math.abs(b.x - x0);
+        const dy = Math.abs(b.y - y0);
+        const sx = x0 < b.x ? 1 : -1;
+        const sy = y0 < b.y ? 1 : -1;
+        let err = dx - dy;
+
+        for (;;) {
+          points.push({ x: x0, y: y0 });
+          if (x0 === b.x && y0 === b.y) break;
+          const e2 = 2 * err;
+          if (e2 > -dy) {
+            err -= dy;
+            x0 += sx;
+          }
+          if (e2 < dx) {
+            err += dx;
+            y0 += sy;
+          }
+        }
+        points.shift();
+        return points;
+      }
+
+      function hexToBytes(hex, length) {
+        const out = new Uint8Array(length);
+        for (let i = 0; i < length; i++) {
+          out[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16) || 0;
+        }
+        return out;
+      }
+
+      const bytesToHex = (bytes) =>
+        Array.from(bytes, (b) => hex2(b).toLowerCase()).join("");
+
+      function loadSession() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return null;
+          const s = JSON.parse(raw);
+          if (!s || !Number.isInteger(s.w) || !Number.isInteger(s.h)) return null;
+          if (s.w < 1 || s.w > 512 || s.h < 8 || s.h > 512 || s.h % 8 !== 0) return null;
+          return {
+            w: s.w,
+            h: s.h,
+            bytes: hexToBytes(String(s.hex || ""), (s.w * s.h) / 8),
+            presetId: typeof s.presetId === "string" ? s.presetId : "custom",
+          };
+        } catch {
+          return null;
         }
       }
-      function bodyAppend(tagName, innerHTML) {
-        var elm;
 
-        elm = document.createElement(tagName);
-        elm.innerHTML = innerHTML;
-        document.body.appendChild(elm);
+      /* ---------------------------------------------------------------------
+         Canvas rendering
+      --------------------------------------------------------------------- */
+
+      function buildOffscreen(width, height, bytes) {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        const img = ctx.createImageData(width, height);
+        const d = img.data;
+        for (let y = 0; y < height; y++) {
+          for (let x = 0; x < width; x++) {
+            const i = (y * width + x) * 4;
+            if (getPixel(bytes, width, x, y)) {
+              d[i] = 224;
+              d[i + 1] = 222;
+              d[i + 2] = 244;
+            } else {
+              d[i] = 35;
+              d[i + 1] = 33;
+              d[i + 2] = 54;
+            }
+            d[i + 3] = 255;
+          }
+        }
+        ctx.putImageData(img, 0, 0);
+        return canvas;
       }
 
-      window.onload = start;
+      function drawGridCanvas(canvas, { width, height, zoom, off, hover, bytes }) {
+        if (!canvas) return;
+        const cssW = GUTTER + width * zoom;
+        const cssH = GUTTER + height * zoom;
+        // Browsers cap canvas dimensions; keep the backing store inside the cap.
+        const dpr = Math.min(window.devicePixelRatio || 1, 3, 16384 / cssW, 16384 / cssH);
+
+        canvas.style.width = cssW + "px";
+        canvas.style.height = cssH + "px";
+        const pxW = Math.round(cssW * dpr);
+        const pxH = Math.round(cssH * dpr);
+        if (canvas.width !== pxW || canvas.height !== pxH) {
+          canvas.width = pxW;
+          canvas.height = pxH;
+        }
+
+        const ctx = canvas.getContext("2d");
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, cssW, cssH);
+
+        const gw = width * zoom;
+        const gh = height * zoom;
+
+        ctx.fillStyle = "#232136";
+        ctx.fillRect(GUTTER, GUTTER, gw, gh);
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(off, GUTTER, GUTTER, gw, gh);
+
+        // Pixel grid; drawn from 4x so it is visible at the default fit zoom too.
+        if (zoom >= 4) {
+          ctx.beginPath();
+          ctx.strokeStyle = "rgba(224,222,244,0.18)";
+          ctx.lineWidth = 1;
+          for (let x = 0; x <= width; x++) {
+            const px = GUTTER + x * zoom + 0.5;
+            ctx.moveTo(px, GUTTER);
+            ctx.lineTo(px, GUTTER + gh);
+          }
+          for (let y = 0; y <= height; y++) {
+            const py = GUTTER + y * zoom + 0.5;
+            ctx.moveTo(GUTTER, py);
+            ctx.lineTo(GUTTER + gw, py);
+          }
+          ctx.stroke();
+        }
+
+        // 8 px page boundaries, the firmware's byte rows
+        ctx.beginPath();
+        ctx.strokeStyle = "rgba(156,207,216,0.45)";
+        ctx.setLineDash([3, 3]);
+        ctx.lineWidth = 1;
+        for (let y = 8; y < height; y += 8) {
+          const py = GUTTER + y * zoom + 0.5;
+          ctx.moveTo(GUTTER, py);
+          ctx.lineTo(GUTTER + gw, py);
+        }
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // rulers
+        ctx.font = "9px ui-monospace, SFMono-Regular, Menlo, monospace";
+        ctx.fillStyle = "#908caa";
+        ctx.textBaseline = "top";
+        ctx.textAlign = "right";
+        const rowStep = zoom >= 4 ? 8 : zoom >= 2 ? 16 : 32;
+        for (let y = 0; y < height; y += rowStep) {
+          ctx.fillText(String(y), GUTTER - 4, GUTTER + y * zoom + 1);
+        }
+        ctx.textAlign = "left";
+        const colStep = zoom >= 6 ? 8 : 16;
+        for (let x = 0; x < width; x += colStep) {
+          ctx.fillText(String(x), GUTTER + x * zoom + 2, GUTTER - 12);
+        }
+
+        ctx.strokeStyle = "rgba(196,167,231,0.35)";
+        ctx.strokeRect(GUTTER - 0.5, GUTTER - 0.5, gw + 1, gh + 1);
+
+        if (hover) {
+          // Invert the cursor box so it stays visible on lit and unlit cells.
+          const lit = bytes && getPixel(bytes, width, hover.x, hover.y);
+          const inset = Math.min(1, zoom / 4);
+          ctx.strokeStyle = lit ? "rgba(35,33,54,0.95)" : "rgba(156,207,216,0.95)";
+          ctx.lineWidth = 2;
+          ctx.strokeRect(
+            GUTTER + hover.x * zoom + inset,
+            GUTTER + hover.y * zoom + inset,
+            Math.max(zoom - inset * 2, 2),
+            Math.max(zoom - inset * 2, 2),
+          );
+        }
+      }
+
+      /* ---------------------------------------------------------------------
+         Components
+      --------------------------------------------------------------------- */
+
+      function useCopy() {
+        const [copied, setCopied] = useState("");
+        const copy = useCallback(async (key, text) => {
+          try {
+            await navigator.clipboard.writeText(text);
+          } catch {
+            const ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.position = "fixed";
+            ta.style.opacity = "0";
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+              document.execCommand("copy");
+            } catch {
+              /* clipboard unavailable */
+            }
+            ta.remove();
+          }
+          setCopied(key);
+          setTimeout(() => setCopied((c) => (c === key ? "" : c)), 1200);
+        }, []);
+        return [copied, copy];
+      }
+
+      function Grid({ width, height, zoom, bytes, onPaint }) {
+        const canvasRef = useRef(null);
+        const stroke = useRef(null);
+        const [hover, setHover] = useState(null);
+
+        const off = useMemo(
+          () => buildOffscreen(width, height, bytes),
+          [width, height, bytes],
+        );
+
+        useEffect(() => {
+          drawGridCanvas(canvasRef.current, { width, height, zoom, off, hover, bytes });
+        }, [width, height, zoom, off, hover, bytes]);
+
+        function cellAt(event) {
+          const canvas = canvasRef.current;
+          if (!canvas) return null;
+          const rect = canvas.getBoundingClientRect();
+          const x = Math.floor((event.clientX - rect.left - GUTTER) / zoom);
+          const y = Math.floor((event.clientY - rect.top - GUTTER) / zoom);
+          if (x < 0 || y < 0 || x >= width || y >= height) return null;
+          return { x, y };
+        }
+
+        function onPointerDown(event) {
+          if (event.button !== 0 && event.button !== 2) return;
+          const cell = cellAt(event);
+          if (!cell) return;
+          event.preventDefault();
+          try {
+            canvasRef.current.setPointerCapture(event.pointerId);
+          } catch {
+            /* capture unsupported */
+          }
+          const ink =
+            event.button === 2 ? false : getPixel(bytes, width, cell.x, cell.y) === 0;
+          stroke.current = { ink, last: cell };
+          onPaint([cell], ink);
+        }
+
+        function onPointerMove(event) {
+          const cell = cellAt(event);
+          setHover(cell);
+
+          const active = stroke.current;
+          if (!active || !cell) return;
+          if (cell.x === active.last.x && cell.y === active.last.y) return;
+
+          const points = linePoints(active.last, cell);
+          active.last = cell;
+          onPaint(points, active.ink);
+        }
+
+        function onPointerUp(event) {
+          stroke.current = null;
+          try {
+            canvasRef.current.releasePointerCapture(event.pointerId);
+          } catch {
+            /* nothing captured */
+          }
+        }
+
+        return html`<canvas
+          ref=${canvasRef}
+          class="grid"
+          onPointerDown=${onPointerDown}
+          onPointerMove=${onPointerMove}
+          onPointerUp=${onPointerUp}
+          onPointerCancel=${onPointerUp}
+          onPointerLeave=${() => setHover(null)}
+          onContextMenu=${(event) => event.preventDefault()}
+        />`;
+      }
+
+      function Preview({ width, height, bytes }) {
+        const canvasRef = useRef(null);
+
+        useEffect(() => {
+          const canvas = canvasRef.current;
+          if (!canvas) return;
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          const img = ctx.createImageData(width, height);
+          const d = img.data;
+          for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+              const i = (y * width + x) * 4;
+              if (getPixel(bytes, width, x, y)) {
+                d[i] = 224;
+                d[i + 1] = 222;
+                d[i + 2] = 244;
+              } else {
+                d[i] = 35;
+                d[i + 1] = 33;
+                d[i + 2] = 54;
+              }
+              d[i + 3] = 255;
+            }
+          }
+          ctx.putImageData(img, 0, 0);
+        }, [width, height, bytes]);
+
+        const scale = clamp(Math.floor(320 / Math.max(width, height)), 2, 8);
+        return html`<canvas
+          ref=${canvasRef}
+          class="preview"
+          style=${{
+            width: width * scale + "px",
+            maxWidth: "100%",
+            height: "auto",
+          }}
+        />`;
+      }
+
+      function App() {
+        const [width, setWidth] = useState(INITIAL.w);
+        const [height, setHeight] = useState(INITIAL.h);
+        const [bytes, setBytes] = useState(INITIAL.bytes);
+        const [presetId, setPresetId] = useState(INITIAL.presetId);
+        const [zoom, setZoom] = useState(4);
+
+        const [hexDraft, setHexDraft] = useState(() => toCSV(INITIAL.bytes));
+        const [escDraft, setEscDraft] = useState(() => toEsc(INITIAL.bytes));
+        const [hexErr, setHexErr] = useState("");
+        const [escErr, setEscErr] = useState("");
+        const hexFocused = useRef(false);
+        const escFocused = useRef(false);
+        const hexTimer = useRef(0);
+        const escTimer = useRef(0);
+
+        const [offset, setOffset] = useState(297);
+        const [swapPairs, setSwapPairs] = useState(true);
+        const [importMsg, setImportMsg] = useState(null);
+        const [dragOver, setDragOver] = useState(false);
+        const [pngScale, setPngScale] = useState(2);
+
+        const [copied, copy] = useCopy();
+        const stageRef = useRef(null);
+
+        const csv = useMemo(() => toCSV(bytes), [bytes]);
+        const escapes = useMemo(() => toEsc(bytes), [bytes]);
+        const cArray = useMemo(() => toCArray(bytes, width, height), [bytes, width, height]);
+        const python = useMemo(() => toPython(bytes, width, height), [bytes, width, height]);
+        const lit = useMemo(
+          () => bytes.reduce((n, b) => n + popcount(b), 0),
+          [bytes],
+        );
+
+        const activePreset =
+          PRESETS.find((p) => p.id === presetId) ||
+          PRESETS[PRESETS.length - 1];
+
+        // Keep the text fields in sync unless the user is typing in them.
+        useEffect(() => {
+          if (hexFocused.current) return;
+          setHexDraft(toCSV(bytes));
+          setHexErr("");
+        }, [bytes]);
+
+        useEffect(() => {
+          if (escFocused.current) return;
+          setEscDraft(toEsc(bytes));
+          setEscErr("");
+        }, [bytes]);
+
+        // Persist the workbench so a reload does not lose the bitmap.
+        useEffect(() => {
+          const id = setTimeout(() => {
+            try {
+              localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify({
+                  w: width,
+                  h: height,
+                  presetId,
+                  hex: bytesToHex(bytes),
+                }),
+              );
+            } catch {
+              /* storage full or blocked */
+            }
+          }, 300);
+          return () => clearTimeout(id);
+        }, [bytes, width, height, presetId]);
+
+        // Fit once the stage has been laid out.
+        useEffect(() => {
+          setZoom(fitZoom(width, height));
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
+
+        // Ctrl+wheel zoom around the pointer.
+        useEffect(() => {
+          const pane = stageRef.current;
+          if (!pane) return undefined;
+
+          function onWheel(event) {
+            if (!event.ctrlKey && !event.metaKey) return;
+            const canvas = pane.querySelector("canvas");
+            if (!canvas) return;
+            event.preventDefault();
+
+            const rect = canvas.getBoundingClientRect();
+            const fx = (event.clientX - rect.left - GUTTER) / zoom;
+            const fy = (event.clientY - rect.top - GUTTER) / zoom;
+            const step = event.deltaY < 0 ? 1 : -1;
+            const next =
+              zoom < 4 ? zoom + step : clamp(Math.round(zoom * (step > 0 ? 1.25 : 0.8)), 1, 32);
+            if (next === zoom) return;
+
+            setZoom(next);
+            requestAnimationFrame(() => {
+              const after = canvas.getBoundingClientRect();
+              pane.scrollLeft += after.left + GUTTER + fx * next - event.clientX;
+              pane.scrollTop += after.top + GUTTER + fy * next - event.clientY;
+            });
+          }
+
+          pane.addEventListener("wheel", onWheel, { passive: false });
+          return () => pane.removeEventListener("wheel", onWheel);
+        }, [zoom]);
+
+        function fitZoom(w, h) {
+          const pane = stageRef.current;
+          const availW = (pane ? pane.clientWidth : 900) - 36 - GUTTER;
+          const availH = (pane ? pane.clientHeight : 460) - 36 - GUTTER - 8;
+          return clamp(Math.floor(Math.min(availW / w, availH / h)), 1, 32);
+        }
+
+        function zoomStep(direction) {
+          const index = ZOOM_STEPS.indexOf(zoom);
+          let next;
+          if (index < 0) {
+            next = direction > 0 ? zoom + 1 : zoom - 1;
+          } else {
+            next = ZOOM_STEPS[clamp(index + direction, 0, ZOOM_STEPS.length - 1)];
+          }
+          setZoom(clamp(next, 1, 32));
+        }
+
+        function setSize(newW, newH, nextPreset) {
+          const w = clamp(Math.round(newW) || 1, 1, 512);
+          const h = clamp(Math.round(newH / 8) * 8 || 8, 8, 512);
+          if (w !== width || h !== height) {
+            releaseFields();
+            setBytes((prev) => resizeBitmap(prev, width, height, w, h));
+            setWidth(w);
+            setHeight(h);
+          }
+          if (nextPreset) setPresetId(nextPreset);
+          setZoom(fitZoom(w, h));
+        }
+
+        function applyPreset(preset) {
+          if (preset.id === "custom") {
+            setPresetId("custom");
+            return;
+          }
+          setSize(preset.w, preset.h, preset.id);
+        }
+
+        const paintCells = useCallback(
+          (cells, ink) => {
+            setBytes((prev) => {
+              const next = prev.slice();
+              let changed = false;
+              for (let i = 0; i < cells.length; i++) {
+                const { x, y } = cells[i];
+                if (x < 0 || x >= width || y < 0) continue;
+                const index = (y >> 3) * width + x;
+                if (index >= next.length) continue;
+                const mask = 1 << (y & 7);
+                const on = (next[index] & mask) !== 0;
+                if (ink && !on) {
+                  next[index] |= mask;
+                  changed = true;
+                } else if (!ink && on) {
+                  next[index] &= ~mask;
+                  changed = true;
+                }
+              }
+              return changed ? next : prev;
+            });
+          },
+          [width],
+        );
+
+        function applyText(text, kind) {
+          const parsed = parseByteText(text);
+          let error = parsed.error;
+          if (!error && parsed.bytes.length !== bytes.length) {
+            error = `expected ${bytes.length} bytes, found ${parsed.bytes.length}`;
+          }
+          if (kind === "hex") {
+            setHexErr(error);
+          } else {
+            setEscErr(error);
+          }
+          if (!error) setBytes(parsed.bytes);
+          return error;
+        }
+
+        function scheduleApply(kind, value) {
+          const timer = kind === "hex" ? hexTimer : escTimer;
+          clearTimeout(timer.current);
+          timer.current = setTimeout(() => applyText(value, kind), 300);
+        }
+
+        function onFieldFocus(kind) {
+          (kind === "hex" ? hexFocused : escFocused).current = true;
+        }
+
+        // Bulk edits win over whatever is half-typed in a text field.
+        function releaseFields() {
+          hexFocused.current = false;
+          escFocused.current = false;
+        }
+
+        function invertBitmap() {
+          releaseFields();
+          setBytes((prev) => invertBytes(prev));
+        }
+
+        function clearBitmap() {
+          releaseFields();
+          setBytes(new Uint8Array(bytes.length));
+        }
+
+        function onFieldBlur(kind, text) {
+          const parsed = parseByteText(text);
+          let error = parsed.error;
+          if (!error && parsed.bytes.length !== bytes.length) {
+            error = `expected ${bytes.length} bytes, found ${parsed.bytes.length}`;
+          }
+
+          if (kind === "hex") {
+            hexFocused.current = false;
+            setHexErr(error);
+            if (!error) {
+              setBytes(parsed.bytes);
+              setHexDraft(toCSV(parsed.bytes));
+            }
+          } else {
+            escFocused.current = false;
+            setEscErr(error);
+            if (!error) {
+              setBytes(parsed.bytes);
+              setEscDraft(toEsc(parsed.bytes));
+            }
+          }
+        }
+
+        async function importFile(file) {
+          if (!file) return;
+          setImportMsg(null);
+          try {
+            const buffer = new Uint8Array(await file.arrayBuffer());
+            const need = bytes.length;
+            if (buffer.length < offset + need) {
+              setImportMsg({
+                ok: false,
+                text:
+                  file.name +
+                  ": " +
+                  buffer.length +
+                  " bytes, need " +
+                  (offset + need) +
+                  " (offset " +
+                  offset +
+                  " + " +
+                  need +
+                  ")",
+              });
+              return;
+            }
+            const slice = buffer.slice(offset, offset + need);
+            if (swapPairs) {
+              for (let i = 0; i + 1 < slice.length; i += 2) {
+                const tmp = slice[i];
+                slice[i] = slice[i + 1];
+                slice[i + 1] = tmp;
+              }
+            }
+            setBytes(slice);
+            releaseFields();
+            setHexDraft(toCSV(slice));
+            setEscDraft(toEsc(slice));
+            setImportMsg({
+              ok: true,
+              text:
+                "Loaded " +
+                need +
+                " bytes from " +
+                file.name +
+                " at offset " +
+                offset +
+                (swapPairs ? " (byte pairs swapped)" : ""),
+            });
+          } catch (err) {
+            setImportMsg({ ok: false, text: "Could not read file: " + err.message });
+          }
+        }
+
+        function downloadPng() {
+          const src = document.createElement("canvas");
+          src.width = width;
+          src.height = height;
+          const sctx = src.getContext("2d");
+          const img = sctx.createImageData(width, height);
+          for (let y = 0; y < height; y++) {
+            for (let x = 0; x < width; x++) {
+              const i = (y * width + x) * 4;
+              const on = getPixel(bytes, width, x, y);
+              img.data[i] = on ? 255 : 0;
+              img.data[i + 1] = on ? 255 : 0;
+              img.data[i + 2] = on ? 255 : 0;
+              img.data[i + 3] = 255;
+            }
+          }
+          sctx.putImageData(img, 0, 0);
+
+          const out = document.createElement("canvas");
+          out.width = width * pngScale;
+          out.height = height * pngScale;
+          const octx = out.getContext("2d");
+          octx.imageSmoothingEnabled = false;
+          octx.drawImage(src, 0, 0, out.width, out.height);
+
+          const link = document.createElement("a");
+          link.href = out.toDataURL("image/png");
+          link.download = `gem-bitmap-${width}x${height}@${pngScale}x.png`;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        }
+
+        function onDrop(event) {
+          event.preventDefault();
+          setDragOver(false);
+          const file = event.dataTransfer.files && event.dataTransfer.files[0];
+          if (file) importFile(file);
+        }
+
+        const byteField = (kind, value, setter, error) =>
+          html`<textarea
+            class=${"field" + (error ? " invalid" : "")}
+            rows="3"
+            spellcheck="false"
+            autocomplete="off"
+            value=${value}
+            onFocus=${() => onFieldFocus(kind)}
+            onInput=${(event) => {
+              const value = event.currentTarget.value;
+              setter(value);
+              scheduleApply(kind, value);
+            }}
+            onBlur=${(event) => onFieldBlur(kind, event.currentTarget.value)}
+          ></textarea>`;
+
+        return html`<div class="app">
+          <header class="topbar">
+            <div class="brand">
+              <span class="brand-mark"></span>
+              <div>
+                <h1>Gem Solder <span>· Bitmap Editor</span></h1>
+                <p>${activePreset.label} · ${width}×${height}</p>
+              </div>
+            </div>
+            <div class="topbar-actions">
+              <button class="btn" onClick=${() => setZoom(fitZoom(width, height))}>
+                Fit
+              </button>
+              <div class="zoom">
+                <button
+                  class="btn icon"
+                  aria-label="Zoom out"
+                  onClick=${() => zoomStep(-1)}
+                >
+                  −
+                </button>
+                <span class="zoom-value">${zoom}×</span>
+                <button
+                  class="btn icon"
+                  aria-label="Zoom in"
+                  onClick=${() => zoomStep(1)}
+                >
+                  +
+                </button>
+              </div>
+              <button class="btn" onClick=${invertBitmap}>Invert</button>
+              <button class="btn" onClick=${clearBitmap}>Clear</button>
+            </div>
+          </header>
+
+          <main>
+            <aside class="col-left">
+              <section class="card">
+                <h2>Preset</h2>
+                <div class="presets">
+                  ${PRESETS.map(
+                    (preset) => html`<button
+                      key=${preset.id}
+                      class=${"preset" + (preset.id === presetId ? " active" : "")}
+                      onClick=${() => applyPreset(preset)}
+                    >
+                      <span class="preset-name">${preset.label}</span>
+                      <span class="preset-note">${preset.note}</span>
+                    </button>`,
+                  )}
+                </div>
+                ${presetId === "custom"
+                  ? html`<div class="custom-size">
+                      <label>
+                        width
+                        <input
+                          type="number"
+                          min="1"
+                          max="512"
+                          value=${width}
+                          onChange=${(event) => {
+                            const value = parseInt(event.currentTarget.value, 10);
+                            if (Number.isFinite(value)) setSize(value, height, "custom");
+                          }}
+                        />
+                      </label>
+                      <label>
+                        height
+                        <input
+                          type="number"
+                          min="8"
+                          max="512"
+                          step="8"
+                          value=${height}
+                          onChange=${(event) => {
+                            const value = parseInt(event.currentTarget.value, 10);
+                            if (Number.isFinite(value)) setSize(width, value, "custom");
+                          }}
+                        />
+                      </label>
+                    </div>`
+                  : null}
+              </section>
+
+              <section class="card hint-card">
+                <h2>Byte layout</h2>
+                <p>
+                  One byte per column per 8 px page, <strong>bit 0 = top row</strong>.
+                </p>
+                <p>
+                  Pages run top to bottom, columns left to right — the firmware's SSD1306
+                  framebuffer.
+                </p>
+              </section>
+            </aside>
+
+            <section class="stage-card">
+              <div class="stage" ref=${stageRef}>
+                <div class="stage-inner">
+                  <${Grid}
+                    width=${width}
+                    height=${height}
+                    zoom=${zoom}
+                    bytes=${bytes}
+                    onPaint=${paintCells}
+                  />
+                </div>
+              </div>
+              <div class="stage-foot">
+                <span>Left-drag paints · right-drag erases · Ctrl+wheel zooms</span>
+                <span>${width * height} px</span>
+              </div>
+            </section>
+
+            <aside class="col-right">
+              <section class="card">
+                <div class="card-head">
+                  <h2>OLED preview</h2>
+                  <span class="muted">${width}×${height}</span>
+                </div>
+                <div class="preview-frame">
+                  <${Preview} width=${width} height=${height} bytes=${bytes} />
+                </div>
+              </section>
+
+              <section class="card">
+                <div class="card-head">
+                  <h2>CSV hex</h2>
+                  <button class="btn tiny" onClick=${() => copy("csv", csv)}>
+                    ${copied === "csv" ? "Copied" : "Copy"}
+                  </button>
+                </div>
+                ${byteField("hex", hexDraft, setHexDraft, hexErr)}
+                ${hexErr ? html`<p class="err">${hexErr}</p>` : null}
+              </section>
+
+              <section class="card">
+                <div class="card-head">
+                  <h2>C escapes</h2>
+                  <button
+                    class="btn tiny"
+                    onClick=${() => copy("esc", escapes)}
+                  >
+                    ${copied === "esc" ? "Copied" : "Copy"}
+                  </button>
+                </div>
+                ${byteField("esc", escDraft, setEscDraft, escErr)}
+                ${escErr ? html`<p class="err">${escErr}</p>` : null}
+              </section>
+
+              <section class="card">
+                <div class="card-head">
+                  <h2>C array</h2>
+                  <button class="btn tiny" onClick=${() => copy("c", cArray)}>
+                    ${copied === "c" ? "Copied" : "Copy"}
+                  </button>
+                </div>
+                <pre class="code">${cArray}</pre>
+              </section>
+
+              <section class="card">
+                <div class="card-head">
+                  <h2>Python</h2>
+                  <button class="btn tiny" onClick=${() => copy("py", python)}>
+                    ${copied === "py" ? "Copied" : "Copy"}
+                  </button>
+                </div>
+                <pre class="code">${python}</pre>
+              </section>
+
+              <section class="card">
+                <h2>Import / export</h2>
+                <label
+                  class=${"drop" + (dragOver ? " over" : "")}
+                  onDragOver=${(event) => {
+                    event.preventDefault();
+                    setDragOver(true);
+                  }}
+                  onDragLeave=${() => setDragOver(false)}
+                  onDrop=${onDrop}
+                >
+                  <input
+                    type="file"
+                    class="sr-only"
+                    onChange=${(event) => {
+                      const input = event.currentTarget;
+                      const file = input.files && input.files[0];
+                      importFile(file);
+                      input.value = "";
+                    }}
+                  />
+                  <span>Drop a raw <code>.bin</code> dump here or click to choose</span>
+                </label>
+
+                <div class="row">
+                  <label>
+                    offset
+                    <input
+                      type="number"
+                      min="0"
+                      max="1048576"
+                      value=${offset}
+                      onInput=${(event) => {
+                        const value = parseInt(event.currentTarget.value, 10);
+                        if (Number.isFinite(value)) setOffset(clamp(value, 0, 1048576));
+                      }}
+                    />
+                  </label>
+                  <label class="check">
+                    <input
+                      type="checkbox"
+                      checked=${swapPairs}
+                      onChange=${(event) => setSwapPairs(event.currentTarget.checked)}
+                    />
+                    swap byte pairs
+                  </label>
+                </div>
+                ${importMsg
+                  ? html`<p class=${importMsg.ok ? "ok" : "err"}>${importMsg.text}</p>`
+                  : null}
+
+                <div class="row export-row">
+                  <label>
+                    PNG scale
+                    <select
+                      value=${pngScale}
+                      onChange=${(event) =>
+                        setPngScale(parseInt(event.currentTarget.value, 10))}
+                    >
+                      <option value="1">1×</option>
+                      <option value="2">2×</option>
+                      <option value="4">4×</option>
+                      <option value="8">8×</option>
+                    </select>
+                  </label>
+                  <button class="btn primary" onClick=${downloadPng}>
+                    Download PNG
+                  </button>
+                </div>
+              </section>
+            </aside>
+          </main>
+
+          <footer class="status">
+            <span>${width}×${height}</span>
+            <span>${bytes.length} bytes</span>
+            <span>${bytes.length / width} page${bytes.length / width === 1 ? "" : "s"}</span>
+            <span>${lit} lit</span>
+            <span>LSB top</span>
+          </footer>
+        </div>`;
+      }
+
+      const session = loadSession();
+      const INITIAL = session || {
+        w: 128,
+        h: 32,
+        bytes: new Uint8Array(512),
+        presetId: "screen",
+      };
+
+      render(html`<${App} />`, root);
     </script>
-  </head>
-  <body>
-    <div id="app">
-      <div class="header">
-        <select v-model="type" v-on:change="VchangeSize()">
-          <option value="small">Small Font (6x8)</option>
-          <option value="big">Big Font (12x16)</option>
-          <option value="icon">Icon (16x16)</option>
-          <option value="icon24">Icon (24x16)</option>
-          <option value="screen">Screen (84x16)</option>
-        </select>
-        <a href="#" onclick="changesize(1);">1x</a>
-        <a href="#" onclick="changesize(2);">2x</a>
-        <a href="#" onclick="changesize(4);">4x</a>
-        <a href="#" onclick="changesize(8);">8x</a>
-        <a href="#" onclick="changesize(10);">10x</a>
-        <a href="#" onclick="changesize(12);">12x</a>
-        <a href="#" onclick="changesize(16);">16x</a>
-        <a href="#" onclick="changesize(32);">32x</a>
-        <a href="#" onclick="invertMatrix();">INVERT!</a>
-      </div>
-      <div
-        id="matrix"
-        class="matrix"
-        onmousedown="mousedown(this)"
-        onmouseup="mouseup(this)"
-        ondragstart="return false"
-      >
-        <div :id="'R'+(r-1)" class="r" v-for="r in matrix.rows">
-          <div
-            :id="'C'+(r-1)+'_'+(c-1)"
-            class="c"
-            onmouseenter="enter(this)"
-            v-for="c in matrix.cols"
-          ></div>
-        </div>
-      </div>
-      <div class="actions">
-        <input
-          type="button"
-          value="Clear"
-          onclick="clearMatrix();stringFromMatrix()"
-        />
-      </div>
-      <div class="data">
-        <textarea
-          v-model="encodedData"
-          style="width: 100%"
-          v-on:change="VtoMatrix(encodedData)"
-          rows="5"
-        ></textarea>
-        <textarea
-          v-model="encodedEscapeSequence"
-          style="width: 100%"
-          v-on:change="escapedToMatrix(encodedEscapeSequence)"
-          rows="5"
-        ></textarea>
-      </div>
-
-      <form action="#" onsubmit="return false;">
-        <input type="file" id="fileinput" />
-        <input
-          type="button"
-          id="btnLoad"
-          value="Import"
-          onclick="importFile();"
-        />
-        (Remember to set correct canvas size before importing)
-      </form>
-      <br />
-
-      <canvas
-        id="myCanvas"
-        width="96"
-        height="16"
-        style="border: 1px dotted #000000; padding: 10px"
-      >
-      </canvas>
-
-      <form>
-        <input type="button" value="Make PNG" onclick="makePNG();" />
-      </form>
-
-      <div id="debug"></div>
-    </div>
   </body>
 </html>
