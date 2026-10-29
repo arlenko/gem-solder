@@ -47,6 +47,10 @@ extern const char *SmallSymbolPDDebug;
 extern const char *SmallSymbolState;
 extern const char *SmallSymbolNoVBus;
 extern const char *SmallSymbolVBus;
+extern const char *SmallSymbolPD;
+
+extern const char *SmallSymbolT245;
+extern const char *SmallSymbolT210;
 
 extern const char *LargeSymbolSleep;
 

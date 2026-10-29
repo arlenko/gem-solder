@@ -37,3 +37,20 @@ void printVoltage(void) {
   OLED::print(SmallSymbolDot, FontStyle::SMALL);
   OLED::printNumber(volt % 10, 1, FontStyle::SMALL);
 }
+
+void printHandleType(void) { OLED::print(SmallSymbolT245, FontStyle::SMALL); }
+
+void printPowerSource(void) {
+  uint8_t srcNum = getPowerSourceNumber();
+
+  if (srcNum == 0 && getSettingValue(SettingsOptions::MinDCVoltageCells)) {
+    // DC input powered from a lithium battery pack:
+    // show the cell count (e.g. "3S") instead of the generic "DC".
+    OLED::printNumber(2 + getSettingValue(SettingsOptions::MinDCVoltageCells), 1, FontStyle::SMALL);
+    OLED::print(SmallSymbolCellCount, FontStyle::SMALL);
+  } else if (srcNum < 2) {
+    OLED::print(PowerSourceNames[srcNum], FontStyle::SMALL);
+  } else {
+    OLED::print(SmallSymbolPD, FontStyle::SMALL);
+  }
+}

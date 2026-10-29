@@ -38,4 +38,6 @@ void ui_draw_usb_pd_debug_pdo(const uint8_t entry_num, const uint16_t min_voltag
                               const uint16_t current_a_x100, const uint16_t wattage);
 // Utils
 void printVoltage(void);
+void printHandleType(void);
+void printPowerSource(void);
 #endif // UI_DRAWING_UI_DRAWING_HPP_

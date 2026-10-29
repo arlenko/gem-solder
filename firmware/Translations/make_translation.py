@@ -137,11 +137,15 @@ def get_constants() -> List[Tuple[str, str]]:
         ("SmallSymbolAmps", "A"),
         ("LargeSymbolDC", "DC"),
         ("LargeSymbolCellCount", "S"),
+        ("SmallSymbolCellCount", "S"),
         ("SmallSymbolVersionNumber", read_version()),
         ("SmallSymbolPDDebug", "PD Debug"),
         ("SmallSymbolState", "State"),
         ("SmallSymbolNoVBus", "No VBus"),
         ("SmallSymbolVBus", "VBus"),
+        ("SmallSymbolPD", "PD"),
+        ("SmallSymbolT245", "T245"),
+        ("SmallSymbolT210", "T210"),
         ("LargeSymbolSleep", "Zzz "),
     ]
 
