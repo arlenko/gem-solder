@@ -389,7 +389,7 @@ def merge_letter_count_info(a: Dict, b: Dict) -> Dict:
     }
 
 
-# --- Terminus fonts: SMALL (8x16) and LARGE (12x24) ---
+# --- Terminus fonts: SMALL (8x16), LARGE (12x24) and XLARGE (16x32) ---
 # (path, cell width, cell height, font ascent)
 TERMINUS_FONTS = {
     "8x16": (
@@ -404,6 +404,12 @@ TERMINUS_FONTS = {
         24,
         19,
     ),  # bold weight for the large/readout font
+    "16x32": (
+        "terminus/ter-u32b.bdf",
+        16,
+        32,
+        26,
+    ),  # bold weight for the extra-large/readout font
 }
 _terminus_cache: Dict[str, Font] = {}
 
@@ -677,7 +683,7 @@ def render_font_block(data: LanguageData, f: TextIO, compress_font: bool = False
     )
 
     if not compress_font:
-        # The SMALL/LARGE fonts are Terminus 8x16/12x24.
+        # The SMALL/LARGE/XLARGE fonts are Terminus 8x16/12x24/16x32.
         f.write(
             make_terminus_table_cpp("USER_FONT_12", "12x24", data.large_text_symbols)
         )
@@ -685,13 +691,19 @@ def render_font_block(data: LanguageData, f: TextIO, compress_font: bool = False
             make_terminus_table_cpp("USER_FONT_6x8", "8x16", data.small_text_symbols)
         )
         f.write(
+            make_terminus_table_cpp("USER_FONT_32", "16x32", data.large_text_symbols)
+        )
+        f.write(
             "const FontSection FontSectionInfo = {\n"
             "    .font12_start_ptr = USER_FONT_12,\n"
             "    .font06_start_ptr = USER_FONT_6x8,\n"
+            "    .font32_start_ptr = USER_FONT_32,\n"
             "    .font12_decompressed_size = 0,\n"
             "    .font06_decompressed_size = 0,\n"
+            "    .font32_decompressed_size = 0,\n"
             "    .font12_compressed_source = 0,\n"
             "    .font06_compressed_source = 0,\n"
+            "    .font32_compressed_source = 0,\n"
             "};\n"
         )
     else:
@@ -699,23 +711,30 @@ def render_font_block(data: LanguageData, f: TextIO, compress_font: bool = False
         def emit_compressed(name: str, data_bytes: bytes) -> None:
             write_bytes_as_c_array(f, name, brieflz.compress(data_bytes))
 
-        # The SMALL/LARGE fonts are Terminus 8x16/12x24. Same array/buffer
-        # names so FontSectionInfo is unchanged (sizes via sizeof).
+        # The SMALL/LARGE/XLARGE fonts are Terminus 8x16/12x24/16x32. The
+        # XLARGE table reuses the LARGE symbol map, so any string encoded for
+        # the large font can also be drawn with FontStyle::XLARGE.
         t12 = terminus_block_bytes("12x24", data.large_text_symbols)
         t06 = terminus_block_bytes("8x16", data.small_text_symbols)
+        t32 = terminus_block_bytes("16x32", data.large_text_symbols)
         emit_compressed("font_12x16_brieflz", t12)
         emit_compressed("font_06x08_brieflz", t06)
+        emit_compressed("font_16x32_brieflz", t32)
         f.write(f"static uint8_t font12_out_buffer[{len(t12)}];\n")
         f.write(f"static uint8_t font06_out_buffer[{len(t06)}];\n")
+        f.write(f"static uint8_t font32_out_buffer[{len(t32)}];\n")
 
         f.write(
             "const FontSection FontSectionInfo = {\n"
             "    .font12_start_ptr = font12_out_buffer,\n"
             "    .font06_start_ptr = font06_out_buffer,\n"
+            "    .font32_start_ptr = font32_out_buffer,\n"
             "    .font12_decompressed_size = sizeof(font12_out_buffer),\n"
             "    .font06_decompressed_size = sizeof(font06_out_buffer),\n"
+            "    .font32_decompressed_size = sizeof(font32_out_buffer),\n"
             "    .font12_compressed_source = font_12x16_brieflz,\n"
             "    .font06_compressed_source = font_06x08_brieflz,\n"
+            "    .font32_compressed_source = font_16x32_brieflz,\n"
             "};\n"
         )
 
@@ -793,7 +812,9 @@ def write_language(
         f.write("void prepareTranslations() {\n")
         if compress_font:
             f.write(
-                "  blz_depack_srcsize(font_12x16_brieflz, font_out_buffer, sizeof(font_12x16_brieflz));\n"
+                "  blz_depack_srcsize(font_12x16_brieflz, font12_out_buffer, sizeof(font_12x16_brieflz));\n"
+                "  blz_depack_srcsize(font_06x08_brieflz, font06_out_buffer, sizeof(font_06x08_brieflz));\n"
+                "  blz_depack_srcsize(font_16x32_brieflz, font32_out_buffer, sizeof(font_16x32_brieflz));\n"
             )
         if strings_bin:
             f.write(

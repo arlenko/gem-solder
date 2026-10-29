@@ -176,10 +176,13 @@ struct TranslationData {
 struct FontSection {
   const uint8_t *font12_start_ptr;
   const uint8_t *font06_start_ptr;
+  const uint8_t *font32_start_ptr;
   uint16_t       font12_decompressed_size;
   uint16_t       font06_decompressed_size;
+  uint16_t       font32_decompressed_size;
   const uint8_t *font12_compressed_source; // Pointer to compressed data or null
   const uint8_t *font06_compressed_source; // Pointer to compressed data or null
+  const uint8_t *font32_compressed_source; // Pointer to compressed data or null
 };
 
 extern const FontSection FontSectionInfo;

@@ -186,6 +186,7 @@ void OLED::drawChar(const uint16_t charCode, const FontStyle fontStyle, const ui
     break;
   case FontStyle::SMALL:
   case FontStyle::LARGE:
+  case FontStyle::XLARGE:
   default:
     currentFont = nullptr;
     index       = 0;
@@ -194,6 +195,11 @@ void OLED::drawChar(const uint16_t charCode, const FontStyle fontStyle, const ui
       // 128x32 panels use the larger Terminus 8x16 small font.
       fontHeight = 16;
       fontWidth  = 8;
+      break;
+    case FontStyle::XLARGE:
+      // Terminus 16x32; fills the whole height of a 128x32 panel.
+      fontHeight = 32;
+      fontWidth  = 16;
       break;
     case FontStyle::LARGE:
     default:
@@ -209,8 +215,18 @@ void OLED::drawChar(const uint16_t charCode, const FontStyle fontStyle, const ui
       return;
     }
 
-    currentFont = fontStyle == FontStyle::SMALL ? FontSectionInfo.font06_start_ptr : FontSectionInfo.font12_start_ptr;
-    index       = charCode - 2;
+    switch (fontStyle) {
+    case FontStyle::SMALL:
+      currentFont = FontSectionInfo.font06_start_ptr;
+      break;
+    case FontStyle::XLARGE:
+      currentFont = FontSectionInfo.font32_start_ptr;
+      break;
+    default:
+      currentFont = FontSectionInfo.font12_start_ptr;
+      break;
+    }
+    index = charCode - 2;
     break;
   }
   const uint8_t *charPointer = currentFont + ((fontWidth * (fontHeight / 8)) * index);
@@ -547,7 +563,9 @@ void OLED::setInverseDisplay(bool inverse) {
 void OLED::print(const char *const str, FontStyle fontStyle, uint8_t len, const uint8_t soft_x_limit) {
   const uint8_t *next = reinterpret_cast<const uint8_t *>(str);
   if (next[0] == 0x01) {
-    fontStyle = FontStyle::LARGE;
+    if (fontStyle == FontStyle::SMALL) {
+      fontStyle = FontStyle::LARGE;
+    }
     next++;
   }
   while (next[0] && len--) {
@@ -594,6 +612,7 @@ void OLED::printSymbolDeg(const FontStyle fontStyle) {
     OLED::drawSymbol(getSettingValue(SettingsOptions::TemperatureInF) ? 0 : 1);
     break;
   case FontStyle::LARGE:
+  case FontStyle::XLARGE:
     OLED::print(getSettingValue(SettingsOptions::TemperatureInF) ? LargeSymbolDegF : LargeSymbolDegC, fontStyle);
     break;
   case FontStyle::SMALL:

@@ -76,6 +76,7 @@ enum class FontStyle {
   SMALL,
   LARGE,
   EXTRAS,
+  XLARGE,
 };
 
 class OLED {
