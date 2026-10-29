@@ -62,7 +62,7 @@ void ui_draw_soldering_power_status(bool boost_mode_on) {
   const int16_t statusX  = OLED_MAX_X - statusW;
 
   // Draw heat symbol
-  ui_draw_heat_status(0, boost_mode_on);
+  ui_draw_heat_status(0, 0, boost_mode_on);
 
   // 24px number, vertically centred (4px above/below)
   OLED::setCursor(tempX, 4);

@@ -882,6 +882,7 @@ void OLED::drawHeatSymbol(uint32_t x10Watts) {
   }
   // Then we want to draw down (16-(5+state)
   uint16_t cursor_x_temp = cursor_x;
+  int16_t  cursor_y_temp = cursor_y;
   drawSymbol(14);
   /*
        / / / / /
@@ -895,7 +896,7 @@ void OLED::drawHeatSymbol(uint32_t x10Watts) {
       What we are doing is aiming to clear a section of the screen, down to the base depending on how close we are to
       90% of the wattage limit. Larger numbers mean more heat, so we clear less of the screen.
   */
-  drawFilledRect(cursor_x_temp, 0, cursor_x_temp + 12, 2 + (8 - state), true);
+  drawFilledRect(cursor_x_temp, cursor_y_temp, cursor_x_temp + 12, cursor_y_temp + 2 + (8 - state), true);
 }
 
 bool OLED::isInitDone() { return initDone; }

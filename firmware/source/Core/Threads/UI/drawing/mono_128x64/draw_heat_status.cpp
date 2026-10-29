@@ -3,9 +3,9 @@
 #include <OperatingModes.h>
 
 #ifdef OLED_128x64
-void ui_draw_heat_status(int16_t posX, bool boostModeOn) {
+void ui_draw_heat_status(int16_t posX, int16_t posY, bool boostModeOn) {
   // Heat symbol
-  OLED::setCursor(posX, 0);
+  OLED::setCursor(posX, posY);
   OLED::drawHeatSymbol(x10WattHistory.average());
   // Boost mode indicator next to heat symbol
   if (boostModeOn) {
