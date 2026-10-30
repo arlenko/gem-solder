@@ -867,8 +867,9 @@ void OLED::invertArea(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1) {
 
 void OLED::drawHeatSymbol(uint32_t x10Watts) {
   // Draw symbol 14
-  // Then draw over it, the bottom 5 pixels always stay. 8 pixels above that are
-  // the levels masks the symbol nicely
+  // The glyph's top two rows are blank padding and are always cleared. The
+  // eight rows below them form the level indicator, while the bottom five
+  // pixels (the base plus its padding) always stay lit.
   uint8_t state = 0;
   if (x10Watts > 0) {
     const int32_t limit = getX10WattageLimits();
@@ -880,7 +881,8 @@ void OLED::drawHeatSymbol(uint32_t x10Watts) {
       }
     }
   }
-  // Then we want to draw down (16-(5+state)
+  // Clear rows 0..(9-state): at full power only the two blank padding rows are
+  // cleared, so the whole glyph is visible, while at zero power only the base stays.
   uint16_t cursor_x_temp = cursor_x;
   int16_t  cursor_y_temp = cursor_y;
   drawSymbol(14);
@@ -896,7 +898,7 @@ void OLED::drawHeatSymbol(uint32_t x10Watts) {
       What we are doing is aiming to clear a section of the screen, down to the base depending on how close we are to
       90% of the wattage limit. Larger numbers mean more heat, so we clear less of the screen.
   */
-  drawFilledRect(cursor_x_temp, cursor_y_temp, cursor_x_temp + 12, cursor_y_temp + 2 + (8 - state), true);
+  drawFilledRect(cursor_x_temp, cursor_y_temp, cursor_x_temp + 12, cursor_y_temp + 1 + (8 - state), true);
 }
 
 bool OLED::isInitDone() { return initDone; }
