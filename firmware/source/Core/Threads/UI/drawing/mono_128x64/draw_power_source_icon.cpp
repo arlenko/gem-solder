@@ -2,6 +2,7 @@
 #ifdef OLED_128x64
 void ui_draw_power_source_icon(void) {
   const int16_t xPos = OLED::getCursorX();
+  const int16_t yPos = OLED::getCursorY();
 #if defined(POW_PD) || defined(POW_QC) || defined(POW_PD_EXT) || defined(POW_PD_STUSB4500)
   if (!getIsPoweredByDCIN()) {
     // On non-DC inputs we replace this symbol with the voltage we are operating on,
@@ -12,15 +13,15 @@ void ui_draw_power_source_icon(void) {
     } else {
       V = V / 10;
     }
-    OLED::setCursor(xPos, 0);
+    OLED::setCursor(xPos, yPos);
     OLED::printNumber(V / 10, 1, FontStyle::SMALL);
-    OLED::setCursor(xPos, 16);
+    OLED::setCursor(xPos, yPos + 16);
     OLED::printNumber(V % 10, 1, FontStyle::SMALL);
     return;
   }
 #endif
 #ifdef POW_DC
-  OLED::setCursor(xPos, 8); // vertically centre the 16px battery / DC icon
+  OLED::setCursor(xPos, yPos + 8); // vertically centre the 16px battery / DC icon
   if (getSettingValue(SettingsOptions::MinDCVoltageCells)) {
     // User is on a lithium battery
     // we need to calculate which of the 10 levels they are on

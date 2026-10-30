@@ -119,6 +119,7 @@ public:
   static void    setBrightness(uint8_t contrast);
   static void    setInverseDisplay(bool inverted);
   static int16_t getCursorX() { return cursor_x; }
+  static int16_t getCursorY() { return cursor_y; }
   // Restrict drawing to a vertical sub-window of the framebuffer (in pages).
   // Menu rows use this so existing 32px-high item drawing code can be reused.
   static void setDrawingWindow(uint8_t firstPage, uint8_t pageCount);

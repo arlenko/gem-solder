@@ -55,29 +55,43 @@ void ui_draw_soldering_power_status(bool boost_mode_on) {
   // other edge. The power-source label is dropped to keep two larger rows.
   // Sides flip with rotation.
   (void)boost_mode_on;
-  const uint8_t statusW  = 5 * 8;                // "NN.NW" / "NN.NV" are 5 cells in the 8x16 small font
-  const uint8_t tempW    = (3 * 12) + (2 * 8);   // 3 large digits + small "°C" = 52px
-  const uint8_t tempZone = UI_DRAWING_TEMP_ZONE; // Left of the status block
-  const int16_t tempX    = tempZone - tempW;
-  const int16_t statusX  = OLED_MAX_X - statusW;
+  const uint8_t statusW = 5 * 8;              // "NN.NW" / "NN.NV" are 5 cells in the 8x16 small font
+  const uint8_t tempW   = (3 * 16) + (2 * 8); // 3 large digits + small "°C"
+  const int16_t tempX   = (OLED_MAX_X - tempW) / 2 + 4;
 
-  // Draw heat symbol
-  ui_draw_heat_status(0, 0, boost_mode_on);
-
-  // 24px number, vertically centred (4px above/below)
-  OLED::setCursor(tempX, 4);
-  ui_draw_tip_temperature(false, FontStyle::LARGE);
-  // Degree + unit in the small font, bottom-aligned with the 24px number (like the TS100)
-  OLED::setCursor(OLED::getCursorX(), 12);
+  // Set temperature
+  OLED::setCursor(1, 0);
+  OLED::printNumber(getSettingValue(SettingsOptions::SolderingTemp), 3, FontStyle::SMALL);
   OLED::printSymbolDeg(FontStyle::SMALL);
 
-  // Wattage (top row)
-  OLED::setCursor(statusX, 0);
+  // Handle type
+  OLED::setCursor(OLED_MAX_X - 32, 0);
+  printHandleType();
+
+  // Draw heat symbol
+  ui_draw_heat_status(1, 21, boost_mode_on);
+
+  // Tip temperature
+  OLED::setCursor(tempX, 16);
+  ui_draw_tip_temperature(false, FontStyle::XLARGE);
+  OLED::setCursor(OLED::getCursorX(), OLED::getCursorY() + 3);
+  OLED::printSymbolDeg(FontStyle::SMALL);
+
+  // Power source icon
+  OLED::setCursor(115, 16);
+  ui_draw_power_source_icon();
+
+  // Wattage
+  OLED::setCursor(1, 49);
   uint32_t x10Watt = x10WattHistory.average();
   printWattage(x10Watt, FontStyle::SMALL);
 
-  // Input voltage (bottom row)
-  OLED::setCursor(statusX, 16);
+  // Power source
+  OLED::setCursor(OLED_MAX_X - statusW - 24, 49);
+  printPowerSource();
+
+  // Input voltage
+  OLED::setCursor(OLED_MAX_X - statusW, 49);
   printVoltage();
   OLED::print(SmallSymbolVolts, FontStyle::SMALL);
 #endif
